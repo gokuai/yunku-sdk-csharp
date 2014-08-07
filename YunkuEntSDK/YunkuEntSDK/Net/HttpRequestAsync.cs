@@ -173,7 +173,7 @@ namespace YunkuEntSDK.Net
         /// <summary>
         /// 请求方式
         /// </summary>
-        public RequestType RequestMethod
+        internal RequestType RequestMethod
         {
             get { return _request_type; }
             set { _request_type = value; }

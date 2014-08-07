@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\BaseData.cs" />
+    <Compile Include="Data\OauthErrMsg.cs" />
     <Compile Include="IYunkuMethod.cs" />
     <Compile Include="Net\HttpEventArgs.cs" />
     <Compile Include="Net\HttpRequestEnum.cs" />

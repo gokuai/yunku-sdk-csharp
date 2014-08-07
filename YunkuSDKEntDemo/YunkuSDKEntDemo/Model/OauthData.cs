@@ -1,25 +1,36 @@
-﻿using System;
+﻿using YunkuEntSDK.Data;
+using YunkuEntSDK.Net;
+using YunkuEntSDK.UtilClass;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using YunkuEntSDK.UtilClass;
+using System.Threading.Tasks;
 
-namespace YunkuEntSDK.Data
+namespace YunkuSDKEntDemo.Model
 {
-    class OauthData : BaseData
+    public class OauthData
     {
 
         private const string LOG_TAG="OauthData";
 
         private const string KEY_ACCESS_TOKEN = "access_token";
         private const string KEY_EXPIRES_IN = "expires_in";
-        private const string KEY_ERROR= "error";
-
+        private const string KEY_ERROR = "error";
 
         /// <summary>
         /// 登陆token
         /// </summary>
         public string Token
+        {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string Error
         {
             get;
             private set;
@@ -40,8 +51,12 @@ namespace YunkuEntSDK.Data
             private set;
         }
 
-
-        new public static OauthData Create(string jsonString)
+        /// <summary>
+        /// 解析认证jsonstring
+        /// </summary>
+        /// <param name="jsonString"></param>
+        /// <returns></returns>
+        public static OauthData Create(string jsonString)
         {
             if (jsonString == null) return null;
 
@@ -49,9 +64,9 @@ namespace YunkuEntSDK.Data
             try
             {
                 var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
-                data.ErrorCode = SimpleJson.TryIntValue(json, KEY_ERROR_CODE);
-                data.ErrorMessage = SimpleJson.TryStringValue(json, KEY_ERROR);
-                data.ErrorMessage = SimpleJson.TryStringValue(json, KEY_ERROR_MSG);
+
+                string msg = SimpleJson.TryStringValue(json, KEY_ERROR);
+                data.Error = OauthErrMsg.ConvertMsg(msg);//转化错误信息
 
                 data.Expires = SimpleJson.TryIntValue(json, KEY_EXPIRES_IN);
                 data.Token = SimpleJson.TryStringValue(json, KEY_ACCESS_TOKEN);
@@ -60,7 +75,7 @@ namespace YunkuEntSDK.Data
             }
             catch (Exception ex)
             {
-                LogPrint.Print(LOG_TAG + ":" + ex.StackTrace);
+                Debug.WriteLine(LOG_TAG + "==>" + ex.StackTrace);
                 return null;
 
             }
