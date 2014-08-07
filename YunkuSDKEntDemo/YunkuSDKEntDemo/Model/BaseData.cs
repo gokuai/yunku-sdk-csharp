@@ -16,7 +16,6 @@ namespace YunkuSDKEntDemo.Model
         protected const string KEY_ERROR_CODE = "error_code";
         protected const string KEY_ERROR_MSG = "error_msg";
         
-
         /// <summary>
         /// 错误码
         /// </summary>
