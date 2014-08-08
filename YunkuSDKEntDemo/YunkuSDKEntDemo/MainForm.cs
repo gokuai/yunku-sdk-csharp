@@ -22,10 +22,10 @@ namespace YunkuSDKEntDemo
             InitializeComponent();
         }
 
-        const string UESRNAME = "Brandon";
-        const string PASSWORD = "123456";
-        const string CLIENT_ID = "b2b54fa4261f9cf5e4772e6359f96161";
-        const string CLIENT_SECRET = "134dba8e0adc4e59b511c09aa1ebf71e";
+        const string UESRNAME = "";
+        const string PASSWORD = "";
+        const string CLIENT_ID = "";
+        const string CLIENT_SECRET = "";
 
         /// <summary>
         /// 分析错误信息
