@@ -32,7 +32,7 @@ namespace YunkuSDKEntDemo
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        private void DeserializeErrorMsg(string result, HttpStatusCode code)
+        private void DeserializeReturn(string result, HttpStatusCode code)
         {
             string msg = "";
             //复制到剪贴板
@@ -59,49 +59,97 @@ namespace YunkuSDKEntDemo
 
         }
 
-        private void OnEnterKeyPress(object sender, KeyPressEventArgs e)
+
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            YunkuEngine.LogPrintAvialable = true;
-            TB_Result.Text = "doing\r\n";
-            YunkuEngine yunku = new YunkuEngine(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
+            DebugConfig.LogPrintAvialable = true;
+            DebugConfig.LogPath = "D://LogPath";//日志文件没有做大小限制
+            EntLibManager entLibManager = new EntLibManager(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
             //获取授权
-            yunku.AccessToken(true);
+            entLibManager.AccessToken(true);
             //获取库列表
-            //DeserializeErrorMsg(yunku.GetLibList(), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
             //获取库授权
-            //DeserializeErrorMsg(yunku.BindLib(146540, "", ""), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.BindLib(146540, "", ""), entLibManager.StatusCode);
+
             //取消库授权
-            //DeserializeErrorMsg(yunku.UnBindLib("9affb8f78fd5914a7218d7561db6ddec"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.UnBindLib("9affb8f78fd5914a7218d7561db6ddec"), entLibManager.StatusCode);
+
+            //添加成员
+            //DeserializeReturn(entLibManager.AddMembers(32662, 1194, new int[] { 21122 }), entLibManager.StatusCode);
+
+            //批量修改单库中成员角色
+            //DeserializeReturn(entLibManager.SetMemberRole(32662, 1194, new int[] { 21122 }), entLibManager.StatusCode);
+
+            //获取某一个库的成员
+            //DeserializeReturn(entLibManager.GetMembers(0, 20, 32662),entLibManager.StatusCode);
+
+            //从库中删除成员
+            //DeserializeReturn(entLibManager.DelMember(32662, new int[] { 21122 }), entLibManager.StatusCode);
+
+            //获取某一个企业的分组列表
+            //DeserializeReturn(entLibManager.GetGroups(32662),entLibManager.StatusCode);
+
+            //库上添加分组
+            //DeserializeReturn(entLibManager.AddGroup(32662, 1086, 1194), entLibManager.StatusCode);
+            
+            //设置分组上的角色
+            //DeserializeReturn(entLibManager.SetGroupRole(32662, 1086, 1194), entLibManager.StatusCode);
+
+            //库上删除分组
+            //DeserializeReturn(entLibManager.DelGroup(32662,1086), entLibManager.StatusCode);
+
             //获取文件列表
-            //DeserializeErrorMsg(yunku.GetFileList("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b", 
-            //    (int)Util.GetUnixDataline(), 0, ""), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.GetFileList("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b", 
+            //    (int)Util.GetUnixDataline(), 0, ""), entLibManager.StatusCode);
+
             //获取更新列表
-            //DeserializeErrorMsg(yunku.GetUpdateList("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(),false, 0), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.GetUpdateList("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(),false, 0), entLibManager.StatusCode);
+
             //获取文件（夹）信息
-            //DeserializeErrorMsg(yunku.GetFileInfo("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(), "test"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.GetFileInfo("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
+
             //创建文件夹
-            //DeserializeErrorMsg(yunku.CreateFolder("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(), "testFolder", "Brandon"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.CreateFolder("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "testFolder", "Brandon"), entLibManager.StatusCode);
+
             //上传文件 文件不得超过50MB
-            //DeserializeErrorMsg(yunku.CreateFile("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.CreateFile("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), entLibManager.StatusCode);
 
             //删除文件
-            //DeserializeErrorMsg(yunku.Del("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(), "test","Brandon"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.Del("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "test","Brandon"), entLibManager.StatusCode);
 
             //移动文件
-            //DeserializeErrorMsg(yunku.Move("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(), "testFolder","1/testFolder", "Brandon"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.Move("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "testFolder","1/testFolder", "Brandon"), entLibManager.StatusCode);
+
             ////文件连接
-            //DeserializeErrorMsg(yunku.Link("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-            //    (int)Util.GetUnixDataline(), "test"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.Link("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
+
             ////发送消息
-            DeserializeErrorMsg(yunku.SendMsg("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), yunku.StatusCode);
+            //DeserializeReturn(entLibManager.SendMsg("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
+            //    (int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), entLibManager.StatusCode);
+
+            EntManager entManager = new EntManager(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
+            //获取授权
+            entManager.AccessToken(true);
+
+            //获取成员
+            DeserializeReturn(entManager.GetEntMembers(0, 20), entLibManager.StatusCode);
+
+            //获取分组
+            DeserializeReturn(entManager.GetEntGroups(), entLibManager.StatusCode);
+
+            //获取角色
+            DeserializeReturn(entManager.GetEntRoles(), entLibManager.StatusCode);
+
+
         }
 
 
