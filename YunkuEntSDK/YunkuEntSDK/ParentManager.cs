@@ -26,9 +26,6 @@ namespace YunkuEntSDK
             get { return _token; }
         }
 
-        public static bool LogPrintAvialable { get; set; }
-
-
          /// <summary>
         /// 
         /// </summary>

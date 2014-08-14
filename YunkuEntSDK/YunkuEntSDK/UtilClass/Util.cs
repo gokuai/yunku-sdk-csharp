@@ -105,6 +105,21 @@ namespace YunkuEntSDK.UtilClass
             return stream;
         }
 
+        public static string intArrayToString(int[] intArray, string conv)
+        {
+            String strReturn = "";
+            int length = intArray.Length;
+            if (length > 0)
+            {
+                for (int i = 0; i < length - 1; i++)
+                {
+                    strReturn += intArray[i] + conv;
+                }
+                strReturn += intArray[length - 1];
+            }
+            return strReturn;
+        }
+
 
 
 

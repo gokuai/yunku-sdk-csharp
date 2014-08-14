@@ -13,12 +13,16 @@ namespace YunkuEntSDK.UtilClass
 
         public static void Print(string log)
         {
-            if (ParentManager.LogPrintAvialable)
+            if (DebugConfig.LogPrintAvialable)
             {
 
                 StreamWriter logWriter;
-                string dateStr=DateTime.Now.ToString("yyyy_MM_dd");
-                string fileName=string.Format(YUNKU_FILE,dateStr);
+                string dateStr = DateTime.Now.ToString("yyyy_MM_dd");
+                string fileName = string.Format(DebugConfig.LogPath + "/" + YUNKU_FILE, dateStr);
+                if (!Directory.Exists(DebugConfig.LogPath))
+                {
+                    Directory.CreateDirectory(DebugConfig.LogPath);
+                }
 
                 if (!File.Exists(fileName))
                 {

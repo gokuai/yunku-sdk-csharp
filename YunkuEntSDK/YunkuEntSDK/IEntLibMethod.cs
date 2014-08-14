@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace YunkuEntSDK
 {
-    internal interface IYunkuMethod
+    internal interface IEntLibMethod
     {
          string AccessToken(bool isEnt);
 
-         string CreateLib(string orgName, int orgCapacity, string storagePointName, string orgDesc);
+         string Create(string orgName, int orgCapacity, string storagePointName, string orgDesc);
 
          string GetLibList();
 
-         string BindLib(int orgId, string title, string linkUrl);
+         string Bind(int orgId, string title, string linkUrl);
 
-         string UnBindLib(string orgClientId);
+         string UnBind(string orgClientId);
 
          string GetFileList(string orgClientId, string orgClientSecret, int dateline, int start, string fullPath);
 
@@ -38,6 +38,25 @@ namespace YunkuEntSDK
          string Link(string orgClientId, string orgClientSecret, int dateline, string fullPath);
 
          string SendMsg(string orgClientId, string orgClientSecret, int dateline, string title, string text, string image, string linkUrl, string opName);
+
+         string GetMembers(int start, int size, int orgId);
+
+         string AddMembers(int orgId, int roleId, int[] memberIds);
+
+         string SetMemberRole(int orgId, int roleId, int[] memberIds);
+
+         string DelMember(int orgId, int[] memberIds);
+
+         string GetGroups(int orgId);
+
+         string AddGroup(int orgId, int groupId, int roleId);
+
+         string DelGroup(int orgId, int groupId);
+
+         string SetGroupRole(int orgId, int groupId, int roleId);
+
+
+
 
     }
 }

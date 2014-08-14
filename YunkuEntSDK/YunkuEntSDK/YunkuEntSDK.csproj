@@ -41,7 +41,10 @@
   <ItemGroup>
     <Compile Include="Data\BaseData.cs" />
     <Compile Include="Data\OauthErrMsg.cs" />
-    <Compile Include="IYunkuMethod.cs" />
+    <Compile Include="DebugConfig.cs" />
+    <Compile Include="EntManager.cs" />
+    <Compile Include="IEntLibMethod.cs" />
+    <Compile Include="IEntMethod.cs" />
     <Compile Include="Net\HttpEventArgs.cs" />
     <Compile Include="Net\HttpRequestEnum.cs" />
     <Compile Include="Net\HttpRequestAsync.cs" />
@@ -57,7 +60,7 @@
     <Compile Include="UtilClass\UnixTimestampConverter.cs" />
     <Compile Include="UtilClass\Util.cs" />
     <Compile Include="UtilClass\UtilFile.cs" />
-    <Compile Include="YunkuEngine.cs" />
+    <Compile Include="EntLibManager.cs" />
     <Compile Include="YunkuManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
