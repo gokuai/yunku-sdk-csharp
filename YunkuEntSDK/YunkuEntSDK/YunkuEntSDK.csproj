@@ -11,6 +11,7 @@
     <AssemblyName>YunkuEntSDK</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,9 +45,9 @@
     <Compile Include="Data\BaseData.cs" />
     <Compile Include="Data\OauthErrMsg.cs" />
     <Compile Include="DebugConfig.cs" />
+    <Compile Include="EnFileManager.cs" />
     <Compile Include="EntManager.cs" />
-    <Compile Include="IEntLibMethod.cs" />
-    <Compile Include="IEntMethod.cs" />
+    <Compile Include="HostConfig.cs" />
     <Compile Include="Net\HttpEventArgs.cs" />
     <Compile Include="Net\HttpRequestEnum.cs" />
     <Compile Include="Net\HttpRequestAsync.cs" />
@@ -61,7 +64,6 @@
     <Compile Include="UtilClass\Util.cs" />
     <Compile Include="UtilClass\UtilFile.cs" />
     <Compile Include="EntLibManager.cs" />
-    <Compile Include="YunkuManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

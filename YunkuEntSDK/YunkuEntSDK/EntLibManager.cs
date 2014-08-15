@@ -1,324 +1,291 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using YunkuEntSDK.Data;
+using YunkuEntSDK.Net;
+using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-     public class EntLibManager:IEntLibMethod
+
+     public class EntlibManager:ParentManager
     {
-         private YunkuManager _manager;
-         private string _username;
-         private string _password;
-         private string _clientId;
-         private string _clientSecret;
+         
+         const string LIB_HOST = HostConfig.LIB_HOST;
+         
+         const string URL_API_CREATE_LIB = LIB_HOST + "/1/org/create";
+         const string URL_API_GET_LIB_LIST = LIB_HOST + "/1/org/ls";
+         const string URL_API_BIND = LIB_HOST + "/1/org/bind";
+         const string URL_API_UNBIND = LIB_HOST + "/1/org/unbind";
 
-         public HttpStatusCode StatusCode 
-         {
-             get { return _manager.StatusCode; }
-         }
 
-         public EntLibManager(string uesrname, string password, string client_id, string client_secret)
-         {
-             _manager = new YunkuManager(uesrname, password, client_id, client_secret);
-             _username=uesrname;
-             _password=password;
-             _clientId = client_id;
-             _clientSecret = client_secret;
-         }
+         const string URL_API_GET_MEMBERS = LIB_HOST + "/1/org/get_members";
+         const string URL_API_ADD_MEMBERS = LIB_HOST + "/1/org/add_member";
+         const string URL_API_SET_MEMBER_ROLE = LIB_HOST + "/1/org/set_member_role";
+        const string URL_API_DEL_MEMBER = LIB_HOST + "/1/org/del_member";
+        const string URL_API_GET_GROUPS = LIB_HOST + "/1/org/get_groups";
+        const string URL_API_ADD_GROUP = LIB_HOST + "/1/org/add_group";
+        const string URL_API_DEL_GROUP = LIB_HOST + "/1/org/del_group";
+        const string URL_API_SET_GROUP_ROLE = LIB_HOST + "/1/org/set_group_role";
 
-         private EntLibManager(string uesrname, string password, string client_id, string client_secret,string token)
-             : this(uesrname, password, client_id, client_secret)
-         {
-             _manager.Token = token;
-             
-         }
+        const string URL_API_ENT_GET_GROUPS = LIB_HOST + "/1/ent/get_groups";
+        const string URL_API_ENT_GET_MEMBERS = LIB_HOST + "/1/ent/get_members";
+        const string URL_API_ENT_GET_ROLES = LIB_HOST + "/1/ent/get_roles";
+        const string URL_API_ENT_SYNC_MEMBER = LIB_HOST + "/1/ent/sync_member";
 
-         /// <summary>
-         /// 获取认证
-         /// </summary>
-         /// <param name="isEnt"></param>
-         /// <returns></returns>
-        public string AccessToken(bool isEnt)
+        public EntlibManager(string uesrname, string password, string client_id, string client_secret)
+            : base(uesrname, password, client_id, client_secret)
         {
-            return _manager.AccessToken(isEnt);
         }
-         /// <summary>
-         /// 创建库
-         /// </summary>
-         /// <param name="orgName"></param>
-         /// <param name="orgCapacity"></param>
-         /// <param name="storagePointName"></param>
-         /// <param name="orgDesc"></param>
-         /// <returns></returns>
+
+       
+
         public string Create(string orgName, int orgCapacity, string storagePointName, string orgDesc)
         {
-            return _manager.Create(orgName, orgCapacity, storagePointName, orgDesc);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_CREATE_LIB;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_name", orgName);
+            request.AppendParameter("org_capacity", orgCapacity + "");
+            request.AppendParameter("storage_point_name", storagePointName);
+            request.AppendParameter("org_desc", orgDesc);
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 获取库里欸包
-         /// </summary>
-         /// <returns></returns>
+
+
         public string GetLibList()
         {
-            return _manager.GetLibList();
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_GET_LIB_LIST;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 获取库授权
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="title"></param>
-         /// <param name="linkUrl"></param>
-         /// <returns></returns>
+
         public string Bind(int orgId, string title, string linkUrl)
         {
-            return _manager.Bind( orgId,  title,  linkUrl);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_BIND;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("title", title);
+            request.AppendParameter("url", linkUrl);
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 取消库授权
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <returns></returns>
+
         public string UnBind(string orgClientId)
         {
-            return _manager.UnBind(orgClientId);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_UNBIND;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 获取文件列表
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="start"></param>
-         /// <param name="fullPath"></param>
-         /// <returns></returns>
-        public string GetFileList(string orgClientId, string orgClientSecret, int dateline, int start, string fullPath)
+
+       
+
+
+        public string GetEntRoles()
         {
-            return _manager.GetFileList( orgClientId,  orgClientSecret,  dateline,  start,  fullPath);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_ENT_GET_ROLES;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 获取更新列表
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="isCompare"></param>
-         /// <param name="fetchDateline"></param>
-         /// <returns></returns>
-        public string GetUpdateList(string orgClientId, string orgClientSecret, int dateline, bool isCompare, long fetchDateline)
+
+        public string GetEntMembers(int start, int size)
         {
-            return _manager.GetUpdateList( orgClientId,  orgClientSecret,  dateline,  isCompare,  fetchDateline);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_ENT_GET_MEMBERS;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("start", start+"");
+            request.AppendParameter("size", size + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 获取文件信息
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <returns></returns>
-        public string GetFileInfo(string orgClientId, string orgClientSecret, int dateline, string fullPath)
+
+        public string GetEntGroups()
         {
-            return _manager.GetFileInfo( orgClientId,  orgClientSecret,  dateline,  fullPath);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_ENT_GET_GROUPS;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 创建文件夹
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <param name="opName"></param>
-         /// <returns></returns>
-        public string CreateFolder(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName)
+
+        public string SyncMembers(string structStr)
         {
-            return _manager.CreateFolder( orgClientId,  orgClientSecret,  dateline,  fullPath,  opName);
-        }
-         /// <summary>
-         /// 上传文件（流方式）
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <param name="opName"></param>
-         /// <param name="stream"></param>
-         /// <param name="fileName"></param>
-         /// <returns></returns>
-        public string CreateFile(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName, System.IO.Stream stream, string fileName)
-        {
-            return _manager.CreateFile( orgClientId,  orgClientSecret,  dateline,  fullPath,  opName,  stream,  fileName);
-        }
-         /// <summary>
-         ///上传文件
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <param name="opName"></param>
-         /// <param name="localPath"></param>
-         /// <returns></returns>
-        public string CreateFile(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName, string localPath)
-        {
-            return _manager.CreateFile( orgClientId,  orgClientSecret,  dateline,  fullPath,  opName,  localPath);
-        }
-         /// <summary>
-         /// 删除文件
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <param name="opName"></param>
-         /// <returns></returns>
-        public string Del(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName)
-        {
-            return _manager.Del(orgClientId, orgClientSecret, dateline, fullPath, opName);
-        }
-         /// <summary>
-         /// 移动文件
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <param name="destFullPath"></param>
-         /// <param name="opName"></param>
-         /// <returns></returns>
-        public string Move(string orgClientId, string orgClientSecret, int dateline, string fullPath, string destFullPath, string opName)
-        {
-            return _manager.Move( orgClientId,  orgClientSecret,  dateline,  fullPath,  destFullPath,  opName);
-        }
-         /// <summary>
-         /// 文件链接
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="fullPath"></param>
-         /// <returns></returns>
-        public string Link(string orgClientId, string orgClientSecret, int dateline, string fullPath)
-        {
-            return _manager.Link( orgClientId,  orgClientSecret,  dateline,  fullPath);
-        }
-         /// <summary>
-         ///发送消息
-         /// </summary>
-         /// <param name="orgClientId"></param>
-         /// <param name="orgClientSecret"></param>
-         /// <param name="dateline"></param>
-         /// <param name="title"></param>
-         /// <param name="text"></param>
-         /// <param name="image"></param>
-         /// <param name="linkUrl"></param>
-         /// <param name="opName"></param>
-         /// <returns></returns>
-        public string SendMsg(string orgClientId, string orgClientSecret, int dateline, string title, string text, string image, string linkUrl, string opName)
-        {
-            return _manager.SendMsg(orgClientId, orgClientSecret, dateline, title, text, image, linkUrl, opName);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_ENT_GET_GROUPS;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("members",structStr);
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
 
 
 
-        
-
-         /// <summary>
-         /// 复制一个Yunku对象
-         /// </summary>
-         /// <returns></returns>
-        public EntLibManager clone() {
-            return new EntLibManager(_username, _password, _clientId, _clientSecret,_manager.Token);
-        }
-
-
-
-
-         /// <summary>
-         /// 获取库成员
-         /// </summary>
-         /// <param name="start"></param>
-         /// <param name="size"></param>
-         /// <param name="orgId"></param>
-         /// <returns></returns>
         public string GetMembers(int start, int size, int orgId)
         {
-            return _manager.GetMembers(start, size, orgId);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_GET_MEMBERS;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("start", start + "");
+            request.AppendParameter("size", size + "");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 添加成员
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="roleId"></param>
-         /// <param name="memberIds"></param>
-         /// <returns></returns>
+
         public string AddMembers(int orgId, int roleId, int[] memberIds)
         {
-            return _manager.AddMembers(orgId, roleId, memberIds);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_ADD_MEMBERS;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("role_id", roleId + "");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("member_ids", Util.intArrayToString(memberIds,","));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 设置成员角色
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="roleId"></param>
-         /// <param name="memberIds"></param>
-         /// <returns></returns>
+
         public string SetMemberRole(int orgId, int roleId, int[] memberIds)
         {
-            return _manager.SetMemberRole(orgId, roleId, memberIds);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_SET_MEMBER_ROLE;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("role_id", roleId + "");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("member_ids", Util.intArrayToString(memberIds, ","));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 删除成员
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="memberIds"></param>
-         /// <returns></returns>
+
         public string DelMember(int orgId, int[] memberIds)
         {
-            return _manager.DelMember(orgId, memberIds);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_DEL_MEMBER;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("member_ids", Util.intArrayToString(memberIds, ","));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 获取库分组
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <returns></returns>
+
         public string GetGroups(int orgId)
         {
-            return _manager.GetGroups(orgId);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_GET_GROUPS;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.GET;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 添加分组
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="groupId"></param>
-         /// <param name="roleId"></param>
-         /// <returns></returns>
+
         public string AddGroup(int orgId, int groupId, int roleId)
         {
-            return _manager.AddGroup(orgId, groupId, roleId);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_ADD_GROUP;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("role_id", roleId + "");
+            request.AppendParameter("group_id", groupId + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 删除分组
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="groupId"></param>
-         /// <returns></returns>
+
         public string DelGroup(int orgId, int groupId)
         {
-            return _manager.DelGroup(orgId, groupId);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_DEL_GROUP;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("group_id", groupId + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
-         /// <summary>
-         /// 设置分组橘色
-         /// </summary>
-         /// <param name="orgId"></param>
-         /// <param name="groupId"></param>
-         /// <param name="roleId"></param>
-         /// <returns></returns>
+
         public string SetGroupRole(int orgId, int groupId, int roleId)
         {
-            return _manager.SetGroupRole(orgId, groupId, roleId);
+            HttpRequestSyn request = new HttpRequestSyn();
+            request.RequestUrl = URL_API_SET_GROUP_ROLE;
+            request.AppendParameter("token", _token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgId + "");
+            request.AppendParameter("group_id", groupId + "");
+            request.AppendParameter("role_id", roleId + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.POST;
+            request.Request();
+            this.StatusCode = request.Code;
+            return request.Result;
         }
     }
 }
