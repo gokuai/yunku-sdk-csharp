@@ -9,7 +9,7 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public class EnFileManager
+    public class EntFileManager
     {
         const string LIB_HOST = HostConfig.LIB_HOST;
         const string URL_API_FILELIST = LIB_HOST + "/1/file/ls";
@@ -22,75 +22,83 @@ namespace YunkuEntSDK
         const string URL_API_LINK_FILE = LIB_HOST + "/1/file/link";
         const string URL_API_SENDMSG = LIB_HOST + "/1/file/sendmsg";
 
+        private string _orgClientId, _orgClientSecret;
+
+        public EntFileManager(string orgClientId, string orgClientSecret)
+        {
+            _orgClientId = orgClientId;
+            _orgClientSecret = orgClientSecret;
+        }
+
         public HttpStatusCode StatusCode
         {
             get;
             set;
         }
 
-        public string GetFileList(string orgClientId, string orgClientSecret, int dateline, int start, string fullPath)
+        public string GetFileList(int dateline, int start, string fullPath)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_FILELIST;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("start", start + "");
             request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.GET;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string GetUpdateList(string orgClientId, string orgClientSecret, int dateline, bool isCompare, long fetchDateline)
+        public string GetUpdateList(int dateline, bool isCompare, long fetchDateline)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_FILELIST;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             if (isCompare)
             {
                 request.AppendParameter("mode", "compare");
             }
             request.AppendParameter("fetch_dateline", fetchDateline + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.GET;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string GetFileInfo(string orgClientId, string orgClientSecret, int dateline, string fullPath)
+        public string GetFileInfo(int dateline, string fullPath)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_FILE_INFO;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.GET;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string CreateFolder(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName)
+        public string CreateFolder(int dateline, string fullPath, string opName)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_CREATE_FOLDER;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.POST;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string CreateFile(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName, System.IO.Stream stream, string fileName)
+        public string CreateFile(int dateline, string fullPath, string opName, System.IO.Stream stream, string fileName)
         {
             if (stream.Length > 51200)
             {
@@ -100,16 +108,16 @@ namespace YunkuEntSDK
 
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_CREATE_FILE;
-            string[] arr = new string[] { dateline + "", "file", fullPath, opName, orgClientId };
+            string[] arr = new string[] { dateline + "", "file", fullPath, opName, _orgClientId };
             MsMultiPartFormData data = new MsMultiPartFormData();
             request.ContentType = "multipart/form-data;boundary=" + data.Boundary;
             data.AddStreamFile("file", fileName, Util.ReadToEnd(stream));
-            data.AddParams("org_client_id", orgClientId);
+            data.AddParams("org_client_id", _orgClientSecret);
             data.AddParams("dateline", dateline + "");
             data.AddParams("fullpath", fullPath);
             data.AddParams("op_name", opName);
             data.AddParams("filefield", "file");
-            data.AddParams("sign", GenerateSign(arr, orgClientSecret));
+            data.AddParams("sign", GenerateSign(arr));
             data.PrepareFormData();
             request.PostDataByte = data.GetFormData();
             request.RequestMethod = RequestType.POST;
@@ -120,14 +128,14 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
-        public string CreateFile(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName, string localPath)
+        public string CreateFile(int dateline, string fullPath, string opName, string localPath)
         {
             using (FileStream FS = new FileStream(localPath, FileMode.Open))
             {
                 Stream stream = FS;
                 if (stream != null)
                 {
-                    return CreateFile(orgClientId, orgClientSecret, dateline, fullPath, opName, stream, Util.GetFileNameFromPath(localPath));
+                    return CreateFile(dateline, fullPath, opName, stream, Util.GetFileNameFromPath(localPath));
                 }
                 else
                 {
@@ -138,63 +146,63 @@ namespace YunkuEntSDK
             return "";
         }
 
-        public string Del(string orgClientId, string orgClientSecret, int dateline, string fullPath, string opName)
+        public string Del(int dateline, string fullPath, string opName)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_DEL_FILE;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.POST;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string Move(string orgClientId, string orgClientSecret, int dateline, string fullPath, string destFullPath, string opName)
+        public string Move(int dateline, string fullPath, string destFullPath, string opName)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_MOVE_FILE;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("dest_fullpath", destFullPath);
             request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.POST;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string Link(string orgClientId, string orgClientSecret, int dateline, string fullPath)
+        public string Link(int dateline, string fullPath)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_LINK_FILE;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.POST;
             request.Request();
             this.StatusCode = request.Code;
             return request.Result;
         }
 
-        public string SendMsg(string orgClientId, string orgClientSecret, int dateline, string title, string text, string image, string linkUrl, string opName)
+        public string SendMsg(int dateline, string title, string text, string image, string linkUrl, string opName)
         {
             HttpRequestSyn request = new HttpRequestSyn();
             request.RequestUrl = URL_API_SENDMSG;
-            request.AppendParameter("org_client_id", orgClientId);
+            request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("title", title);
             request.AppendParameter("text", text);
             request.AppendParameter("image", image);
             request.AppendParameter("url", linkUrl);
             request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter, orgClientSecret));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.POST;
             request.Request();
             this.StatusCode = request.Code;
@@ -207,7 +215,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        protected string GenerateSign(string[] array, string orgClientSecret)
+        protected string GenerateSign(string[] array)
         {
             string string_sign = "";
             for (int i = 0; i < array.Length; i++)
@@ -215,7 +223,7 @@ namespace YunkuEntSDK
                 string_sign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
             }
 
-            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(string_sign, orgClientSecret));
+            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(string_sign, _orgClientSecret));
         }
 
     }

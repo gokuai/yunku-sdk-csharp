@@ -62,11 +62,14 @@ namespace YunkuSDKEntDemo
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //=======条件设置=======//
             DebugConfig.LogPrintAvialable = true;
-            DebugConfig.LogPath = "D://LogPath";//日志文件没有做大小限制
+            DebugConfig.LogPath = "";//日志文件没有做大小限制
+
+            //=========企业库操作============//
             EntLibManager entLibManager = new EntLibManager(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
             //获取授权
-            entLibManager.AccessToken(true);
+            //entLibManager.AccessToken(true);
             //获取库列表
             //DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
@@ -100,55 +103,53 @@ namespace YunkuSDKEntDemo
             //库上删除分组
             //DeserializeReturn(entLibManager.DelGroup(32662,1086), entLibManager.StatusCode);
 
+            //==========企业文件操作============//
+            string orgClientId = "0c0aa6d2274dc51e5cb6c0cf8e13b25e";
+            string orgClientSecret = "b219ae7113d098249fef36d261360d0b";
+
+            EntFileManager entFileManager = new EntFileManager(orgClientId, orgClientSecret);
+
 
             //获取文件列表
-            DeserializeReturn(entLibManager.GetFileList("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), 0, ""), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.GetFileList((int)Util.GetUnixDataline(), 0, ""), entLibManager.StatusCode);
 
             //获取更新列表
-            DeserializeReturn(entLibManager.GetUpdateList("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), false, 0), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.GetUpdateList((int)Util.GetUnixDataline(), false, 0), entLibManager.StatusCode);
 
             //获取文件（夹）信息
-            DeserializeReturn(entLibManager.GetFileInfo("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.GetFileInfo((int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
 
             //创建文件夹
-            DeserializeReturn(entLibManager.CreateFolder("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "testFolder", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.CreateFolder((int)Util.GetUnixDataline(), "testFolder", "Brandon"), entLibManager.StatusCode);
 
             //上传文件 文件不得超过50MB
-            DeserializeReturn(entLibManager.CreateFile("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.CreateFile((int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), entLibManager.StatusCode);
 
             //删除文件
-            DeserializeReturn(entLibManager.Del("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "test", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"), entLibManager.StatusCode);
 
             //移动文件
-            DeserializeReturn(entLibManager.Move("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.Move((int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"), entLibManager.StatusCode);
 
             ////文件连接
-            DeserializeReturn(entLibManager.Link("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.Link((int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
 
             ////发送消息
-            DeserializeReturn(entLibManager.SendMsg("0c0aa6d2274dc51e5cb6c0cf8e13b25e", "b219ae7113d098249fef36d261360d0b",
-                (int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.SendMsg((int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), entLibManager.StatusCode);
 
+            //=======企业操作========//
             EntManager entManager = new EntManager(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
             //获取授权
             entManager.AccessToken(true);
 
             //获取成员
-            DeserializeReturn(entManager.GetEntMembers(0, 20), entLibManager.StatusCode);
+            //DeserializeReturn(entManager.GetMembers(0, 20), entLibManager.StatusCode);
 
             //获取分组
-            DeserializeReturn(entManager.GetEntGroups(), entLibManager.StatusCode);
+            //DeserializeReturn(entManager.GetGroups(), entLibManager.StatusCode);
 
             //获取角色
-            DeserializeReturn(entManager.GetEntRoles(), entLibManager.StatusCode);
+            //DeserializeReturn(entManager.GetRoles(), entLibManager.StatusCode);
 
 
         }
