@@ -143,7 +143,7 @@ namespace YunkuSDKEntDemo
             entManager.AccessToken(true);
 
             //获取成员
-            //DeserializeReturn(entManager.GetMembers(0, 20), entLibManager.StatusCode);
+            DeserializeReturn(entManager.GetMembers(0, 20), entLibManager.StatusCode);
 
             //获取分组
             //DeserializeReturn(entManager.GetGroups(), entLibManager.StatusCode);
