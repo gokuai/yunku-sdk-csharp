@@ -275,13 +275,18 @@ namespace YunkuEntSDK
         /// 获取当前库所有外链
         /// </summary>
         /// <param name="dateline"></param>
+        /// <param name="fileOnly"></param>
         /// <returns></returns>
-        public string Links(int dateline)
+        public string Links(int dateline, bool fileOnly)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiGetLink;
             request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
+            if (fileOnly)
+            {
+                request.AppendParameter("file", "1");
+            }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();
