@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Windows.Forms;
 using YunkuEntSDK;
+using YunkuEntSDK.Data;
 using YunkuEntSDK.UtilClass;
 using YunkuSDKEntDemo.Model;
 
@@ -9,11 +11,10 @@ namespace YunkuSDKEntDemo
 {
     public partial class MainForm : Form
     {
-
-        private const string Uesrname = "";
-        private const string Password = "";
-        private const string ClientId = "";
-        private const string ClientSecret = "";
+        private const string Uesrname = "gktest1";
+        private const string Password = "111111";
+        private const string ClientId = "b2b54fa4261f9cf5e4772e6359f96161";
+        private const string ClientSecret = "134dba8e0adc4e59b511c09aa1ebf71e";
 
         public MainForm()
         {
@@ -29,7 +30,7 @@ namespace YunkuSDKEntDemo
         {
             string msg = "";
             //复制到剪贴板
-            Clipboard.SetDataObject(result);
+            
             if (code == HttpStatusCode.OK)
             {
                 //成功则返回结果
@@ -48,6 +49,8 @@ namespace YunkuSDKEntDemo
                     msg = data.ErrorCode + ":" + data.ErrorMessage;
                 }
             }
+            Clipboard.SetDataObject(result);
+            TB_Result.Text += msg + "\r\n";
             TB_Result.Text += result + "\r\n";
         }
 
@@ -61,7 +64,7 @@ namespace YunkuSDKEntDemo
             //=========企业库操作============//
             var entLibManager = new EntLibManager(Uesrname, Password, ClientId, ClientSecret);
             //获取授权
-            entLibManager.AccessToken(true);
+//            entLibManager.AccessToken(true);
             //获取库列表
             //DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
@@ -151,6 +154,9 @@ namespace YunkuSDKEntDemo
 
             //根据外部成员id获取成员信息
 //            DeserializeReturn(entManager.GetMemberByOutid(new string[] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);
+
+            
         }
     }
+
 }

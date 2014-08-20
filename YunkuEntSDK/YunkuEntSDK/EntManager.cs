@@ -27,12 +27,12 @@ namespace YunkuEntSDK
 //        public string SyncMembers(string structStr)
 //        {
 //            var request = new HttpRequestSyn();
-//            request.RequestUrl = UrlApiEntGetGroups;
+//            request.RequestUrl = UrlApiEntSyncMember;
 //            request.AppendParameter("token", Token);
 //            request.AppendParameter("token_type", "ent");
 //            request.AppendParameter("members", structStr);
 //            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-//            request.RequestMethod = RequestType.GET;
+//            request.RequestMethod = RequestType.Post;
 //            request.Request();
 //            StatusCode = request.Code;
 //            return request.Result;

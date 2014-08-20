@@ -26,7 +26,14 @@ namespace YunkuEntSDK
         {
         }
 
-
+        /// <summary>
+        /// 创建库
+        /// </summary>
+        /// <param name="orgName"></param>
+        /// <param name="orgCapacity"></param>
+        /// <param name="storagePointName"></param>
+        /// <param name="orgDesc"></param>
+        /// <returns></returns>
         public string Create(string orgName, int orgCapacity, string storagePointName, string orgDesc)
         {
             var request = new HttpRequestSyn();
@@ -44,7 +51,10 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
-
+        /// <summary>
+        /// 获取库列表
+        /// </summary>
+        /// <returns></returns>
         public string GetLibList()
         {
             var request = new HttpRequestSyn();
@@ -58,6 +68,13 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 获取库授权
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="title"></param>
+        /// <param name="linkUrl"></param>
+        /// <returns></returns>
         public string Bind(int orgId, string title, string linkUrl)
         {
             var request = new HttpRequestSyn();
@@ -74,6 +91,11 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 取消库授权
+        /// </summary>
+        /// <param name="orgClientId"></param>
+        /// <returns></returns>
         public string UnBind(string orgClientId)
         {
             var request = new HttpRequestSyn();
@@ -88,6 +110,13 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 获取库成员列表
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
         public string GetMembers(int start, int size, int orgId)
         {
             var request = new HttpRequestSyn();
@@ -104,6 +133,13 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 添加库成员
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="roleId"></param>
+        /// <param name="memberIds"></param>
+        /// <returns></returns>
         public string AddMembers(int orgId, int roleId, int[] memberIds)
         {
             var request = new HttpRequestSyn();
@@ -120,6 +156,13 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 修改库成员角色
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="roleId"></param>
+        /// <param name="memberIds"></param>
+        /// <returns></returns>
         public string SetMemberRole(int orgId, int roleId, int[] memberIds)
         {
             var request = new HttpRequestSyn();
@@ -136,6 +179,12 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 删除库成员
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="memberIds"></param>
+        /// <returns></returns>
         public string DelMember(int orgId, int[] memberIds)
         {
             var request = new HttpRequestSyn();
@@ -151,6 +200,11 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 获取库分组列表
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
         public string GetGroups(int orgId)
         {
             var request = new HttpRequestSyn();
@@ -165,6 +219,13 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 库上添加分组
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
         public string AddGroup(int orgId, int groupId, int roleId)
         {
             var request = new HttpRequestSyn();
@@ -181,6 +242,12 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 删除库上的分组
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
         public string DelGroup(int orgId, int groupId)
         {
             var request = new HttpRequestSyn();
@@ -196,6 +263,13 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 修改库上分组的角色
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
         public string SetGroupRole(int orgId, int groupId, int roleId)
         {
             var request = new HttpRequestSyn();
