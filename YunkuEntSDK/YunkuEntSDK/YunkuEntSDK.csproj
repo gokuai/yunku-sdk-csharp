@@ -45,7 +45,7 @@
     <Compile Include="Data\BaseData.cs" />
     <Compile Include="Data\OauthErrMsg.cs" />
     <Compile Include="DebugConfig.cs" />
-    <Compile Include="EnFileManager.cs" />
+    <Compile Include="EntFileManager.cs" />
     <Compile Include="EntManager.cs" />
     <Compile Include="HostConfig.cs" />
     <Compile Include="Net\HttpEventArgs.cs" />

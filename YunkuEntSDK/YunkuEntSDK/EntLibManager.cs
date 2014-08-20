@@ -1,227 +1,214 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using YunkuEntSDK.Data;
-using YunkuEntSDK.Net;
+﻿using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-
-     public class EntLibManager:ParentManager
+    public class EntLibManager : ParentManager
     {
-         
-         const string LIB_HOST = HostConfig.LIB_HOST;
-         
-         const string URL_API_CREATE_LIB = LIB_HOST + "/1/org/create";
-         const string URL_API_GET_LIB_LIST = LIB_HOST + "/1/org/ls";
-         const string URL_API_BIND = LIB_HOST + "/1/org/bind";
-         const string URL_API_UNBIND = LIB_HOST + "/1/org/unbind";
+        private const string LibHost = HostConfig.LibHost;
 
+        private const string UrlApiCreateLib = LibHost + "/1/org/create";
+        private const string UrlApiGetLibList = LibHost + "/1/org/ls";
+        private const string UrlApiBind = LibHost + "/1/org/bind";
+        private const string UrlApiUnbind = LibHost + "/1/org/unbind";
+        private const string UrlApiGetMembers = LibHost + "/1/org/get_members";
+        private const string UrlApiAddMembers = LibHost + "/1/org/add_member";
+        private const string UrlApiSetMemberRole = LibHost + "/1/org/set_member_role";
+        private const string UrlApiDelMember = LibHost + "/1/org/del_member";
+        private const string UrlApiGetGroups = LibHost + "/1/org/get_groups";
+        private const string UrlApiAddGroup = LibHost + "/1/org/add_group";
+        private const string UrlApiDelGroup = LibHost + "/1/org/del_group";
+        private const string UrlApiSetGroupRole = LibHost + "/1/org/set_group_role";
 
-         const string URL_API_GET_MEMBERS = LIB_HOST + "/1/org/get_members";
-         const string URL_API_ADD_MEMBERS = LIB_HOST + "/1/org/add_member";
-         const string URL_API_SET_MEMBER_ROLE = LIB_HOST + "/1/org/set_member_role";
-        const string URL_API_DEL_MEMBER = LIB_HOST + "/1/org/del_member";
-        const string URL_API_GET_GROUPS = LIB_HOST + "/1/org/get_groups";
-        const string URL_API_ADD_GROUP = LIB_HOST + "/1/org/add_group";
-        const string URL_API_DEL_GROUP = LIB_HOST + "/1/org/del_group";
-        const string URL_API_SET_GROUP_ROLE = LIB_HOST + "/1/org/set_group_role";
-
-        
 
         public EntLibManager(string uesrname, string password, string client_id, string client_secret)
             : base(uesrname, password, client_id, client_secret)
         {
         }
 
-       
 
         public string Create(string orgName, int orgCapacity, string storagePointName, string orgDesc)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_CREATE_LIB;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiCreateLib;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_name", orgName);
             request.AppendParameter("org_capacity", orgCapacity + "");
             request.AppendParameter("storage_point_name", storagePointName);
             request.AppendParameter("org_desc", orgDesc);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
 
         public string GetLibList()
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_GET_LIB_LIST;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiGetLibList;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.GET;
+            request.RequestMethod = RequestType.Get;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string Bind(int orgId, string title, string linkUrl)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_BIND;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiBind;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("title", title);
             request.AppendParameter("url", linkUrl);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string UnBind(string orgClientId)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_UNBIND;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiUnbind;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_client_id", orgClientId);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string GetMembers(int start, int size, int orgId)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_GET_MEMBERS;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiGetMembers;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("start", start + "");
             request.AppendParameter("size", size + "");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.GET;
+            request.RequestMethod = RequestType.Get;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string AddMembers(int orgId, int roleId, int[] memberIds)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_ADD_MEMBERS;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiAddMembers;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("org_id", orgId + "");
-            request.AppendParameter("member_ids", Util.intArrayToString(memberIds,","));
+            request.AppendParameter("member_ids", Util.IntArrayToString(memberIds, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string SetMemberRole(int orgId, int roleId, int[] memberIds)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_SET_MEMBER_ROLE;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiSetMemberRole;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("org_id", orgId + "");
-            request.AppendParameter("member_ids", Util.intArrayToString(memberIds, ","));
+            request.AppendParameter("member_ids", Util.IntArrayToString(memberIds, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string DelMember(int orgId, int[] memberIds)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_DEL_MEMBER;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiDelMember;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", orgId + "");
-            request.AppendParameter("member_ids", Util.intArrayToString(memberIds, ","));
+            request.AppendParameter("member_ids", Util.IntArrayToString(memberIds, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string GetGroups(int orgId)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_GET_GROUPS;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiGetGroups;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.GET;
+            request.RequestMethod = RequestType.Get;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string AddGroup(int orgId, int groupId, int roleId)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_ADD_GROUP;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiAddGroup;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("group_id", groupId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string DelGroup(int orgId, int groupId)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_DEL_GROUP;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiDelGroup;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("group_id", groupId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
 
         public string SetGroupRole(int orgId, int groupId, int roleId)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_SET_GROUP_ROLE;
-            request.AppendParameter("token", _token);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiSetGroupRole;
+            request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("group_id", groupId + "");
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             return request.Result;
         }
     }

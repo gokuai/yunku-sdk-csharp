@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using YunkuEntSDK;
 using YunkuEntSDK.UtilClass;
@@ -17,18 +9,19 @@ namespace YunkuSDKEntDemo
 {
     public partial class MainForm : Form
     {
+
+        private const string Uesrname = "";
+        private const string Password = "";
+        private const string ClientId = "";
+        private const string ClientSecret = "";
+
         public MainForm()
         {
             InitializeComponent();
         }
 
-        const string UESRNAME = "";
-        const string PASSWORD = "";
-        const string CLIENT_ID = "";
-        const string CLIENT_SECRET = "";
-
         /// <summary>
-        /// 分析错误信息
+        ///     分析错误信息
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
@@ -40,10 +33,10 @@ namespace YunkuSDKEntDemo
             if (code == HttpStatusCode.OK)
             {
                 //成功则返回结果
-                
+
                 if (result.Equals(string.Empty))
                 {
-                    msg= "返回成功";
+                    msg = "返回成功";
                 }
             }
             else
@@ -52,11 +45,10 @@ namespace YunkuSDKEntDemo
                 BaseData data = BaseData.Create(result);
                 if (data != null)
                 {
-                    msg= data.ErrorCode + ":" + data.ErrorMessage;
+                    msg = data.ErrorCode + ":" + data.ErrorMessage;
                 }
             }
-            TB_Result.Text += result+"\r\n";
-
+            TB_Result.Text += result + "\r\n";
         }
 
 
@@ -64,20 +56,20 @@ namespace YunkuSDKEntDemo
         {
             //=======条件设置=======//
             DebugConfig.LogPrintAvialable = true;
-            DebugConfig.LogPath = "";//日志文件没有做大小限制
+            DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
-            EntLibManager entLibManager = new EntLibManager(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
+            var entLibManager = new EntLibManager(Uesrname, Password, ClientId, ClientSecret);
             //获取授权
-            //entLibManager.AccessToken(true);
+            entLibManager.AccessToken(true);
             //获取库列表
             //DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
             //获取库授权
-            //DeserializeReturn(entLibManager.BindLib(146540, "", ""), entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.Bind(21340, "", ""), entLibManager.StatusCode);
 
             //取消库授权
-            //DeserializeReturn(entLibManager.UnBindLib("9affb8f78fd5914a7218d7561db6ddec"), entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.UnBind("9affb8f78fd5914a7218d7561db6ddec"), entLibManager.StatusCode);
 
             //添加成员
             //DeserializeReturn(entLibManager.AddMembers(32662, 1194, new int[] { 21122 }), entLibManager.StatusCode);
@@ -96,7 +88,7 @@ namespace YunkuSDKEntDemo
 
             //库上添加分组
             //DeserializeReturn(entLibManager.AddGroup(32662, 1086, 1194), entLibManager.StatusCode);
-            
+
             //设置分组上的角色
             //DeserializeReturn(entLibManager.SetGroupRole(32662, 1086, 1194), entLibManager.StatusCode);
 
@@ -104,56 +96,61 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entLibManager.DelGroup(32662,1086), entLibManager.StatusCode);
 
             //==========企业文件操作============//
-            string orgClientId = "0c0aa6d2274dc51e5cb6c0cf8e13b25e";
-            string orgClientSecret = "b219ae7113d098249fef36d261360d0b";
+            string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
+            string orgClientSecret = "fd5ba40932fa31dd18170881b9f00e77";
 
-            EntFileManager entFileManager = new EntFileManager(orgClientId, orgClientSecret);
+            var entFileManager = new EntFileManager(orgClientId, orgClientSecret);
 
 
             //获取文件列表
-            //DeserializeReturn(entFileManager.GetFileList((int)Util.GetUnixDataline(), 0, ""), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.GetFileList((int)Util.GetUnixDataline(), 0, ""), entFileManager.StatusCode);
 
             //获取更新列表
-            //DeserializeReturn(entFileManager.GetUpdateList((int)Util.GetUnixDataline(), false, 0), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.GetUpdateList((int)Util.GetUnixDataline(), false, 0), entFileManager.StatusCode);
 
             //获取文件（夹）信息
-            //DeserializeReturn(entFileManager.GetFileInfo((int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.GetFileInfo((int)Util.GetUnixDataline(), "test"), entFileManager.StatusCode);
 
             //创建文件夹
-            //DeserializeReturn(entFileManager.CreateFolder((int)Util.GetUnixDataline(), "testFolder", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.CreateFolder((int)Util.GetUnixDataline(), "testFolder", "Brandon"), entFileManager.StatusCode);
 
             //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile((int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.CreateFile((int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), entFileManager.StatusCode);
 
             //删除文件
-            //DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"), entFileManager.StatusCode);
 
             //移动文件
-            //DeserializeReturn(entFileManager.Move((int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.Move((int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"), entFileManager.StatusCode);
 
             ////文件连接
-            //DeserializeReturn(entFileManager.Link((int)Util.GetUnixDataline(), "test"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.Link((int)Util.GetUnixDataline(), "test"), entFileManager.StatusCode);
 
             ////发送消息
-            //DeserializeReturn(entFileManager.SendMsg((int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), entLibManager.StatusCode);
+            //DeserializeReturn(entFileManager.SendMsg((int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), entFileManager.StatusCode);
+
+            //获取当前库所有外链
+//            DeserializeReturn(entFileManager.Links((int)Util.GetUnixDataline()), entFileManager.StatusCode);
 
             //=======企业操作========//
-            EntManager entManager = new EntManager(UESRNAME, PASSWORD, CLIENT_ID, CLIENT_SECRET);
+            var entManager = new EntManager(Uesrname, Password, ClientId, ClientSecret);
             //获取授权
             entManager.AccessToken(true);
 
             //获取成员
-            DeserializeReturn(entManager.GetMembers(0, 20), entLibManager.StatusCode);
+//            DeserializeReturn(entManager.GetMembers(0, 20), entManager.StatusCode);
 
             //获取分组
-            //DeserializeReturn(entManager.GetGroups(), entLibManager.StatusCode);
+            //DeserializeReturn(entManager.GetGroups(), entManager.StatusCode);
 
             //获取角色
-            //DeserializeReturn(entManager.GetRoles(), entLibManager.StatusCode);
+            //DeserializeReturn(entManager.GetRoles(), entManager.StatusCode);
 
+            //根据成员id获取成员个人库外链
+//            DeserializeReturn(entManager.GetMemberFileLink(52), entManager.StatusCode);
 
+            //根据外部成员id获取成员信息
+//            DeserializeReturn(entManager.GetMemberByOutid(new string[] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);
         }
-
-
     }
 }

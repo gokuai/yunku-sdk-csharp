@@ -1,25 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace YunkuEntSDK.UtilClass
 {
-    class LogPrint
+    internal class LogPrint
     {
-        private const string YUNKU_FILE = "yunkusdk_{0}.log";
+        private const string YunkuFile = "yunkusdk_{0}.log";
 
         public static void Print(string log)
         {
             if (DebugConfig.LogPrintAvialable)
             {
-
                 StreamWriter logWriter;
                 string dateStr = DateTime.Now.ToString("yyyy_MM_dd");
-                string fileName = string.Format(DebugConfig.LogPath + "/" + YUNKU_FILE, dateStr);
-                if (!Directory.Exists(DebugConfig.LogPath))
+                string fileName = string.Format(DebugConfig.LogPath + "/" + YunkuFile, dateStr);
+
+                if (!string.IsNullOrEmpty(DebugConfig.LogPath) && !Directory.Exists(DebugConfig.LogPath))
                 {
                     Directory.CreateDirectory(DebugConfig.LogPath);
                 }
@@ -33,6 +29,7 @@ namespace YunkuEntSDK.UtilClass
                     logWriter = File.AppendText(fileName);
                 }
 
+                Console.WriteLine(log);
                 // Write to the file:
                 logWriter.WriteLine(DateTime.Now);
                 logWriter.WriteLine(log);
@@ -41,8 +38,6 @@ namespace YunkuEntSDK.UtilClass
                 // Close the stream:
                 logWriter.Close();
             }
-            
         }
-        
     }
 }

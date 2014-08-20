@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace YunkuEntSDK
 {
-    class HostConfig
+    internal class HostConfig
     {
-        public const string OAUTH_HOST = "http://zka.goukuai.cn";
-        public const string LIB_HOST = "http://zka-lib.goukuai.cn";
+        public const string UserAgent = "YunkuSDK";
+        public const string OauthHost = "http://zka.goukuai.cn";
+        //public const string OauthHost = "http://a.goukuai.cn";
+        public const string LibHost = "http://zka-lib.goukuai.cn";
+        //public const string OauthHost = "http://a-lib.goukuai.cn";
 
     }
 }

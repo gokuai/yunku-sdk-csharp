@@ -18,7 +18,7 @@ namespace YunkuEntSDK.UtilClass
     /// </summary>
     public class Util
     {
-        public const string LOG_TAG = "Util";
+        public const string LogTag = "Util";
 
         /// <summary>
         /// HMacsha1加密，最后做base64加密
@@ -105,9 +105,15 @@ namespace YunkuEntSDK.UtilClass
             return stream;
         }
 
-        public static string intArrayToString(int[] intArray, string conv)
+        /// <summary>
+        /// int 数组转string
+        /// </summary>
+        /// <param name="intArray"></param>
+        /// <param name="conv"></param>
+        /// <returns></returns>
+        public static string IntArrayToString(int[] intArray, string conv)
         {
-            String strReturn = "";
+            string strReturn = "";
             int length = intArray.Length;
             if (length > 0)
             {
@@ -120,9 +126,22 @@ namespace YunkuEntSDK.UtilClass
             return strReturn;
         }
 
-
-
-
+        public static string StrArrayToString(string[] strArray, string conv)
+        {
+            string strReturn = "";
+            int length = strArray.Length;
+            if (length > 0)
+            {
+                for (int i = 0; i < length - 1; i++)
+                {
+                    strReturn += strArray[i] + conv;
+                }
+                strReturn += strArray[length - 1];
+            }
+            return strReturn;
+            
+        }
+     
         /// <summary>
         /// 获取文件父级路径
         /// </summary>
@@ -131,7 +150,7 @@ namespace YunkuEntSDK.UtilClass
         /// <returns></returns>
         public static string GetParentPath(string path)
         {
-            string seperatorString = UtilFile.SEPERATOR;
+            string seperatorString = UtilFile.Seperator;
             if (path.EndsWith(seperatorString))
             {
                 int index=path.Remove(path.Length - seperatorString.Length).LastIndexOf(seperatorString);
@@ -161,7 +180,7 @@ namespace YunkuEntSDK.UtilClass
         /// <returns></returns>
         public static string GetFileNameFromPath(string path)
         {
-            string seperatorString = UtilFile.SEPERATOR;
+            string seperatorString = UtilFile.Seperator;
             if (path.EndsWith(seperatorString))
             {
                 string newPath = path.Remove(path.Length - seperatorString.Length);
@@ -179,14 +198,6 @@ namespace YunkuEntSDK.UtilClass
             }
         }
 
-        ///// <summary>
-        ///// 检查是否有网络
-        ///// </summary>
-        ///// <returns></returns>
-        //public static bool CheckNetworkAvaliable()
-        //{
-        //    return NetworkInterface.GetIsNetworkAvailable(); ;
-        //}
 
         /// <summary>
         /// 文件大小转换
@@ -338,30 +349,6 @@ namespace YunkuEntSDK.UtilClass
         {
             return UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now)/1000;
         }
-
-        //public static string generateSignForOss(string url, int randomNum,long time,
-        //    string token)
-        //{
-        //    string string_to_sign = url + "\n";
-        //    string_to_sign += token + "\n";
-        //    string_to_sign += time + "\n";
-        //    string_to_sign += randomNum;
-        //    return Uri.EscapeDataString(EncodeToHMACSHA1(string_to_sign, Config.OSS_KEY));
-        //}
-
-
-
-
-        //public static void gkpAction(Uri uri)
-        //{
-        //    if (uri.Scheme.Equals("gkp2")) 
-        //    {
-        //        //string decodeStr = DecodeBase64(uri.);
-        //    }
-        //    else if (uri.Scheme.Equals("gkp")) 
-        //    {
-        //    }
-        //}
 
 
     }

@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace YunkuEntSDK
+﻿namespace YunkuEntSDK
 {
     public class DebugConfig
     {
         /// <summary>
-        /// 是否打印日志
+        ///     是否打印日志
         /// </summary>
-        public static bool LogPrintAvialable
-        {
-            set;
-            get;
-        }
+        public static bool LogPrintAvialable { set; get; }
 
-        public static string LogPath
-        {
-            set;
-            get;
-        }
-
-
+        /// <summary>
+        ///     日志打印路径
+        /// </summary>
+        public static string LogPath { set; get; }
     }
 }
