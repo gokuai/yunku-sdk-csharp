@@ -9,29 +9,29 @@ namespace YunkuEntSDK.UtilClass
 {
     class UtilFile
     {
-        public const string SEPERATOR="/";
-        public readonly static string[] SUPPORT_FILEVIEW_EXTENSION = { "mp3", "wma", "wav", "3gp", "avi", "wmv", "mp4", "bmp", "jpg", "jpeg", "gif", "png","txt" };
-        public readonly static string[] SUPPORT_VIEW_DOCUMENTS_EXTENSION = {"ppt", "pptx", "doc", "docx", "xls",
+        public const string Seperator="/";
+        public readonly static string[] SupportFileviewExtension = { "mp3", "wma", "wav", "3gp", "avi", "wmv", "mp4", "bmp", "jpg", "jpeg", "gif", "png","txt" };
+        public readonly static string[] SupportViewDocumentsExtension = {"ppt", "pptx", "doc", "docx", "xls",
 			"xlsx","pdf" };
-        private const string PATH_SMALL_FORMAT = "/Image/ic_{0}.png";
-        private const string PATH_BIG_FORMAT = "/Image/ic_{0}_256.png";
-        private readonly static string[] _img = { "png", "gif", "jpeg", "jpg", "bmp", "psd" };
-        private readonly static string[] _program = { "ipa", "exe", "pxl", "apk", "bat", "com", "xap", "bak" };
-        private readonly static string[] _compressFile = { "iso", "tar", "rar", "gz", "cab",
+        private const string PathSmallFormat = "/Image/ic_{0}.png";
+        private const string PathBigFormat = "/Image/ic_{0}_256.png";
+        private readonly static string[] Img = { "png", "gif", "jpeg", "jpg", "bmp", "psd" };
+        private readonly static string[] Program = { "ipa", "exe", "pxl", "apk", "bat", "com", "xap", "bak" };
+        private readonly static string[] CompressFile = { "iso", "tar", "rar", "gz", "cab",
 			"zip" };
-        private readonly static string[] _video = { "3gp", "asf", "avi", "m4v", "flv",
+        private readonly static string[] Video = { "3gp", "asf", "avi", "m4v", "flv",
 			"mkv", "mov", "mp4", "mpeg", "mpg", "rm", "rmvb", "ts", "wmv",
 			"3gp", "avi" };
-        private readonly static string[] _music = { "flac", "m4a", "mp3", "ogg", "aac", "ape",
+        private readonly static string[] Music = { "flac", "m4a", "mp3", "ogg", "aac", "ape",
 			"wma", "wav" };
-        private readonly static string[] _wordsFile = { "odt", "txt" };
-        private readonly static string[] _officeDoc = { "ppt", "pptx", "doc", "docx", "xls",
+        private readonly static string[] WordsFile = { "odt", "txt" };
+        private readonly static string[] OfficeDoc = { "ppt", "pptx", "doc", "docx", "xls",
 			"xlsx" };
-        private readonly static string[] _pdf = { "pdf" };
+        private readonly static string[] Pdf = { "pdf" };
         
         public static string [] HasThumbNailImg
         {
-            get { return _img; }
+            get { return Img; }
         }
         /// <summary>
         /// 获得后缀名
@@ -64,9 +64,9 @@ namespace YunkuEntSDK.UtilClass
         public static string GetImgSrc (string fileName,bool isBig)
         {
             string ext = GetExtension(fileName).ToLower();
-            string pathFormat = isBig ? PATH_BIG_FORMAT : PATH_SMALL_FORMAT;
+            string pathFormat = isBig ? PathBigFormat : PathSmallFormat;
             //图片文件
-            foreach (string str in _img)
+            foreach (string str in Img)
             {
                 if (ext.Equals(str))
                 {
@@ -76,7 +76,7 @@ namespace YunkuEntSDK.UtilClass
             }
 
             //音乐文件
-            foreach (string str in _music)
+            foreach (string str in Music)
             {
                 if (ext.Equals(str))
                 {
@@ -86,7 +86,7 @@ namespace YunkuEntSDK.UtilClass
             }
 
             //office文件
-            foreach (string str in _officeDoc)
+            foreach (string str in OfficeDoc)
             {
                 if (ext.Equals(str))
                 {
@@ -95,7 +95,7 @@ namespace YunkuEntSDK.UtilClass
             }
 
             //程序文件，例如exe,apk等
-            foreach (string str in _program)
+            foreach (string str in Program)
             {
                 if (ext.Equals(str))
                 {
@@ -105,7 +105,7 @@ namespace YunkuEntSDK.UtilClass
             }
 
             //视频文件
-            foreach (string str in _video)
+            foreach (string str in Video)
             {
                 if (ext.Equals(str))
                 {
@@ -115,7 +115,7 @@ namespace YunkuEntSDK.UtilClass
             }
 
             //文档文件
-            foreach (string str in _wordsFile)
+            foreach (string str in WordsFile)
             {
                 if (ext.Equals(str))
                 {
@@ -125,7 +125,7 @@ namespace YunkuEntSDK.UtilClass
             }
 
             //pdf类文件
-            foreach (string str in _pdf)
+            foreach (string str in Pdf)
             {
                 if (ext.Equals(str))
                 {
@@ -134,7 +134,7 @@ namespace YunkuEntSDK.UtilClass
  
             }
 
-            foreach (string str in _compressFile)
+            foreach (string str in CompressFile)
             {
                 if (ext.Equals(str))
                 {

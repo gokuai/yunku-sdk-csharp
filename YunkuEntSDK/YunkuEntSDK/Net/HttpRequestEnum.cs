@@ -14,11 +14,11 @@ namespace YunkuEntSDK.Net
         /// <summary>
         /// GET请求
         /// </summary>
-        GET,
+        Get,
         /// <summary>
         /// POST请求
         /// </summary>
-        POST,
+        Post,
 
     }
 }

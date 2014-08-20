@@ -7,11 +7,11 @@ namespace YunkuEntSDK.Data
 {
     public class OauthErrMsg
     {
-        private const string ERRORRESPONES_INVALID_REQUEST = "invalid_request";
-        private const string ERRORRESPONES_INVALID_CLIENT = "invalid_client";
-        private const string ERRORRESPONES_INVALID_GRANT = "invalid_grant";
-        private const string ERRORRESPONES_UNAUTHORIED_CLIENT = "unauthorized_client";
-        private const string ERRORRESPONES_ACCESS_DENIED = "access_denied";
+        private const string ErrorresponesInvalidRequest = "invalid_request";
+        private const string ErrorresponesInvalidClient = "invalid_client";
+        private const string ErrorresponesInvalidGrant = "invalid_grant";
+        private const string ErrorresponesUnauthoriedClient = "unauthorized_client";
+        private const string ErrorresponesAccessDenied = "access_denied";
 
         /// <summary>
         /// 
@@ -29,23 +29,23 @@ namespace YunkuEntSDK.Data
         /// <returns></returns>
         public static string ConvertMsg(string errorMsg)
         {
-            if (errorMsg.Equals(ERRORRESPONES_INVALID_REQUEST))
+            if (errorMsg.Equals(ErrorresponesInvalidRequest))
             {
                 return "请求参数错误";
             }
-            else if (errorMsg.Equals(ERRORRESPONES_INVALID_CLIENT))
+            else if (errorMsg.Equals(ErrorresponesInvalidClient))
             {
                 return "当前客户端版本已不能使用";
             }
-            else if (errorMsg.Equals(ERRORRESPONES_INVALID_GRANT))
+            else if (errorMsg.Equals(ErrorresponesInvalidGrant))
             {
                 return "邮箱或密码错误";
             }
-            else if (errorMsg.Equals(ERRORRESPONES_UNAUTHORIED_CLIENT))
+            else if (errorMsg.Equals(ErrorresponesUnauthoriedClient))
             {
                 return "该设备已限制使用";
             }
-            else if (errorMsg.Equals(ERRORRESPONES_ACCESS_DENIED))
+            else if (errorMsg.Equals(ErrorresponesAccessDenied))
             {
                 return "您的客户端已被限制登录";
             }

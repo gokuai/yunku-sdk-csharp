@@ -13,11 +13,11 @@ namespace YunkuSDKEntDemo.Model
     public class OauthData
     {
 
-        private const string LOG_TAG="OauthData";
+        private const string LogTag="OauthData";
 
-        private const string KEY_ACCESS_TOKEN = "access_token";
-        private const string KEY_EXPIRES_IN = "expires_in";
-        private const string KEY_ERROR = "error";
+        private const string KeyAccessToken = "access_token";
+        private const string KeyExpiresIn = "expires_in";
+        private const string KeyError = "error";
 
         /// <summary>
         /// 登陆token
@@ -65,17 +65,17 @@ namespace YunkuSDKEntDemo.Model
             {
                 var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
 
-                string msg = SimpleJson.TryStringValue(json, KEY_ERROR);
+                string msg = SimpleJson.TryStringValue(json, KeyError);
                 data.Error = OauthErrMsg.ConvertMsg(msg);//转化错误信息
 
-                data.Expires = SimpleJson.TryIntValue(json, KEY_EXPIRES_IN);
-                data.Token = SimpleJson.TryStringValue(json, KEY_ACCESS_TOKEN);
+                data.Expires = SimpleJson.TryIntValue(json, KeyExpiresIn);
+                data.Token = SimpleJson.TryStringValue(json, KeyAccessToken);
                 return data;
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(LOG_TAG + "==>" + ex.StackTrace);
+                Debug.WriteLine(LogTag + "==>" + ex.StackTrace);
                 return null;
 
             }

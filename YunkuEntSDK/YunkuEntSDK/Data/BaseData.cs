@@ -11,9 +11,9 @@ namespace YunkuEntSDK.Data
    /// </summary>
     class BaseData
     {
-        private const string LOG_TAG = "BaseData";
-        protected const string KEY_ERROR_CODE = "error_code";
-        protected const string KEY_ERROR_MSG = "error_msg";
+        private const string LogTag = "BaseData";
+        protected const string KeyErrorCode = "error_code";
+        protected const string KeyErrorMsg = "error_msg";
 
         /// <summary>
         /// 错误码
@@ -43,14 +43,14 @@ namespace YunkuEntSDK.Data
             {
 
                 var json =  (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
-                data.ErrorCode = SimpleJson.TryIntValue(json, KEY_ERROR_CODE);
-                data.ErrorMessage = SimpleJson.TryStringValue(json, KEY_ERROR_MSG);
+                data.ErrorCode = SimpleJson.TryIntValue(json, KeyErrorCode);
+                data.ErrorMessage = SimpleJson.TryStringValue(json, KeyErrorMsg);
                 return data;
 
             }
             catch (Exception ex)
             {
-                LogPrint.Print(LOG_TAG + ":" + ex.StackTrace);
+                LogPrint.Print(LogTag + ":" + ex.StackTrace);
                 return null;
 
             }

@@ -12,9 +12,9 @@ namespace YunkuSDKEntDemo.Model
    /// </summary>
     public class BaseData
     {
-        private const string LOG_TAG = "BaseData";
-        protected const string KEY_ERROR_CODE = "error_code";
-        protected const string KEY_ERROR_MSG = "error_msg";
+        private const string LogTag = "BaseData";
+        protected const string KeyErrorCode = "error_code";
+        protected const string KeyErrorMsg = "error_msg";
         
         /// <summary>
         /// 错误码
@@ -43,15 +43,15 @@ namespace YunkuSDKEntDemo.Model
             try
             {
                 var json =  (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
-                data.ErrorCode = SimpleJson.TryIntValue(json, KEY_ERROR_CODE);
+                data.ErrorCode = SimpleJson.TryIntValue(json, KeyErrorCode);
                 
-                data.ErrorMessage = SimpleJson.TryStringValue(json, KEY_ERROR_MSG);
+                data.ErrorMessage = SimpleJson.TryStringValue(json, KeyErrorMsg);
                 return data;
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(LOG_TAG + "==>" + ex.StackTrace);
+                Debug.WriteLine(LogTag + "==>" + ex.StackTrace);
                 return null;
 
             }

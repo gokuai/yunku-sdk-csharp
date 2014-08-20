@@ -9,11 +9,11 @@ namespace YunkuEntSDK.Data
     class OauthData : BaseData
     {
 
-        private const string LOG_TAG="OauthData";
+        private const string LogTag="OauthData";
 
-        private const string KEY_ACCESS_TOKEN = "access_token";
-        private const string KEY_EXPIRES_IN = "expires_in";
-        private const string KEY_ERROR= "error";
+        private const string KeyAccessToken = "access_token";
+        private const string KeyExpiresIn = "expires_in";
+        private const string KeyError= "error";
 
 
         /// <summary>
@@ -49,18 +49,18 @@ namespace YunkuEntSDK.Data
             try
             {
                 var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
-                data.ErrorCode = SimpleJson.TryIntValue(json, KEY_ERROR_CODE);
-                data.ErrorMessage = SimpleJson.TryStringValue(json, KEY_ERROR);
-                data.ErrorMessage = SimpleJson.TryStringValue(json, KEY_ERROR_MSG);
+                data.ErrorCode = SimpleJson.TryIntValue(json, KeyErrorCode);
+                data.ErrorMessage = SimpleJson.TryStringValue(json, KeyError);
+                data.ErrorMessage = SimpleJson.TryStringValue(json, KeyErrorMsg);
 
-                data.Expires = SimpleJson.TryIntValue(json, KEY_EXPIRES_IN);
-                data.Token = SimpleJson.TryStringValue(json, KEY_ACCESS_TOKEN);
+                data.Expires = SimpleJson.TryIntValue(json, KeyExpiresIn);
+                data.Token = SimpleJson.TryStringValue(json, KeyAccessToken);
                 return data;
 
             }
             catch (Exception ex)
             {
-                LogPrint.Print(LOG_TAG + ":" + ex.StackTrace);
+                LogPrint.Print(LogTag + ":" + ex.StackTrace);
                 return null;
 
             }

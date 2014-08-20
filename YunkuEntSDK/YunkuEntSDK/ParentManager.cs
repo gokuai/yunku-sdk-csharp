@@ -1,98 +1,81 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-
     public abstract class ParentManager
     {
+        private const string OauthHost = HostConfig.OauthHost;
+        private const string UrlApiToken = OauthHost + "/oauth2/token";
+        protected string ClientId;
+        protected string ClientSecret;
+        protected string Password;
 
-        const string OAUTH_HOST = HostConfig.OAUTH_HOST;
-        const string URL_API_TOKEN = OAUTH_HOST + "/oauth2/token";
-        protected string _clientId;
-        protected string _clientSecret;
-        protected string _username;
-        protected string _password;
+        protected string Username;
 
-        protected string _token;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <param name="clientId"></param>
+    /// <param name="clientSecret"></param>
+        public ParentManager(string username, string password, string clientId, string clientSecret)
+        {
+            Username = username;
+            Password = MD5Core.GetHashString(password);
+            ClientId = clientId;
+            ClientSecret = clientSecret;
+        }
+
         /// <summary>
-        /// 获取到的身份验证token
+        ///     获取到的身份验证token
         /// </summary>
-        public string Token
-        {
-            internal set { _token=value;}
-            get { return _token; }
-        }
+        public  string Token { internal set; get; }
 
-         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="account">帐号</param>
-        /// <param name="password">密码</param>
-        /// <param name="key">序列号</param>
-        /// <param name="secrectkey">密钥</param>
-        public ParentManager(string username, string password, string clientId, string clientSecret) 
-        {
-            _username = username;
-            _password = MD5Core.GetHashString(password);
-            _clientId = clientId;
-            _clientSecret = clientSecret;
-
-        }
-
-        public HttpStatusCode StatusCode
-        {
-            set;
-            get;
-        }
+        public HttpStatusCode StatusCode { internal set;  get; }
 
 
         public string AccessToken(bool isEnt)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = URL_API_TOKEN;
-            request.AppendParameter("username", _username);
-            request.AppendParameter("password", _password);
-            request.AppendParameter("client_id", _clientId);
-            request.AppendParameter("client_secret", _clientSecret);
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiToken;
+            request.AppendParameter("username", Username);
+            request.AppendParameter("password", Password);
+            request.AppendParameter("client_id", ClientId);
+            request.AppendParameter("client_secret", ClientSecret);
             request.AppendParameter("grant_type", isEnt ? "ent_password" : "password");
-            request.RequestMethod = RequestType.POST;
+            request.RequestMethod = RequestType.Post;
             request.Request();
-            this.StatusCode = request.Code;
+            StatusCode = request.Code;
             string result = request.Result;
 
             OauthData data = OauthData.Create(result);
             if (request.Code == HttpStatusCode.OK)
             {
-                _token = data.Token;
+                Token = data.Token;
             }
             return result;
         }
 
-        
 
         /// <summary>
-        /// 生成签名
+        ///     生成签名
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
         protected string GenerateSign(string[] array)
         {
-            string string_sign = "";
+            string stringSign = "";
             for (int i = 0; i < array.Length; i++)
             {
-                string_sign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
+                stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
             }
 
-            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(string_sign, _clientSecret));
+            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(stringSign, ClientSecret));
         }
-
-
     }
 }
