@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using YunkuEntSDK;
@@ -11,10 +12,10 @@ namespace YunkuSDKEntDemo
 {
     public partial class MainForm : Form
     {
-        private const string Uesrname = "gktest1";
-        private const string Password = "111111";
-        private const string ClientId = "b2b54fa4261f9cf5e4772e6359f96161";
-        private const string ClientSecret = "134dba8e0adc4e59b511c09aa1ebf71e";
+        private const string Uesrname = "";
+        private const string Password = "";
+        private const string ClientId = "";
+        private const string ClientSecret = "";
 
         public MainForm()
         {
@@ -52,6 +53,7 @@ namespace YunkuSDKEntDemo
             Clipboard.SetDataObject(result);
             TB_Result.Text += msg + "\r\n";
             TB_Result.Text += result + "\r\n";
+            TB_Result.Text += "==========================\r\n";
         }
 
 
@@ -99,8 +101,8 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entLibManager.DelGroup(32662,1086), entLibManager.StatusCode);
 
             //==========企业文件操作============//
-            string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
-            string orgClientSecret = "fd5ba40932fa31dd18170881b9f00e77";
+            const string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
+            const string orgClientSecret = "fd5ba40932fa31dd18170881b9f00e77";
 
             var entFileManager = new EntFileManager(orgClientId, orgClientSecret);
 
@@ -153,8 +155,29 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entManager.GetMemberFileLink(52), entManager.StatusCode);
 
             //根据外部成员id获取成员信息
-//            DeserializeReturn(entManager.GetMemberByOutid(new string[] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);
+//            DeserializeReturn(entManager.GetMemberByOutid(new [] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);
 
+            //添加或修改同步成员
+//            DeserializeReturn(entManager.AddSyncMember("MemberTest1", "Member1", "Member1", "", ""), entManager.StatusCode);
+//             DeserializeReturn(entManager.AddSyncMember("MemberTest2", "Member2", "Member2", "", ""), entManager.StatusCode);
+//             DeserializeReturn(entManager.AddSyncMember("MemberTest3", "Member3", "Member3", "", ""), entManager.StatusCode);
+
+            //删除同步成员
+//            DeserializeReturn(entManager.DelSyncMember(new []{"MemberTest", "MemberTest1", "MemberTest2"}), entManager.StatusCode);
+//
+            //添加或修改同步分组
+//            DeserializeReturn(entManager.AddSyncGroup("ParentGroup","ParentGroup",""),entManager.StatusCode);
+//            DeserializeReturn(entManager.AddSyncGroup("GroupTest","Group","ParentGroup"),entManager.StatusCode);
+
+            //删除同步分组
+//             DeserializeReturn(entManager.DelSyncGroup(new[] { "ParentGroup", "GroupTest" }), entManager.StatusCode);
+
+            //添加同步分组的成员
+//            DeserializeReturn(entManager.AddSyncGroupMember("GroupTest",new []{"MemberTest1"}),entManager.StatusCode);
+//            DeserializeReturn(entManager.AddSyncGroupMember("ParentGroup", new[] { "MemberTest2","MemberTest3" }), entManager.StatusCode);
+
+            //删除同步分组的成员
+//            DeserializeReturn(entManager.DelSyncGroupMember("ParentGroup", new[] { "MemberTest2", "MemberTest3" }), entManager.StatusCode);
             
         }
     }
