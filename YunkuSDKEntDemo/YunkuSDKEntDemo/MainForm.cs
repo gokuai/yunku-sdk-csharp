@@ -17,6 +17,7 @@ namespace YunkuSDKEntDemo
         private const string ClientId = "";
         private const string ClientSecret = "";
 
+
         public MainForm()
         {
             InitializeComponent();
@@ -152,7 +153,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entManager.GetRoles(), entManager.StatusCode);
 
             //根据成员id获取成员个人库外链
-//            DeserializeReturn(entManager.GetMemberFileLink(52), entManager.StatusCode);
+//            DeserializeReturn(entManager.GetMemberFileLink(52,true), entManager.StatusCode);
 
             //根据外部成员id获取成员信息
 //            DeserializeReturn(entManager.GetMemberByOutid(new [] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);

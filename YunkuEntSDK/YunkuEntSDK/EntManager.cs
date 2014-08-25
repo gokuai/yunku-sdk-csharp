@@ -17,7 +17,7 @@ namespace YunkuEntSDK
         private const string UrlApiDelSyncMember = LibHost + "/1/ent/del_sync_member";
         private const string UrlApiAddSyncGroup = LibHost + "/1/ent/add_sync_group";
         private const string UrlApiDelSyncGroup = LibHost + "/1/ent/del_sync_group";
-        private const string UrlAplAddSyncGroupMember = LibHost + "/1/ent/add_sync_group_member";
+        private const string UrlApiAddSyncGroupMember = LibHost + "/1/ent/add_sync_group_member";
         private const string UrlApiDelSyncGroupMember = LibHost + "/1/ent/del_sync_group_member";
 
 
@@ -122,12 +122,16 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public string GetMemberFileLink(int memberId)
+        public string GetMemberFileLink(int memberId,bool fileOnly)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiGetMemberFileLink;
             request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
+            if (fileOnly)
+            {
+                request.AppendParameter("file", "1");
+            }
             request.AppendParameter("member_id", memberId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
@@ -256,7 +260,7 @@ namespace YunkuEntSDK
         public string AddSyncGroupMember(string groupOutId,string[] members)
         {
             var request = new HttpRequestSyn();
-            request.RequestUrl = UrlAplAddSyncGroupMember;
+            request.RequestUrl = UrlApiAddSyncGroupMember;
             request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("group_out_id", groupOutId);
