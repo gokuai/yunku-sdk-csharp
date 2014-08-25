@@ -13,7 +13,7 @@ namespace YunkuEntSDK
         public const string OauthHost = "http://a.goukuai.cn";
 //        public const string LibHost = "http://test4a-lib.goukuai.cn";
 //        public const string LibHost = "http://zka-lib.goukuai.cn";
-        public const string OauthHost = "http://a-lib.goukuai.cn";
+        public const string LibHost = "http://a-lib.goukuai.cn";
 
     }
 }
