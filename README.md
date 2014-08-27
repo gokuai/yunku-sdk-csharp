@@ -21,10 +21,12 @@ Robots: noindex,nofollow
 ## 企业库管理（**EntLibManager.cs** ）
 
 ###构造方法
-```c
+
+
 new EntLibManager（string username，string password,
 	string clientId, string clientSecret）
-```
+
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -36,9 +38,9 @@ new EntLibManager（string username，string password,
 ---
 
 ### 授权
-```c
+
 	AccessToken(bool isEnt)
-	```
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -62,10 +64,10 @@ new EntLibManager（string username，string password,
 ---
 
 ### 创建库
-```c
+
 	Create(string orgName, int orgCapacity, 
 	string storagePointName, string orgDesc) 
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -88,9 +90,9 @@ new EntLibManager（string username，string password,
 
 ---
 ### 获取库列表
-```c
+
 	getLibList()
-```
+
 #### 参数 
 (无)
 #### 返回结果
@@ -113,9 +115,9 @@ new EntLibManager（string username，string password,
 ---
 
 ### 获取库授权
-```c
+
 	Bind(int orgId, string title, string linkUrl)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -141,9 +143,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 
 ### 取消库授权
-```c
+
 	UnBind(string orgClientId) 
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -156,9 +158,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 ### 获取库成员列表
-```c
+
 	GetMembers(int start, int size, int orgId)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -185,9 +187,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 ### 添加库成员
-```c
+
 	AddMembers(int orgId, int roleId, int[] memberIds) 
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -201,9 +203,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 ### 修改库成员角色
-```c
+
 	SetMemberRole(int orgId, int roleId, int[] memberIds) 
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -217,9 +219,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 ### 删除库成员
-```c
+
 	DelMember(int orgId, int[] memberIds)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -231,9 +233,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 ### 获取库分组列表
-```c
+
 	GetGroups(int orgId)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -250,9 +252,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 ### 库上添加分组
-```c
+
 	AddGroup(int orgId, int groupId, int roleId)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -265,9 +267,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 ### 删除库上的分组
-```c
-DelGroup(int orgId, int groupId)
-```
+
+	DelGroup(int orgId, int groupId)
+
 #### 参数 
  参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -279,9 +281,9 @@ DelGroup(int orgId, int groupId)
 
 ---
 ### 修改库上分组的角色
-```c
-SetGroupRole(int orgId, int groupId, int roleId)
-```
+
+	SetGroupRole(int orgId, int groupId, int roleId)
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -299,9 +301,9 @@ SetGroupRole(int orgId, int groupId, int roleId)
 ## 企业管理（**EntManager.cs** ）
 ###构造方法
 
-```c
-new EntManager（Username，Password,ClientId,ClientSecret）
-```
+
+	new EntManager（Username，Password,ClientId,ClientSecret）
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -313,9 +315,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ### 授权
-```c
+
 	AccessToken(bool isEnt)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -338,9 +340,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###获取角色
-```c
+
 	GetRoles() 
-```
+
 #### 参数
 （无） 
 #### 返回结果
@@ -355,9 +357,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ###获取成员
-```c
+
 	GetMembers(int start, int size)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -382,9 +384,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###获取分组
-```c
+
 	GetGroups() 
-```
+
 #### 参数 
 （无）
 #### 返回结果
@@ -403,9 +405,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ###根据成员id获取成员个人库外链
-```c
+
 	GetMemberFileLink(int memberId, bool fileOnly)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -425,9 +427,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###根据外部成员id获取成员信息
-```c
+
 	GetMemberByOutid(string outIds[])
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -446,10 +448,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ### 添加或修改同步成员
-```c
-	AddSyncMember(string oudId,string memberName,
-	string account,string memberEmail,string memberPhone)
-```
+
+	AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone)
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -466,9 +467,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ### 删除同步成员
-```c
+
 	DelSyncMember(string[] members)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -481,9 +482,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ### 添加或修改同步分组
-```c
+
 	AddSyncGroup(string outId,string name,string parentOutId)
-```
+
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -497,9 +498,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ### 删除同步分组
-```c
+
 	DelSyncGroup(string[]groups)
-	```
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -510,9 +511,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
     HTTP 200
 ---
 ### 添加同步分组的成员
-```c
+
 	AddSyncGroupMember(string groupOutId,string[] members)
-	```
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -523,9 +524,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
     HTTP 200
 ---
 ### 删除同步分组的成员
-```c
+
 	DelSyncGroupMember(string groupOutId, string[] members)
-	```
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -539,9 +540,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ## 企业文件管理（**EntFileManager.cs** ）
 ###构造方法
-```c
+
 	new EntFileManager(string orgClientId,string orgClientSecret);
-	```
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -550,9 +551,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###获取文件列表
-```c
+
 	GetFileList(int dateline, int start, string fullPath) 
-	```
+	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -601,9 +602,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###获取更新列表
-```c
+
 	GetUpdateList(int dateline, bool isCompare, long fetchDateline)
-	```
+	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -633,9 +634,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ###获取文件信息
-```c
+
 	GetFileInfo(int dateline, string fullPath) 
-	```
+	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -673,10 +674,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###创建文件夹
-```c
-	CreateFolder(int dateline, string fullPath, 
-	string opName)
-	```
+
+	CreateFolder(int dateline, string fullPath, string opName)
+	
 #### 参数 
 
 | 参数 | 必须 | 类型 | 说明 |
@@ -693,10 +693,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###通过文件流上传（50M以内文件）
-```c
-	CreateFile(int dateline, string fullPath, 
-	string opName, FileInputStream stream, string fileName) 
-	```
+
+	CreateFile(int dateline, string fullPath,string opName, FileInputStream stream, string fileName) 
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
@@ -716,9 +715,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###通过本地路径上传（50M以内文件）
-```c
+
 	CreateFile(int dateline, string fullPath, string opName, string localPath)
-	```
+	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
@@ -737,9 +736,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 ---
 ###删除文件
-```c
+
 	Del(int dateline, string fullPath, string opName)
-	```
+	
 #### 参数 
 | 参数 | 必需 | 类型 | 说明 |
 |------|------|------|------|
@@ -750,9 +749,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 	正常返回 HTTP 200
 ---
 ###移动文件
-```c
+
 	Move(int dateline, string fullPath, string destFullPath, string opName)
-	```
+	
 #### 参数 
 
 | 参数 | 必需 | 类型 | 说明 |
@@ -766,9 +765,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 	正常返回 HTTP 200
 ---
 ###获取文件链接
-```c
+
 	Link(int dateline, string fullPath) 
-	```
+	
 #### 参数 
 | 参数 | 必需 | 类型 | 说明 |
 |------|------|------|------|
@@ -777,10 +776,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 
 #### 返回结果
 ###发送消息
-```c
-	Sendmsg(int dateline, string title, 
-	string text, string image, string linkUrl, string opName) 
-	```
+
+	Sendmsg(int dateline, string title, string text, string image, string linkUrl, string opName) 
+	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -795,9 +793,9 @@ new EntManager（Username，Password,ClientId,ClientSecret）
 ---
 
 ###获取当前库所有外链
-```c
+
 	Links(int dateline, bool fileOnly)
-	```
+	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
