@@ -302,15 +302,15 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ###构造方法
 
 
-	new EntManager（Username，Password,ClientId,ClientSecret）
+	new EntManager（string username，string password,string clientId,string clientSecret）
 
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| Username | 是 | string | 用户名 |
-| Password | 是 | string | 密码|
-| ClientId | 是 | string | 申请应用时分配的AppKey |
-| ClientSecret | 是 | string | 申请应用时分配的AppSecret |
+| username | 是 | string | 用户名 |
+| password | 是 | string | 密码|
+| clientId | 是 | string | 申请应用时分配的AppKey |
+| clientSecret | 是 | string | 申请应用时分配的AppSecret |
 
 ---
 
