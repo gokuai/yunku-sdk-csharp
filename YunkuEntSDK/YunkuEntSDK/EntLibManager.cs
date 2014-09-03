@@ -19,6 +19,7 @@ namespace YunkuEntSDK
         private const string UrlApiAddGroup = LibHost + "/1/org/add_group";
         private const string UrlApiDelGroup = LibHost + "/1/org/del_group";
         private const string UrlApiSetGroupRole = LibHost + "/1/org/set_group_role";
+        private const string UrlApiDestroy = LibHost + "/1/org/destroy";
 
 
         public EntLibManager(string uesrname, string password, string client_id, string client_secret)
@@ -279,6 +280,25 @@ namespace YunkuEntSDK
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("group_id", groupId + "");
             request.AppendParameter("role_id", roleId + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Post;
+            request.Request();
+            StatusCode = request.Code;
+            return request.Result;
+        }
+
+        /// <summary>
+        /// 删除库
+        /// </summary>
+        /// <param name="orgClientId"></param>
+        /// <returns></returns>
+        public string Destroy(string orgClientId)
+        {
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiDestroy;
+            request.AppendParameter("token", Token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_client_id", "" + orgClientId);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();

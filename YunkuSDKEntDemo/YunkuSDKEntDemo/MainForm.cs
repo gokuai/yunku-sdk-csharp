@@ -12,11 +12,6 @@ namespace YunkuSDKEntDemo
 {
     public partial class MainForm : Form
     {
-        private const string Uesrname = "";
-        private const string Password = "";
-        private const string ClientId = "";
-        private const string ClientSecret = "";
-
 
         public MainForm()
         {
@@ -65,20 +60,23 @@ namespace YunkuSDKEntDemo
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
-            var entLibManager = new EntLibManager(Uesrname, Password, ClientId, ClientSecret);
+            var entLibManager = new EntLibManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId, OuathConfig.ClientSecret);
             //获取授权
-//            entLibManager.AccessToken(true);
+            entLibManager.AccessToken(true);
+            //创建库
+//            DeserializeReturn(entLibManager.Create("destroy",10,"destroy","testlib"),entLibManager.StatusCode);
+
             //获取库列表
             //DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
             //获取库授权
-//            DeserializeReturn(entLibManager.Bind(21340, "", ""), entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.Bind(48716, "", ""), entLibManager.StatusCode);
 
             //取消库授权
 //            DeserializeReturn(entLibManager.UnBind("9affb8f78fd5914a7218d7561db6ddec"), entLibManager.StatusCode);
 
-            //添加成员
             //DeserializeReturn(entLibManager.AddMembers(32662, 1194, new int[] { 21122 }), entLibManager.StatusCode);
+            //添加成员
 
             //批量修改单库中成员角色
             //DeserializeReturn(entLibManager.SetMemberRole(32662, 1194, new int[] { 21122 }), entLibManager.StatusCode);
@@ -100,6 +98,9 @@ namespace YunkuSDKEntDemo
 
             //库上删除分组
             //DeserializeReturn(entLibManager.DelGroup(32662,1086), entLibManager.StatusCode);
+
+            //删除库
+            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"), entLibManager.StatusCode);
 
             //==========企业文件操作============//
             const string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
@@ -139,7 +140,7 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entFileManager.Links((int)Util.GetUnixDataline()), entFileManager.StatusCode);
 
             //=======企业操作========//
-            var entManager = new EntManager(Uesrname, Password, ClientId, ClientSecret);
+            var entManager = new EntManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId, OuathConfig.ClientSecret);
             //获取授权
             entManager.AccessToken(true);
 

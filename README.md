@@ -296,6 +296,17 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
+### 删除库
+	Destroy(String orgClientId)
+#### 参数 
+| 参数 | 必须 | 类型 | 说明 |
+| orgClientId | 否 | string | 库授权client_id|
+#### 返回结果
+	
+	正常返回 HTTP 200
+
+---
+
 
 
 ## 企业管理（**EntManager.cs** ）
