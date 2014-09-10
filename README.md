@@ -414,7 +414,36 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}	
 
 ---
+### 分组成员列表
+	GetGroupMembers(int groupId, int start, int size, bool showChild) 
+#### 参数 
 
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| groupId | 是 | int | 分组id |
+| start | 是 | int | 记录开始位置 |
+| size | 是 | int | 返回条数 |
+| showChild | 是 | bool | [0,1] 是否显示子分组内的成员 |
+#### 返回结果
+	
+	
+	{
+		list:
+		[
+			{
+				"member_id": 成员id,
+				"out_id": 成员外部id,
+				"account": 外部账号,
+				"member_name": 成员显示名,
+				"member_email": 成员邮箱,
+				"state": 成员状态。1：已接受，2：未接受,
+			},
+			...
+		],
+		count: 成员总数
+	}
+
+---
 ###根据成员id获取成员个人库外链
 
 	GetMemberFileLink(int memberId, bool fileOnly)

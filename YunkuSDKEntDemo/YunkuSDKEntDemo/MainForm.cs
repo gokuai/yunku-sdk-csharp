@@ -100,7 +100,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entLibManager.DelGroup(32662,1086), entLibManager.StatusCode);
 
             //删除库
-            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"), entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"), entLibManager.StatusCode);
 
             //==========企业文件操作============//
             const string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
@@ -152,6 +152,9 @@ namespace YunkuSDKEntDemo
 
             //获取角色
             //DeserializeReturn(entManager.GetRoles(), entManager.StatusCode);
+
+            //分组成员列表获取
+            DeserializeReturn(entManager.GetGroupMembers(1086, 0, 3, true),entManager.StatusCode);
 
             //根据成员id获取成员个人库外链
 //            DeserializeReturn(entManager.GetMemberFileLink(52,true), entManager.StatusCode);

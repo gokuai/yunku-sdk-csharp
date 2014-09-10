@@ -19,6 +19,7 @@ namespace YunkuEntSDK
         private const string UrlApiDelSyncGroup = LibHost + "/1/ent/del_sync_group";
         private const string UrlApiAddSyncGroupMember = LibHost + "/1/ent/add_sync_group_member";
         private const string UrlApiDelSyncGroupMember = LibHost + "/1/ent/del_sync_group_member";
+        private const string UrlApiGetGroupMembers = LibHost + "/1/ent/get_group_members";
 
 
         public EntManager(string username, string password, string clientId, string clientSecret)
@@ -292,6 +293,32 @@ namespace YunkuEntSDK
             StatusCode = request.Code;
             return request.Result;
         }
+
+        /// <summary>
+        /// 分组成员列表
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        /// <param name="showChild"></param>
+        /// <returns></returns>
+        public string GetGroupMembers(int groupId, int start, int size, bool showChild)
+        {
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiGetGroupMembers;
+            request.AppendParameter("token", Token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("group_id", groupId+"");
+            request.AppendParameter("start", start + "");
+            request.AppendParameter("size", size + "");
+            request.AppendParameter("show_child", (showChild?1:0) + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Post;
+            request.Request();
+            StatusCode = request.Code;
+            return request.Result;
+        }
+
 
 
     }
