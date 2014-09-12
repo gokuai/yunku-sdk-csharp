@@ -154,13 +154,16 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entManager.GetRoles(), entManager.StatusCode);
 
             //分组成员列表获取
-            DeserializeReturn(entManager.GetGroupMembers(1086, 0, 3, true),entManager.StatusCode);
+//            DeserializeReturn(entManager.GetGroupMembers(1086, 0, 3, true),entManager.StatusCode);
 
             //根据成员id获取成员个人库外链
 //            DeserializeReturn(entManager.GetMemberFileLink(52,true), entManager.StatusCode);
 
             //根据外部成员id获取成员信息
 //            DeserializeReturn(entManager.GetMemberByOutid(new [] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);
+
+            //根据外部成员登陆帐号获取成员信息
+            DeserializeReturn(entManager.GetMemberByUserIds(new[] { "nishuonishuo" }), entManager.StatusCode);
 
             //添加或修改同步成员
 //            DeserializeReturn(entManager.AddSyncMember("MemberTest1", "Member1", "Member1", "", ""), entManager.StatusCode);

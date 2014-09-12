@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
@@ -148,11 +149,42 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string GetMemberByOutid(string[] outIds)
         {
+            if (outIds == null)
+            {
+                throw new NoNullAllowedException("outIds is null");
+            }
+            return GetMemberByIds(null,outIds);
+        }
+
+        /// <summary>
+        /// 根据外部成员登陆帐号获取成员信息
+        /// </summary>
+        /// <param name="userIds"></param>
+        /// <returns></returns>
+        public string GetMemberByUserIds(string[] userIds)
+        {
+            if (userIds == null)
+            {
+                throw new NoNullAllowedException("userIds is null");
+            }
+            return GetMemberByIds(userIds, null);
+        }
+
+
+        private string GetMemberByIds(string[] userIds,string[] outIds)
+        {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiGetMemberByOutId;
             request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
-            request.AppendParameter("out_ids", Util.StrArrayToString(outIds, ","));
+            if (outIds != null)
+            {
+                request.AppendParameter("out_ids", Util.StrArrayToString(outIds, ","));
+            }
+            else
+            {
+                request.AppendParameter("user_ids", Util.StrArrayToString(userIds, ","));
+            }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();

@@ -487,6 +487,26 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}
 
 ---
+
+###根据外部登录帐号获取成员信息
+	GetMemberByUserId(string userIds[])
+#### 参数 
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| userIds | 是 | array | 外部成员登录帐号数组 |
+#### 返回结果
+	{
+		user_id:{
+			"member_id": 成员id,
+			"account": 外部账号,
+			"member_name": 成员显示名,
+			"member_email": 成员邮箱,
+			"state": 成员状态。1：已接受，2：未接受
+		},
+		...
+	}
+
+---
 ### 添加或修改同步成员
 
 	AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone)
