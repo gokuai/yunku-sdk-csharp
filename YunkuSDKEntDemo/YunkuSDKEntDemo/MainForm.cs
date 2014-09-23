@@ -63,11 +63,11 @@ namespace YunkuSDKEntDemo
             var entLibManager = new EntLibManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId, OuathConfig.ClientSecret);
             //获取授权
             entLibManager.AccessToken(true);
-            //创建库
-//            DeserializeReturn(entLibManager.Create("destroy",10,"destroy","testlib"),entLibManager.StatusCode);
+            //创建库 1T="1099511627776" 1G＝“1073741824”；
+            //DeserializeReturn(entLibManager.Create("destroy","1073741824","destroy","testlib"),entLibManager.StatusCode);
 
             //获取库列表
-            //DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
             //获取库授权
 //            DeserializeReturn(entLibManager.Bind(48716, "", ""), entLibManager.StatusCode);
@@ -82,7 +82,10 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entLibManager.SetMemberRole(32662, 1194, new int[] { 21122 }), entLibManager.StatusCode);
 
             //获取某一个库的成员
-            //DeserializeReturn(entLibManager.GetMembers(0, 20, 32662),entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.GetMembers(0, 20, 32662),entLibManager.StatusCode);
+
+            //查询库成员信息
+//            DeserializeReturn(entLibManager.GetMember(4405, EntLibManager.MemberType.ACCOUNT, new[] { "qwdqwdq1" }), entLibManager.StatusCode);
 
             //从库中删除成员
             //DeserializeReturn(entLibManager.DelMember(32662, new int[] { 21122 }), entLibManager.StatusCode);
@@ -101,6 +104,9 @@ namespace YunkuSDKEntDemo
 
             //删除库
 //            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"), entLibManager.StatusCode);
+
+            //修改库信息 1T="1099511627776" 1G＝“1073741824”；
+            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""), entLibManager.StatusCode);
 
             //==========企业文件操作============//
             const string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
@@ -142,7 +148,7 @@ namespace YunkuSDKEntDemo
             //=======企业操作========//
             var entManager = new EntManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId, OuathConfig.ClientSecret);
             //获取授权
-            entManager.AccessToken(true);
+//            entManager.AccessToken(true);
 
             //获取成员
 //            DeserializeReturn(entManager.GetMembers(0, 20), entManager.StatusCode);
@@ -163,7 +169,7 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entManager.GetMemberByOutid(new [] { "nishuonishuo", "dqwdqw" }),entManager.StatusCode);
 
             //根据外部成员登陆帐号获取成员信息
-            DeserializeReturn(entManager.GetMemberByUserIds(new[] { "nishuonishuo" }), entManager.StatusCode);
+//            DeserializeReturn(entManager.GetMemberByUserIds(new[] { "nishuonishuo" }), entManager.StatusCode);
 
             //添加或修改同步成员
 //            DeserializeReturn(entManager.AddSyncMember("MemberTest1", "Member1", "Member1", "", ""), entManager.StatusCode);

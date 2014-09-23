@@ -88,6 +88,10 @@ new EntLibManager（string username，string password,
 | org_id | int | 库ID |
 | mount_id | int | 库空间id |
 
+####数值参考
+1T="1099511627776" 
+1G＝“1073741824”；
+
 ---
 ### 获取库列表
 
@@ -186,6 +190,33 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}
 
 ---
+
+### 查询库成员信息
+	GetMember(int orgid, MemberType type, String[] ids)
+
+#### 参数 
+	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| orgid | 是 | int | 库id |
+| type | 是 | enum | ACCOUNT,OUT_ID,MEMBER_ID |
+| ids | 是 | array | 多个id数组 |
+
+#### 返回结果
+		
+		{
+			"id(传入时的id))":{
+				"member_id": 成员id,
+				"out_id": 成员外部id,
+				"account": 外部账号,
+				"member_name": 成员显示名,
+				"member_email": 成员邮箱
+			},
+			...
+		}
+
+---
+
 ### 添加库成员
 
 	AddMembers(int orgId, int roleId, int[] memberIds) 
@@ -306,6 +337,27 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ---
+
+### 修改库信息
+
+	Set(int orgId, string name, string capacity, string description, string logo) 
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| orgId | 是 | int | 库id |
+| name | 否 | string | 库名称 |
+| capacity | 否 | string | 库容量限制，单位B |
+| description | 否 | string | 库描述 |
+| logo | 否 | string | 库logo |
+
+#### 返回结果 
+   正常返回 HTTP 200
+   
+---
+
+####数值参考
+1T="1099511627776" 
+1G＝“1073741824”；
 
 
 

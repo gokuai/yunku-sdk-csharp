@@ -20,6 +20,8 @@ namespace YunkuEntSDK
         private const string UrlApiDelGroup = LibHost + "/1/org/del_group";
         private const string UrlApiSetGroupRole = LibHost + "/1/org/set_group_role";
         private const string UrlApiDestroy = LibHost + "/1/org/destroy";
+        private const string UrlApiGetMember = LibHost + "/1/org/get_member";
+        private const string UrlApiSet = LibHost + "/1/org/set";
 
 
         public EntLibManager(string uesrname, string password, string client_id, string client_secret)
@@ -35,14 +37,14 @@ namespace YunkuEntSDK
         /// <param name="storagePointName"></param>
         /// <param name="orgDesc"></param>
         /// <returns></returns>
-        public string Create(string orgName, int orgCapacity, string storagePointName, string orgDesc)
+        public string Create(string orgName, string orgCapacity, string storagePointName, string orgDesc)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiCreateLib;
             request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_name", orgName);
-            request.AppendParameter("org_capacity", orgCapacity + "");
+            request.AppendParameter("org_capacity", orgCapacity );
             request.AppendParameter("storage_point_name", storagePointName);
             request.AppendParameter("org_desc", orgDesc);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -132,6 +134,30 @@ namespace YunkuEntSDK
             request.Request();
             StatusCode = request.Code;
             return request.Result;
+        }
+
+        /// <summary>
+        /// 查询库成员信息
+        /// </summary>
+        /// <param name="orgid"></param>
+        /// <param name="type"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public string GetMember(int orgid, MemberType type, string[] ids)
+        {
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiGetMember;
+            request.AppendParameter("token", Token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", orgid + "");
+            request.AppendParameter("type", type.ToString().ToLower() + "");
+            request.AppendParameter("ids", Util.StrArrayToString(ids,","));
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Get;
+            request.Request();
+            StatusCode = request.Code;
+            return request.Result;
+
         }
 
         /// <summary>
@@ -304,6 +330,53 @@ namespace YunkuEntSDK
             request.Request();
             StatusCode = request.Code;
             return request.Result;
+        }
+
+        /// <summary>
+        /// 修改库信息
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="name"></param>
+        /// <param name="capacity"></param>
+        /// <param name="description"></param>
+        /// <param name="logo"></param>
+        /// <returns></returns>
+        public string Set(int orgId, string name, string capacity, string description, string logo)
+        {
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiSet;
+            request.AppendParameter("token", Token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", "" + orgId);
+            if (!string.IsNullOrEmpty(name))
+            {
+                request.AppendParameter("name", "" + name);
+            }
+            if (!string.IsNullOrEmpty(capacity))
+            {
+                request.AppendParameter("capacity", "" + capacity);
+            }
+            if (!string.IsNullOrEmpty(description))
+            {
+                request.AppendParameter("description", "" + description);
+            }
+            if (!string.IsNullOrEmpty(description))
+            {
+                request.AppendParameter("logo", "" + logo);
+            }
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Post;
+            request.Request();
+            StatusCode = request.Code;
+            return request.Result;
+
+        }
+
+        public enum MemberType
+        {
+            ACCOUNT ,
+            OUT_ID,
+            MEMBER_ID
         }
     }
 }

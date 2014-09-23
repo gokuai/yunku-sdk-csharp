@@ -22,7 +22,6 @@ namespace YunkuEntSDK
         private const string UrlApiDelSyncGroupMember = LibHost + "/1/ent/del_sync_group_member";
         private const string UrlApiGetGroupMembers = LibHost + "/1/ent/get_group_members";
 
-
         public EntManager(string username, string password, string clientId, string clientSecret)
             : base(username, password, clientId, clientSecret)
         {
@@ -67,6 +66,7 @@ namespace YunkuEntSDK
             StatusCode = request.Code;
             return request.Result;
         }
+
 
         /// <summary>
         ///     获取分组
@@ -186,8 +186,8 @@ namespace YunkuEntSDK
                 request.AppendParameter("user_ids", Util.StrArrayToString(userIds, ","));
             }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
             request.Request();
+            request.RequestMethod = RequestType.Get;
             StatusCode = request.Code;
             return request.Result;
         }
