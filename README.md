@@ -340,15 +340,15 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ### 修改库信息
 
-	Set(int orgId, string name, string capacity, string description, string logo) 
+	Set(int orgId, string orgName, string orgCapacity, string orgDesc, string orgLogo) 
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
-| name | 否 | string | 库名称 |
-| capacity | 否 | string | 库容量限制，单位B |
-| description | 否 | string | 库描述 |
-| logo | 否 | string | 库logo |
+| orgName | 否 | string | 库名称 |
+| orgCapacity | 否 | string | 库容量限制，单位B |
+| orgDesc | 否 | string | 库描述 |
+| orgLogo | 否 | string | 库logo |
 
 #### 返回结果 
    正常返回 HTTP 200

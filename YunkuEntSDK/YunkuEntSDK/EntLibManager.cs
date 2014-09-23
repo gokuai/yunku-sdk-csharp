@@ -336,33 +336,33 @@ namespace YunkuEntSDK
         /// 修改库信息
         /// </summary>
         /// <param name="orgId"></param>
-        /// <param name="name"></param>
-        /// <param name="capacity"></param>
-        /// <param name="description"></param>
-        /// <param name="logo"></param>
+        /// <param name="orgName"></param>
+        /// <param name="orgCapacity"></param>
+        /// <param name="orgDesc"></param>
+        /// <param name="orgLogo"></param>
         /// <returns></returns>
-        public string Set(int orgId, string name, string capacity, string description, string logo)
+        public string Set(int orgId, string orgName, string orgCapacity, string orgDesc, string orgLogo)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiSet;
             request.AppendParameter("token", Token);
             request.AppendParameter("token_type", "ent");
             request.AppendParameter("org_id", "" + orgId);
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(orgName))
             {
-                request.AppendParameter("name", "" + name);
+                request.AppendParameter("org_name", "" + orgName);
             }
-            if (!string.IsNullOrEmpty(capacity))
+            if (!string.IsNullOrEmpty(orgCapacity))
             {
-                request.AppendParameter("capacity", "" + capacity);
+                request.AppendParameter("org_capacity", "" + orgCapacity);
             }
-            if (!string.IsNullOrEmpty(description))
+            if (!string.IsNullOrEmpty(orgDesc))
             {
-                request.AppendParameter("description", "" + description);
+                request.AppendParameter("org_desc", "" + orgDesc);
             }
-            if (!string.IsNullOrEmpty(description))
+            if (!string.IsNullOrEmpty(orgDesc))
             {
-                request.AppendParameter("logo", "" + logo);
+                request.AppendParameter("org_logo", "" + orgLogo);
             }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
