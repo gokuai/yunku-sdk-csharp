@@ -106,11 +106,11 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"), entLibManager.StatusCode);
 
             //修改库信息 1T="1099511627776" 1G＝“1073741824”；
-            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""), entLibManager.StatusCode);
+//            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""), entLibManager.StatusCode);
 
             //==========企业文件操作============//
-            const string orgClientId = "bab623c8a80283689c6a77fec0ecede1";
-            const string orgClientSecret = "fd5ba40932fa31dd18170881b9f00e77";
+            const string orgClientId = "183925acbe239a820aea71862e4b44a2";
+            const string orgClientSecret = "cc7c632dc5e8bdb1651e0113a600c000";
 
             var entFileManager = new EntFileManager(orgClientId, orgClientSecret);
 
@@ -120,6 +120,12 @@ namespace YunkuSDKEntDemo
 
             //获取更新列表
             //DeserializeReturn(entFileManager.GetUpdateList((int)Util.GetUnixDataline(), false, 0), entFileManager.StatusCode);
+
+            long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
+            long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
+
+            //文件更新数量
+            DeserializeReturn(entFileManager.GetUpdateCount((int)Util.GetUnixDataline(),beigin ,now , true), entFileManager.StatusCode);
 
             //获取文件（夹）信息
             //DeserializeReturn(entFileManager.GetFileInfo((int)Util.GetUnixDataline(), "test"), entFileManager.StatusCode);

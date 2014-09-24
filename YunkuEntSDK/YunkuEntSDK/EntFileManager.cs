@@ -20,6 +20,7 @@ namespace YunkuEntSDK
         private const string UrlApiLinkFile = LibHost + "/1/file/link";
         private const string UrlApiSendmsg = LibHost + "/1/file/sendmsg";
         private const string UrlApiGetLink = LibHost + "/1/file/links";
+        private const string UrlApiUpdateCount = LibHost + "/1/file/updates_count";
 
         private readonly string _orgClientId;
         private readonly string _orgClientSecret;
@@ -72,6 +73,34 @@ namespace YunkuEntSDK
                 request.AppendParameter("mode", "compare");
             }
             request.AppendParameter("fetch_dateline", fetchDateline + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Get;
+            request.Request();
+            StatusCode = request.Code;
+            return request.Result;
+        }
+
+        /// <summary>
+        /// 文件更新数量
+        /// </summary>
+        /// <param name="dateline"></param>
+        /// <param name="beginDateline"></param>
+        /// <param name="endDateline"></param>
+        /// <param name="showDelete"></param>
+        /// <returns></returns>
+
+        public string GetUpdateCount(int dateline, long beginDateline, long endDateline, bool showDelete)
+        {
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiUpdateCount;
+            request.AppendParameter("org_client_id", _orgClientId);
+            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("begin_dateline", beginDateline + "");
+            request.AppendParameter("end_dateline", endDateline + "");
+            if (showDelete)
+            {
+                request.AppendParameter("showdel","1");
+            }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();

@@ -745,6 +745,24 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
+###文件更新数量
+	GetUpdateCounts(int dateline, long beginDateline, long endDateline, bool showDelete)
+	
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| dateline | 是 | int | 10位当前时间戳 |
+| beginDateline | 是 | long | 13位时间戳, 开始时间 |
+| endDateline | 是 | long | 13位时间戳, 结束时间 |
+| showDelete | 是 | boolean |是否返回删除文件 |
+
+#### 返回结果
+
+	{
+		count: 更新数量
+	}
+---
+
 ###获取文件信息
 
 	GetFileInfo(int dateline, string fullPath) 
