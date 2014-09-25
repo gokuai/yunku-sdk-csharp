@@ -22,6 +22,7 @@ namespace YunkuEntSDK
         private const string UrlApiDestroy = LibHost + "/1/org/destroy";
         private const string UrlApiGetMember = LibHost + "/1/org/get_member";
         private const string UrlApiSet = LibHost + "/1/org/set";
+        private const string UrlApiGetInfo = LibHost + "/1/org/info";
 
 
         public EntLibManager(string uesrname, string password, string client_id, string client_secret)
@@ -372,11 +373,31 @@ namespace YunkuEntSDK
 
         }
 
+        /// <summary>
+        /// 获取库信息
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
+ 
+        public string GetInfo(int orgId)
+        {
+            var request = new HttpRequestSyn();
+            request.RequestUrl = UrlApiGetInfo;
+            request.AppendParameter("token", Token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("org_id", "" + orgId);
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Get;
+            request.Request();
+            StatusCode = request.Code;
+            return request.Result;
+        }
+
         public enum MemberType
         {
-            ACCOUNT ,
-            OUT_ID,
-            MEMBER_ID
+            Account ,
+            OutId,
+            MemberId
         }
     }
 }

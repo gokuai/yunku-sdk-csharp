@@ -66,6 +66,12 @@ namespace YunkuSDKEntDemo
             //创建库 1T="1099511627776" 1G＝“1073741824”；
             //DeserializeReturn(entLibManager.Create("destroy","1073741824","destroy","testlib"),entLibManager.StatusCode);
 
+            //修改库信息 1T="1099511627776" 1G＝“1073741824”；
+//            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""), entLibManager.StatusCode);
+
+            //获取库信息
+            DeserializeReturn(entLibManager.GetInfo(109654), entLibManager.StatusCode);
+
             //获取库列表
 //            DeserializeReturn(entLibManager.GetLibList(), entLibManager.StatusCode);
 
@@ -85,7 +91,7 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entLibManager.GetMembers(0, 20, 32662),entLibManager.StatusCode);
 
             //查询库成员信息
-//            DeserializeReturn(entLibManager.GetMember(4405, EntLibManager.MemberType.ACCOUNT, new[] { "qwdqwdq1" }), entLibManager.StatusCode);
+            //            DeserializeReturn(entLibManager.GetMember(4405, EntLibManager.MemberType.Account, new[] { "qwdqwdq1" }), entLibManager.StatusCode);
 
             //从库中删除成员
             //DeserializeReturn(entLibManager.DelMember(32662, new int[] { 21122 }), entLibManager.StatusCode);
@@ -105,8 +111,7 @@ namespace YunkuSDKEntDemo
             //删除库
 //            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"), entLibManager.StatusCode);
 
-            //修改库信息 1T="1099511627776" 1G＝“1073741824”；
-//            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""), entLibManager.StatusCode);
+
 
             //==========企业文件操作============//
             const string orgClientId = "183925acbe239a820aea71862e4b44a2";
@@ -121,11 +126,11 @@ namespace YunkuSDKEntDemo
             //获取更新列表
             //DeserializeReturn(entFileManager.GetUpdateList((int)Util.GetUnixDataline(), false, 0), entFileManager.StatusCode);
 
-            long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
-            long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
+//            long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
+//            long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
 
             //文件更新数量
-            DeserializeReturn(entFileManager.GetUpdateCount((int)Util.GetUnixDataline(),beigin ,now , true), entFileManager.StatusCode);
+//            DeserializeReturn(entFileManager.GetUpdateCount((int)Util.GetUnixDataline(),beigin ,now , true), entFileManager.StatusCode);
 
             //获取文件（夹）信息
             //DeserializeReturn(entFileManager.GetFileInfo((int)Util.GetUnixDataline(), "test"), entFileManager.StatusCode);
