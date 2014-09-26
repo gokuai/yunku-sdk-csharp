@@ -38,7 +38,7 @@ namespace YunkuEntSDK
         /// <param name="storagePointName"></param>
         /// <param name="orgDesc"></param>
         /// <returns></returns>
-        public string Create(string orgName, string orgCapacity, string storagePointName, string orgDesc)
+        public string Create(string orgName, string orgCapacity, string storagePointName, string orgDesc,string orgLogo)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiCreateLib;
@@ -48,6 +48,7 @@ namespace YunkuEntSDK
             request.AppendParameter("org_capacity", orgCapacity );
             request.AppendParameter("storage_point_name", storagePointName);
             request.AppendParameter("org_desc", orgDesc);
+            request.AppendParameter("org_logo", orgLogo);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();

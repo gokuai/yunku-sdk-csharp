@@ -66,7 +66,7 @@ new EntLibManager（string username，string password,
 ### 创建库
 
 	Create(string orgName, int orgCapacity, 
-	string storagePointName, string orgDesc) 
+	string storagePointName, string orgDesc,string orgLogo) 
 
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
@@ -75,6 +75,7 @@ new EntLibManager（string username，string password,
 | orgCapacity | 否 | int | 库容量上限, 单位字节, 默认无上限|
 | storagePointName | 否 | string | 库归属存储点名称, 默认使用够快存储|
 | orgDesc | 否 | string | 库描述|
+| orgLogo | 否 | string | 库logo |
 
 #### 返回结果
 

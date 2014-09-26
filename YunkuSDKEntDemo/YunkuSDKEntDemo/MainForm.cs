@@ -64,7 +64,7 @@ namespace YunkuSDKEntDemo
             //获取授权
             entLibManager.AccessToken(true);
             //创建库 1T="1099511627776" 1G＝“1073741824”；
-            //DeserializeReturn(entLibManager.Create("destroy","1073741824","destroy","testlib"),entLibManager.StatusCode);
+            //DeserializeReturn(entLibManager.Create("destroy","1073741824","destroy","testlib",""),entLibManager.StatusCode);
 
             //修改库信息 1T="1099511627776" 1G＝“1073741824”；
 //            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""), entLibManager.StatusCode);
