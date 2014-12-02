@@ -201,7 +201,8 @@ namespace YunkuEntSDK
         /// <param name="memberEmail"></param>
         /// <param name="memberPhone"></param>
         /// <returns></returns>
-        public string AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone)
+        public string AddSyncMember(string oudId,string memberName,
+            string account,string memberEmail,string memberPhone,string password)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiAddSyncMember;
@@ -212,6 +213,7 @@ namespace YunkuEntSDK
             request.AppendParameter("account", account);
             request.AppendParameter("member_email", memberEmail);
             request.AppendParameter("member_phone", memberPhone);
+            request.AppendParameter("password", password);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();

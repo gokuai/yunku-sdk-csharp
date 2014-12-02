@@ -183,9 +183,9 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entManager.GetMemberByUserIds(new[] { "nishuonishuo" }), entManager.StatusCode);
 
             //添加或修改同步成员
-//            DeserializeReturn(entManager.AddSyncMember("MemberTest1", "Member1", "Member1", "", ""), entManager.StatusCode);
-//             DeserializeReturn(entManager.AddSyncMember("MemberTest2", "Member2", "Member2", "", ""), entManager.StatusCode);
-//             DeserializeReturn(entManager.AddSyncMember("MemberTest3", "Member3", "Member3", "", ""), entManager.StatusCode);
+//            DeserializeReturn(entManager.AddSyncMember("MemberTest1", "Member1", "Member1", "", "",""), entManager.StatusCode);
+//             DeserializeReturn(entManager.AddSyncMember("MemberTest2", "Member2", "Member2", "", "",""), entManager.StatusCode);
+//             DeserializeReturn(entManager.AddSyncMember("MemberTest3", "Member3", "Member3", "", "",""), entManager.StatusCode);
 
             //删除同步成员
 //            DeserializeReturn(entManager.DelSyncMember(new []{"MemberTest", "MemberTest1", "MemberTest2"}), entManager.StatusCode);

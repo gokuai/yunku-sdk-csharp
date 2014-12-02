@@ -591,7 +591,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ### 添加或修改同步成员
 
-	AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone)
+	AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone,string password)
 
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
@@ -601,6 +601,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | account | 是 | string | 成员在外部系统的登录帐号 |
 | memberEmail | 否 | string | 邮箱 |
 | memberPhone | 否 | string | 联系电话 |
+| password | 否 | string | 如果需要由够快验证帐号密码,密码为必须参数 |
 
 #### 返回结果
 
