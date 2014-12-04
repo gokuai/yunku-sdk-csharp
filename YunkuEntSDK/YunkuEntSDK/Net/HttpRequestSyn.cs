@@ -250,30 +250,6 @@ namespace YunkuEntSDK.Net
         }
 
         /// <summary>
-        ///     获得头参数
-        /// </summary>
-        /// <param name="webrequest"></param>
-        /// <returns></returns>
-        private WebHeaderCollection GetHeadParame()
-        {
-            var header = new WebHeaderCollection();
-            if (_headParameter.Count > 0)
-            {
-                foreach (var item in _headParameter)
-                {
-                    header[item.Key] = item.Value;
-                }
-            }
-            else
-            {
-                return null;
-            }
-
-
-            return header;
-        }
-
-        /// <summary>
         ///     获取传递参数的字符串
         /// </summary>
         /// <returns>字符串</returns>
@@ -288,6 +264,10 @@ namespace YunkuEntSDK.Net
                 if (!hasParameter)
                     hasParameter = true;
 
+                if (item.Value == null)
+                {
+                    continue;
+                }
                 value = Uri.EscapeUriString(item.Value); //对传递的字符串进行编码操作
                 sb.Append(string.Format("{0}={1}&", item.Key, value));
             }
@@ -299,6 +279,34 @@ namespace YunkuEntSDK.Net
             }
             LogPrint.Print("-------httprequest------------>" + result);
             return result;
+        }
+
+        /// <summary>
+        ///     获得头参数
+        /// </summary>
+        /// <param name="webrequest"></param>
+        /// <returns></returns>
+        private WebHeaderCollection GetHeadParame()
+        {
+            var header = new WebHeaderCollection();
+            if (_headParameter.Count > 0)
+            {
+                foreach (var item in _headParameter)
+                {
+                    if (item.Value == null)
+                    {
+                        continue;
+                    }
+                    header[item.Key] = item.Value;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+
+            return header;
         }
     }
 }

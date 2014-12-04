@@ -72,6 +72,10 @@ namespace YunkuEntSDK
             string stringSign = "";
             for (int i = 0; i < array.Length; i++)
             {
+                if (array[i] == null)
+                {
+                    continue;
+                }
                 stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
             }
 
