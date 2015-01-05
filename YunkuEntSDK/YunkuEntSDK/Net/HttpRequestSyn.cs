@@ -66,6 +66,10 @@ namespace YunkuEntSDK.Net
                     var myList = new List<KeyValuePair<string, string>>();
                     foreach (var key in _parameter)
                     {
+                        if (key.Value == null)
+                        {
+                            continue;
+                        }
                         myList.Add(key);
                     }
                     myList.Sort((firstPair, nextPair) => { return firstPair.Key.CompareTo(nextPair.Key); });

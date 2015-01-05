@@ -148,7 +148,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.Move((int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"), entFileManager.StatusCode);
 
             ////文件连接
-            //DeserializeReturn(entFileManager.Link((int)Util.GetUnixDataline(), "test"), entFileManager.StatusCode);
+            DeserializeReturn(entFileManager.Link((int)Util.GetUnixDataline(), "test",0,EntFileManager.AuthType.Default,null), entFileManager.StatusCode);
 
             ////发送消息
             //DeserializeReturn(entFileManager.SendMsg((int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"), entFileManager.StatusCode);

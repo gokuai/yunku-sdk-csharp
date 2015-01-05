@@ -59,6 +59,7 @@
     <Compile Include="Net\MsMultiPartFormData.cs" />
     <Compile Include="ParentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignAbility.cs" />
     <Compile Include="UtilClass\FileSizeFormatProvider.cs" />
     <Compile Include="UtilClass\LogPrint.cs" />
     <Compile Include="UtilClass\MD5.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="UtilClass\UtilFile.cs" />
     <Compile Include="EntLibManager.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

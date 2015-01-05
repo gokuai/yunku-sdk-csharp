@@ -6,7 +6,7 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public class EntFileManager
+    public class EntFileManager:SignAbility
     {
         private const long UploadSizeLimit = 52428800;//50MB
         private const string LibHost = HostConfig.LibHost;
@@ -23,12 +23,11 @@ namespace YunkuEntSDK
         private const string UrlApiUpdateCount = LibHost + "/1/file/updates_count";
 
         private readonly string _orgClientId;
-        private readonly string _orgClientSecret;
 
         public EntFileManager(string orgClientId, string orgClientSecret)
         {
             _orgClientId = orgClientId;
-            _orgClientSecret = orgClientSecret;
+            ClientSecret = orgClientSecret;
         }
 
         public HttpStatusCode StatusCode { get; internal set; }
@@ -173,7 +172,7 @@ namespace YunkuEntSDK
             var data = new MsMultiPartFormData();
             request.ContentType = "multipart/form-data;boundary=" + data.Boundary;
             data.AddStreamFile("file", fileName, Util.ReadToEnd(stream));
-            data.AddParams("org_client_id", _orgClientSecret);
+            data.AddParams("org_client_id", ClientSecret);
             data.AddParams("dateline", dateline + "");
             data.AddParams("fullpath", fullPath);
             data.AddParams("op_name", opName);
@@ -258,13 +257,26 @@ namespace YunkuEntSDK
         /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string Link(int dateline, string fullPath)
+        public string Link(int dateline, string fullPath,int deadline,AuthType authType,string password)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiLinkFile;
             request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
             request.AppendParameter("fullpath", fullPath);
+            request.AppendParameter("password", password);
+
+            if (deadline != 0)
+            {
+                request.AppendParameter("deadline", deadline + "");
+            }
+
+            if (!authType.Equals(AuthType.Default))
+            {
+                request.AppendHeaderParameter("auth", authType.ToString().ToLower());
+
+            }
+            
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();
@@ -323,20 +335,12 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
-        /// <summary>
-        ///     生成签名
-        /// </summary>
-        /// <param name="array"></param>
-        /// <returns></returns>
-        protected string GenerateSign(string[] array)
+        public enum AuthType
         {
-            string stringSign = "";
-            for (int i = 0; i < array.Length; i++)
-            {
-                stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
-            }
-
-            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(stringSign, _orgClientSecret));
+            Default,
+            Preview,
+            Download,
+            Upload
         }
     }
 }

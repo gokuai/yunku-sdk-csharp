@@ -927,13 +927,17 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###获取文件链接
 
-	Link(int dateline, string fullPath) 
+	Link(int dateline, String fullPath, int deadline, AuthType authType, String password)
 	
 #### 参数 
 | 参数 | 必需 | 类型 | 说明 |
 |------|------|------|------|
 | dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 文件路径 |
+| deadline | 否 | int | 10位链接失效的时间戳 ，永久传－1 |
+| authtype | 是 | enum | 文件访问权限DEFAULT默认为预览，PREVIEW：预览，DOWNLOAD：下载、预览，UPLOAD：上传、下载、预览｜	
+| password | 否 | string | 密码，不过不设置密码，传null |
+
 
 #### 返回结果
 ###发送消息
