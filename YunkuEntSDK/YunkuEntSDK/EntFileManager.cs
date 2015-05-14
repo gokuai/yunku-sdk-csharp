@@ -172,7 +172,7 @@ namespace YunkuEntSDK
             var data = new MsMultiPartFormData();
             request.ContentType = "multipart/form-data;boundary=" + data.Boundary;
             data.AddStreamFile("file", fileName, Util.ReadToEnd(stream));
-            data.AddParams("org_client_id", ClientSecret);
+            data.AddParams("org_client_id", _orgClientId);
             data.AddParams("dateline", dateline + "");
             data.AddParams("fullpath", fullPath);
             data.AddParams("op_name", opName);
@@ -209,16 +209,16 @@ namespace YunkuEntSDK
         /// 删除文件
         /// </summary>
         /// <param name="dateline"></param>
-        /// <param name="fullPath"></param>
+        /// <param name="fullPaths"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Del(int dateline, string fullPath, string opName)
+        public string Del(int dateline, string fullPaths, string opName)
         {
             var request = new HttpRequestSyn();
             request.RequestUrl = UrlApiDelFile;
             request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", dateline + "");
-            request.AppendParameter("fullpath", fullPath);
+            request.AppendParameter("fullpaths", fullPaths);
             request.AppendParameter("op_name", opName);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;

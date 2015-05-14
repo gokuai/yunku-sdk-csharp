@@ -18,6 +18,9 @@ Robots: noindex,nofollow
 ## 初始化
 要使用云库api，您需要有效的CLIENT_ID和CLIENT_SECRET,和获得云库后台管理账号。
 
+##参数使用
+以下使用到的方法中，如果是string类型的非必要参数，如果是不传，则传null
+
 ## 企业库管理（**EntLibManager.cs** ）
 
 ###构造方法
@@ -898,13 +901,13 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###删除文件
 
-	Del(int dateline, string fullPath, string opName)
+	Del(int dateline, string fullPaths, string opName)
 	
 #### 参数 
 | 参数 | 必需 | 类型 | 说明 |
 |------|------|------|------|
 | dateline | 是 | int | 10位当前时间戳 |
-| fullPath| 是 |string| 文件路径 |
+| fullPaths| 是 |string| 文件路径,多个文件用逗号隔开 |
 | opName | 是 | string | 用户名称 |
 #### 返回结果
 	正常返回 HTTP 200

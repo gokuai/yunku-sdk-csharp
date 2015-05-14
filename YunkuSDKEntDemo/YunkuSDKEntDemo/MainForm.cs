@@ -141,8 +141,8 @@ namespace YunkuSDKEntDemo
             //上传文件 文件不得超过50MB
             //DeserializeReturn(entFileManager.CreateFile((int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"), entFileManager.StatusCode);
 
-            //删除文件
-            //DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"), entFileManager.StatusCode);
+            //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
+//            DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"), entFileManager.StatusCode);
 
             //移动文件
             //DeserializeReturn(entFileManager.Move((int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"), entFileManager.StatusCode);
