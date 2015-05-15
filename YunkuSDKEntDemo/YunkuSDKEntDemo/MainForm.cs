@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 using YunkuEntSDK;
 using YunkuEntSDK.Data;
@@ -11,7 +12,6 @@ namespace YunkuSDKEntDemo
 {
     public partial class MainForm : Form
     {
-
         public MainForm()
         {
             InitializeComponent();
@@ -29,8 +29,8 @@ namespace YunkuSDKEntDemo
             string msg = "";
             string result = returnResult.Result;
             //复制到剪贴板
-            
-            if (code == (int)HttpStatusCode.OK)
+
+            if (code == (int) HttpStatusCode.OK)
             {
                 //成功则返回结果
 
@@ -62,7 +62,8 @@ namespace YunkuSDKEntDemo
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
-            var entLibManager = new EntLibManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId, OuathConfig.ClientSecret);
+            var entLibManager = new EntLibManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId,
+                OuathConfig.ClientSecret);
             //获取授权
 //            entLibManager.AccessToken(true);
             //创建库 1T="1099511627776" 1G＝“1073741824”；
@@ -114,7 +115,6 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"));
 
 
-
             //==========企业文件操作============//
             const string orgClientId = "294925cc5b65f075677a3227141b9467";
             const string orgClientSecret = "e195dbb3f9c263890a269010f18bea50";
@@ -143,7 +143,8 @@ namespace YunkuSDKEntDemo
             //上传文件 文件不得超过50MB
             //DeserializeReturn(entFileManager.CreateFile((int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"));
 
-            entFileManager.UploadByBlock((int) Util.GetUnixDataline(), "test.txt", "Brandon", 0, "C:\\Users\\Brandon\\Desktop\\test.txt",true,UploadCompeleted,ProgressChanged);
+            entFileManager.UploadByBlock((int) Util.GetUnixDataline(), "test.png", "Brandon", 0,
+                "C:\\Users\\Brandon\\Desktop\\test.jpg", true, UploadCompeleted, ProgressChanged);
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
 //            DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"));
@@ -161,7 +162,8 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entFileManager.Links((int)Util.GetUnixDataline(),true));
 
             //=======企业操作========//
-            var entManager = new EntManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId, OuathConfig.ClientSecret);
+            var entManager = new EntManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId,
+                OuathConfig.ClientSecret);
             //获取授权
 //            entManager.AccessToken(true);
 
@@ -207,28 +209,38 @@ namespace YunkuSDKEntDemo
 
             //删除同步分组的成员
 //            DeserializeReturn(entManager.DelSyncGroupMember("ParentGroup", new[] { "MemberTest2", "MemberTest3" }));
-            
         }
 
         private void ProgressChanged(object sender, ProgressEventArgs e)
         {
-            Console.Write(e.LocalFullPath);
-            Console.WriteLine(e.ProgressPercent);
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)delegate { ProgressChanged(sender, e); });
+                return;
+            }
+
+            TB_Result.Text += e.LocalFullPath + ":" + e.ProgressPercent + "\r\n";
+            TB_Result.Text += "==========================\r\n";
         }
 
         private void UploadCompeleted(object sender, CompletedEventArgs e)
         {
-            Console.Write(e.LocalFullPath);
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker) delegate { UploadCompeleted(sender, e); });
+                return;
+            }
+
             if (e.IsError)
             {
-                Console.WriteLine(e.ErrorMessage+":"+e.LocalFullPath);
+                TB_Result.Text += e.LocalFullPath + ":" + e.ErrorMessage + "\r\n";
+                TB_Result.Text += "==========================\r\n";
             }
             else
             {
-                Console.WriteLine("success"+e.LocalFullPath);
-
+                TB_Result.Text += e.LocalFullPath + ":" + "success" + "\r\n";
+                TB_Result.Text += "==========================\r\n";
             }
         }
     }
-
 }

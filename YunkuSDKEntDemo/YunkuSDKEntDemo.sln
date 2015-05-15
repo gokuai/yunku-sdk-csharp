@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YunkuSDKEntDemo", "YunkuSDKEntDemo\YunkuSDKEntDemo.csproj", "{75431A1A-61C5-4684-84D3-146EA5F39084}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YunkuEntSDK", "..\YunkuEntSDK\YunkuEntSDK\YunkuEntSDK.csproj", "{C6840E0C-8270-4C0B-B42B-19E3AEF60174}"
