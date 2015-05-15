@@ -35,7 +35,6 @@ namespace YunkuEntSDK
         /// </summary>
         public  string Token { internal  set; get; }
 
-        public HttpStatusCode StatusCode {  set;  get; }
 
 
         public string AccessToken(bool isEnt)
@@ -49,11 +48,11 @@ namespace YunkuEntSDK
             request.AppendParameter("grant_type", isEnt ? "ent_password" : "password");
             request.RequestMethod = RequestType.Post;
             request.Request();
-            StatusCode = request.Code;
-            string result = request.Result;
+            ReturnResult returnResult= ReturnResult.Create(request.Result);
+            string result = ReturnResult.Create(request.Result).Result;
 
             OauthData data = OauthData.Create(result);
-            if (request.Code == HttpStatusCode.OK)
+            if (returnResult.Code == (int)HttpStatusCode.OK)
             {
                 Token = data.Token;
             }

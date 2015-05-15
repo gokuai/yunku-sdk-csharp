@@ -104,16 +104,6 @@ namespace YunkuEntSDK.Net
         public event HttpResquestEventHandler HttpCompleted;
 
 
-        ///// <summary>
-        ///// Http回调事件
-        ///// </summary>
-        //public Action CallbackAction
-        //{
-        //    get;
-        //    set;
-        //}
-
-
         /// <summary>
         ///     追加参数
         /// </summary>
@@ -300,6 +290,7 @@ namespace YunkuEntSDK.Net
                         }
                         stream.Flush();
                     }
+
                 }
             }
 
@@ -350,10 +341,12 @@ namespace YunkuEntSDK.Net
             }
             finally
             {
-                var e = new HttpEventArgs();
-                e.IsError = iserror;
-                e.Result = result;
-                e.StatusCode = code;
+                var e = new HttpEventArgs
+                {
+                    IsError = iserror,
+                    Result = result,
+                    StatusCode = code
+                };
 
                 //进行异步回调操作
                 SynchronizationContext context = SynchronizationContext.Current;

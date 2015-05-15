@@ -1,14 +1,8 @@
-﻿using YunkuEntSDK.UtilClass;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace YunkuEntSDK.UtilClass
@@ -29,9 +23,9 @@ namespace YunkuEntSDK.UtilClass
         public static string EncodeToHMACSHA1(string toEncodeString,string key)
         {
             HMACSHA1 hmacsha1 = new HMACSHA1();
-            hmacsha1.Key = System.Text.Encoding.UTF8.GetBytes(key);
+            hmacsha1.Key = Encoding.UTF8.GetBytes(key);
 
-            byte[] dataBuffer = System.Text.Encoding.UTF8.GetBytes(toEncodeString);
+            byte[] dataBuffer = Encoding.UTF8.GetBytes(toEncodeString);
             byte[] hashBytes = hmacsha1.ComputeHash(dataBuffer);
             return Convert.ToBase64String(hashBytes);
         }
@@ -46,7 +40,7 @@ namespace YunkuEntSDK.UtilClass
 
         public static string EncodeBase64(string toEncodeString)
         { 
-            byte[] dataBuffer = System.Text.Encoding.UTF8.GetBytes(toEncodeString);
+            byte[] dataBuffer = Encoding.UTF8.GetBytes(toEncodeString);
             return Convert.ToBase64String(dataBuffer);
         }
 
@@ -55,7 +49,7 @@ namespace YunkuEntSDK.UtilClass
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static byte[] ReadToEnd(System.IO.Stream stream)
+        public static byte[] ReadToEnd(Stream stream)
         {
             long originalPosition = stream.Position;
             stream.Position = 0;
@@ -266,7 +260,7 @@ namespace YunkuEntSDK.UtilClass
         {
 
             string _rfc822Format = "ddd, dd MMM yyyy HH:mm:ss";
-            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             string _tmp = date.ToUniversalTime().ToString(_rfc822Format);
             return _tmp + " UT";

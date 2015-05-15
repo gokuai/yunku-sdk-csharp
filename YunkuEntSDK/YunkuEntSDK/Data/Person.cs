@@ -1,22 +1,20 @@
-﻿using System;
-
-namespace YunkuEntSDK.Data
+﻿namespace YunkuEntSDK.Data
 {
     public class Person
     {
-        public string Account;
-        public string Email;
-        public string Name;
-        public string Phone;
-        public int PId;
+        public string account;
+        public string email;
+        public string name;
+        public string phone;
+        public int pid;
 
-        public Person(int pid, String account, String name, String email, String phone)
+        public Person(int pid, string account, string name, string email, string phone)
         {
-            PId = pid;
-            Account = account;
-            Name = name;
-            Email = email;
-            Phone = phone;
+            this.pid = pid;
+            this.account = account;
+            this.name = name;
+            this.email = email;
+            this.phone = phone;
         }
     }
 }

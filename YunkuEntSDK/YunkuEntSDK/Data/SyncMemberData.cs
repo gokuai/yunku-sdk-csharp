@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK.Data
@@ -27,19 +22,19 @@ namespace YunkuEntSDK.Data
 //                entManager.StatusCode);
     public class SyncMemberData
     {
-        public Person Person;
-        public Group Group;
+        public Person person;
+        public Group group;
 
         public SyncMemberData(Person person, Group group)
         {
-            Person = person;
-            Group = group;
+            this.person = person;
+            this.group = group;
         }
 
 
         public String ToJsonString()
         {
-            return SimpleJson.SerializeObject(this).ToLower();
+            return SimpleJson.SerializeObject(this);
 
         }
 

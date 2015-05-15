@@ -5,20 +5,20 @@ namespace YunkuEntSDK.Data
 {
     public class Group
     {
-        public  List<Object> Children;
-        public int GId;
-        public String Name;
+        public  List<Object> children;
+        public int gid;
+        public String name;
 
-        public Group(int gid, String name, List<object> children)
+        public Group(int gid, string name, List<object> children)
         {
-            GId = gid;
-            Name = name;
-            Children = children;
+            this.gid = gid;
+            this.name = name;
+            this.children = children;
         }
 
         public void AddChildren(Object o)
         {
-            Children.Add(o);
+            this.children.Add(o);
         }
     }
 }

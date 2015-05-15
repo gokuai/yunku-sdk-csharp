@@ -15,8 +15,9 @@ namespace YunkuSDKEntDemo.Model
         private const string LogTag = "BaseData";
         protected const string KeyErrorCode = "error_code";
         protected const string KeyErrorMsg = "error_msg";
-        
-        /// <summary>
+
+
+       /// <summary>
         /// 错误码
         /// </summary>
         public int ErrorCode
