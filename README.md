@@ -899,19 +899,46 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | filesize | long | 文件大小 |
 
 ---
-###删除文件
+###通过本地路径上传（50M以内文件）
 
-	Del(int dateline, string fullPaths, string opName)
+	CreateFile(int dateline, string fullPath, string opName, string localPath)
 	
 #### 参数 
-| 参数 | 必需 | 类型 | 说明 |
+| 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
 | dateline | 是 | int | 10位当前时间戳 |
-| fullPaths| 是 |string| 文件路径,多个文件用逗号隔开 |
+| fullPath | 是 | string | 文件路径 |
 | opName | 是 | string | 用户名称 |
+| localPath | 是 | string | 文件流 |
+| fileName | 是 | string | 文件名 |
 #### 返回结果
-	正常返回 HTTP 200
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| hash | string | 文件唯一标识 |
+| fullpath | string | 文件路径 |
+| filehash | string | 文件内容hash |
+| filesize | long | 文件大小 |
+
 ---
+###文件分块上传
+
+	UploadByBlock(int dateline, String fullPath, String opName,
+	 int opId, String localFilePath,boolean overWrite,CompletedHanlder completeHanlder,ProgressChangedHandler progressHandler)
+	
+#### 参数 
+| 参数 | 必须 | 类型 | 说明 |	
+|------|------|------|------|
+| dateline | 是 | int | 10位当前时间戳 |
+| fullpath | 是 | string | 文件路径 |
+| opName | 否 | string |  创建人名称, 如果指定了op_id, 就不需要op_name， |
+| opId | 否 | int | 创建人id, 个人库默认是库拥有人id, 如果创建人不是云库用户, 可以用op_name代替,|
+| localFilePath | 是 | string | 文件本地路径 |	
+| overWrite | 是 | boolean | 是否覆盖同名文件，true为覆盖 |
+| completeHanlder | 否 | CompletedHanlder | 上传完成回调 |
+| progressHandler | 否 | ProgressChangedHandler | 上传进度回调 |
+
+---
+
 ###移动文件
 
 	Move(int dateline, string fullPath, string destFullPath, string opName)
