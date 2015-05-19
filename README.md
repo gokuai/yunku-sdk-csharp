@@ -820,6 +820,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 		last_member_name:
 		last_dateline:
 		uri:
+		preiview：
 	}
 
 | 字段 | 类型 | 说明 |
@@ -835,6 +836,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | last_member_name | string | 文件最后修改人 |
 | last_dateline | int | 文件最后修改时间戳(10位精确到秒) |
 | uri | string | 文件下载地址 |
+| preiview | string | 文件预览地址 |
 
 ---
 ###创建文件夹
