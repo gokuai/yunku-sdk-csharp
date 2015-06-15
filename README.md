@@ -698,12 +698,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###获取文件列表
 
-	GetFileList(int dateline, int start, string fullPath) 
+	GetFileList( int start, string fullPath) 
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| dateline | 是 | int | 10位当前时间戳 |
 | start | 是 | int | 开始位置(每次返回100条数据) |
 | fullPath | 是 | string | 文件的路径 |
 
@@ -749,12 +748,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###获取更新列表
 
-	GetUpdateList(int dateline, bool isCompare, long fetchDateline)
+	GetUpdateList( bool isCompare, long fetchDateline)
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| dateline | 是 | int | 10位当前时间戳 |
 | mode | 否 | string | 更新模式, 可不传, 当需要返回已删除的文件时使用compare |
 | fetchDateline | 是 | int | 13位时间戳, 获取该时间后的数据, 第一次获取用0 |
 #### 返回结果
@@ -780,12 +778,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 ###文件更新数量
-	GetUpdateCounts(int dateline, long beginDateline, long endDateline, bool showDelete)
+	GetUpdateCounts( long beginDateline, long endDateline, bool showDelete)
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| dateline | 是 | int | 10位当前时间戳 |
 | beginDateline | 是 | long | 13位时间戳, 开始时间 |
 | endDateline | 是 | long | 13位时间戳, 结束时间 |
 | showDelete | 是 | boolean |是否返回删除文件 |
@@ -799,12 +796,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ###获取文件信息
 
-	GetFileInfo(int dateline, string fullPath) 
+	GetFileInfo( string fullPath) 
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 文件路径 |
 
 #### 返回结果
@@ -841,13 +837,12 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###创建文件夹
 
-	CreateFolder(int dateline, string fullPath, string opName)
+	CreateFolder( string fullPath, string opName)
 	
 #### 参数 
 
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 |string| 文件夹路径 |
 | opName | 是 | string | 用户名称 |
 #### 返回结果
@@ -860,12 +855,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###通过文件流上传（50M以内文件）
 
-	CreateFile(int dateline, string fullPath,string opName, FileInputStream stream, string fileName) 
+	CreateFile( string fullPath,string opName, FileInputStream stream, string fileName) 
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 文件路径 |
 | opName | 是 | string | 用户名称 |
 | stream | 是 | stream | 文件流 |
@@ -882,12 +876,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###通过本地路径上传（50M以内文件）
 
-	CreateFile(int dateline, string fullPath, string opName, string localPath)
+	CreateFile( string fullPath, string opName, string localPath)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 文件路径 |
 | opName | 是 | string | 用户名称 |
 | localPath | 是 | string | 文件流 |
@@ -903,12 +896,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###通过本地路径上传（50M以内文件）
 
-	CreateFile(int dateline, string fullPath, string opName, string localPath)
+	CreateFile( string fullPath, string opName, string localPath)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 文件路径 |
 | opName | 是 | string | 用户名称 |
 | localPath | 是 | string | 文件流 |
@@ -924,17 +916,16 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###文件分块上传
 
-	UploadByBlock(int dateline, String fullPath, String opName,
+	UploadByBlock( String fullPath, String opName,
 	 int opId, String localFilePath,boolean overWrite,CompletedHanlder completeHanlder,ProgressChangedHandler progressHandler)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |	
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullpath | 是 | string | 文件路径 |
 | opName | 否 | string |  创建人名称, 如果指定了op_id, 就不需要op_name， |
 | opId | 否 | int | 创建人id, 个人库默认是库拥有人id, 如果创建人不是云库用户, 可以用op_name代替,|
-| localFilePath | 是 | string | 文件本地路径 |	
+| localFilePath | 是 | string | 文件本地路径 |
 | overWrite | 是 | boolean | 是否覆盖同名文件，true为覆盖 |
 | completeHanlder | 否 | CompletedHanlder | 上传完成回调 |
 | progressHandler | 否 | ProgressChangedHandler | 上传进度回调 |
@@ -943,13 +934,12 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ###移动文件
 
-	Move(int dateline, string fullPath, string destFullPath, string opName)
+	Move( string fullPath, string destFullPath, string opName)
 	
 #### 参数 
 
 | 参数 | 必需 | 类型 | 说明 |
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 要移动文件的路径 |
 | destFullPath | 是 | string | 移动后的路径 |
 | opName | 是 | string | 用户名称 |
@@ -959,12 +949,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###获取文件链接
 
-	Link(int dateline, String fullPath, int deadline, AuthType authType, String password)
+	Link( String fullPath, int deadline, AuthType authType, String password)
 	
 #### 参数 
 | 参数 | 必需 | 类型 | 说明 |
 |------|------|------|------|
-| dateline | 是 | int | 10位当前时间戳 |
 | fullPath | 是 | string | 文件路径 |
 | deadline | 否 | int | 10位链接失效的时间戳 ，永久传－1 |
 | authtype | 是 | enum | 文件访问权限DEFAULT默认为预览，PREVIEW：预览，DOWNLOAD：下载、预览，UPLOAD：上传、下载、预览｜	
@@ -974,12 +963,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 #### 返回结果
 ###发送消息
 
-	Sendmsg(int dateline, string title, string text, string image, string linkUrl, string opName) 
+	Sendmsg( string title, string text, string image, string linkUrl, string opName) 
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| dateline | 是 | int | 10位当前时间戳 |
 | title | 是 | string | 消息标题 |
 | text | 是 | string | 消息正文 |
 | image | 否 | string | 图片url |
@@ -991,7 +979,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ###获取当前库所有外链
 
-	Links(int dateline, bool fileOnly)
+	Links( bool fileOnly)
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |

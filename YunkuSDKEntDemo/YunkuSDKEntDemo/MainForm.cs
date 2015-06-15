@@ -123,43 +123,43 @@ namespace YunkuSDKEntDemo
 
 
             //获取文件列表
-//            DeserializeReturn(entFileManager.GetFileList((int)Util.GetUnixDataline(), 0, ""));
+//            DeserializeReturn(entFileManager.GetFileList( 0, ""));
 
             //获取更新列表
-            //DeserializeReturn(entFileManager.GetUpdateList((int)Util.GetUnixDataline(), false, 0));
+            //DeserializeReturn(entFileManager.GetUpdateList( false, 0));
 
 //            long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
 //            long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
 
             //文件更新数量
-//            DeserializeReturn(entFileManager.GetUpdateCount((int)Util.GetUnixDataline(),beigin ,now , true));
+//            DeserializeReturn(entFileManager.GetUpdateCount(beigin ,now , true));
 
             //获取文件（夹）信息
-            //DeserializeReturn(entFileManager.GetFileInfo((int)Util.GetUnixDataline(), "test"));
+            //DeserializeReturn(entFileManager.GetFileInfo( "test"));
 
             //创建文件夹
-            //DeserializeReturn(entFileManager.CreateFolder((int)Util.GetUnixDataline(), "testFolder", "Brandon"));
+            //DeserializeReturn(entFileManager.CreateFolder( "testFolder", "Brandon"));
 
             //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile((int)Util.GetUnixDataline(), "test", "Brandon", "D:\\test.txt"));
+            //DeserializeReturn(entFileManager.CreateFile( "test", "Brandon", "D:\\test.txt"));
 
-            entFileManager.UploadByBlock((int) Util.GetUnixDataline(), "test.png", "Brandon", 0,
+            entFileManager.UploadByBlock( "test.png", "Brandon", 0,
                 "C:\\Users\\Brandon\\Desktop\\test.jpg", true, UploadCompeleted, ProgressChanged);
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
-//            DeserializeReturn(entFileManager.Del((int)Util.GetUnixDataline(), "test", "Brandon"));
+//            DeserializeReturn(entFileManager.Del( "test", "Brandon"));
 
             //移动文件
-            //DeserializeReturn(entFileManager.Move((int)Util.GetUnixDataline(), "testFolder", "1/testFolder", "Brandon"));
+            //DeserializeReturn(entFileManager.Move( "testFolder", "1/testFolder", "Brandon"));
 
             ////文件连接
-//            DeserializeReturn(entFileManager.Link((int)Util.GetUnixDataline(), "test.png", 0, EntFileManager.AuthType.Default, null));
+//            DeserializeReturn(entFileManager.Link( "test.png", 0, EntFileManager.AuthType.Default, null));
 
             ////发送消息
-            //DeserializeReturn(entFileManager.SendMsg((int)Util.GetUnixDataline(), "msgTest", "msg", "", "", "Brandon"));
+            //DeserializeReturn(entFileManager.SendMsg( "msgTest", "msg", "", "", "Brandon"));
 
             //获取当前库所有外链
-//            DeserializeReturn(entFileManager.Links((int)Util.GetUnixDataline(),true));
+//            DeserializeReturn(entFileManager.Links(true));
 
             //=======企业操作========//
             var entManager = new EntManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId,

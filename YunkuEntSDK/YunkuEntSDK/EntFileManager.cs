@@ -37,15 +37,14 @@ namespace YunkuEntSDK
         /// <summary>
         /// 获取文件列表
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="start"></param>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string GetFileList(int dateline, int start, string fullPath)
+        public string GetFileList( int start, string fullPath)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiFilelist};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("start", start + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -57,15 +56,14 @@ namespace YunkuEntSDK
         /// <summary>
         /// 获取更新列表
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="isCompare"></param>
         /// <param name="fetchDateline"></param>
         /// <returns></returns>
-        public string GetUpdateList(int dateline, bool isCompare, long fetchDateline)
+        public string GetUpdateList( bool isCompare, long fetchDateline)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiUpdateList};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             if (isCompare)
             {
                 request.AppendParameter("mode", "compare");
@@ -80,17 +78,16 @@ namespace YunkuEntSDK
         /// <summary>
         /// 文件更新数量
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="beginDateline"></param>
         /// <param name="endDateline"></param>
         /// <param name="showDelete"></param>
         /// <returns></returns>
 
-        public string GetUpdateCount(int dateline, long beginDateline, long endDateline, bool showDelete)
+        public string GetUpdateCount( long beginDateline, long endDateline, bool showDelete)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiUpdateCount};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("begin_dateline", beginDateline + "");
             request.AppendParameter("end_dateline", endDateline + "");
             if (showDelete)
@@ -106,14 +103,13 @@ namespace YunkuEntSDK
         /// <summary>
         /// 获取文件信息
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string GetFileInfo(int dateline, string fullPath)
+        public string GetFileInfo( string fullPath)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiFileInfo};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
@@ -124,15 +120,14 @@ namespace YunkuEntSDK
         /// <summary>
         /// 创建文件夹
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string CreateFolder(int dateline, string fullPath, string opName)
+        public string CreateFolder( string fullPath, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiCreateFolder};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("op_name", opName);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -144,19 +139,18 @@ namespace YunkuEntSDK
         /// <summary>
         /// 通过文件流上传
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <param name="opName"></param>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public string CreateFile(int dateline, string fullPath, string opName, Stream stream)
+        public string CreateFile( string fullPath, string opName, Stream stream)
         {
             if (stream.Length > UploadSizeLimit)
             {
                 LogPrint.Print("文件大小超过50MB");
                 return "";
             }
-
+            long dateline = Util.GetUnixDataline();
             var request = new HttpRequestSyn {RequestUrl = UrlApiCreateFile};
             string[] arr = {dateline + "", "file", fullPath, opName, _orgClientId};
             var data = new MsMultiPartFormData();
@@ -181,19 +175,18 @@ namespace YunkuEntSDK
         /// <summary>
         /// 通过本地路径上传
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <param name="opName"></param>
         /// <param name="localPath"></param>
         /// <returns></returns>
-        public string CreateFile(int dateline, string fullPath, string opName, string localPath)
+        public string CreateFile( string fullPath, string opName, string localPath)
         {
             if (File.Exists(fullPath))
             {
                 using (var fs = new FileStream(localPath, FileMode.Open))
                 {
                     Stream stream = fs;
-                    return CreateFile(dateline, fullPath, opName, stream);
+                    return CreateFile( fullPath, opName, stream);
                 }
             }
             else
@@ -205,11 +198,11 @@ namespace YunkuEntSDK
 
 
 
-        public Thread UploadByBlock(int dateline, string fullPath, string opName, int opId, string localFilePath,bool overWrite
+        public Thread UploadByBlock( string fullPath, string opName, int opId, string localFilePath,bool overWrite
             ,CompletedEventHandler completedEventHandler,ProgressChangeEventHandler progressChangeEventHandler)
         {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, localFilePath,
-                fullPath, opName, opId, _orgClientId, dateline, ClientSecret, overWrite);
+                fullPath, opName, opId, _orgClientId, Util.GetUnixDataline(), ClientSecret, overWrite);
             uploadManager.Completed +=new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 
@@ -221,15 +214,14 @@ namespace YunkuEntSDK
         /// <summary>
         /// 删除文件
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPaths"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Del(int dateline, string fullPaths, string opName)
+        public string Del( string fullPaths, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelFile};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("fullpaths", fullPaths);
             request.AppendParameter("op_name", opName);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -241,16 +233,15 @@ namespace YunkuEntSDK
         /// <summary>
         /// 移动文件
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <param name="destFullPath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Move(int dateline, string fullPath, string destFullPath, string opName)
+        public string Move( string fullPath, string destFullPath, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiMoveFile};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("dest_fullpath", destFullPath);
             request.AppendParameter("op_name", opName);
@@ -263,14 +254,13 @@ namespace YunkuEntSDK
         /// <summary>
         /// 获取文件链接
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string Link(int dateline, string fullPath,int deadline,AuthType authType,string password)
+        public string Link( string fullPath,int deadline,AuthType authType,string password)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiLinkFile};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("fullpath", fullPath);
             request.AppendParameter("password", password);
 
@@ -294,18 +284,17 @@ namespace YunkuEntSDK
         /// <summary>
         /// 发送消息
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="title"></param>
         /// <param name="text"></param>
         /// <param name="image"></param>
         /// <param name="linkUrl"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string SendMsg(int dateline, string title, string text, string image, string linkUrl, string opName)
+        public string SendMsg( string title, string text, string image, string linkUrl, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiSendmsg};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("title", title);
             request.AppendParameter("text", text);
             request.AppendParameter("image", image);
@@ -320,14 +309,13 @@ namespace YunkuEntSDK
         /// <summary>
         /// 获取当前库所有外链
         /// </summary>
-        /// <param name="dateline"></param>
         /// <param name="fileOnly"></param>
         /// <returns></returns>
-        public string Links(int dateline, bool fileOnly)
+        public string Links( bool fileOnly)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetLink};
             request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", dateline + "");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             if (fileOnly)
             {
                 request.AppendParameter("file", "1");
