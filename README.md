@@ -855,7 +855,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 ###通过文件流上传（50M以内文件）
 
-	CreateFile( string fullPath,string opName, FileInputStream stream, string fileName) 
+	CreateFile( string fullPath,string opName, FileInputStream stream) 
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
@@ -863,7 +863,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | fullPath | 是 | string | 文件路径 |
 | opName | 是 | string | 用户名称 |
 | stream | 是 | stream | 文件流 |
-| fileName | 是 | string | 文件名 |
+
 
 #### 返回结果
 | 字段 | 类型 | 说明 |
@@ -882,7 +882,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
 | fullPath | 是 | string | 文件路径 |
-| opName | 是 | string | 用户名称 |
+| opName | 否 | string | 用户名称 |
 | localPath | 是 | string | 文件流 |
 | fileName | 是 | string | 文件名 |
 #### 返回结果
@@ -902,7 +902,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
 | fullPath | 是 | string | 文件路径 |
-| opName | 是 | string | 用户名称 |
+| opName | 否 | string | 用户名称 |
 | localPath | 是 | string | 文件流 |
 | fileName | 是 | string | 文件名 |
 #### 返回结果
