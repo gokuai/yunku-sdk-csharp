@@ -882,9 +882,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
 | fullPath | 是 | string | 文件路径 |
-| opName | 否 | string | 用户名称 |
+| opName | 时 | string | 用户名称 |
 | localPath | 是 | string | 文件流 |
-| fileName | 是 | string | 文件名 |
+
 #### 返回结果
 | 字段 | 类型 | 说明 |
 |------|------|------|
