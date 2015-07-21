@@ -104,9 +104,9 @@ namespace YunkuEntSDK.Net
                                 _server = data.Server;
                                 UploadInit(data.UuidHash, filename, _fullPath, filehash, filesize);
 
-                                long range_index = 0;
-                                long range_end = 0;
-                                long datalength = -1;
+//                                long range_index = 0;
+//                                long range_end = 0;
+//                                long datalength = -1;
                                 long crc32 = 0;
                                 long offset = 0;
                                 long rang_end = 0;

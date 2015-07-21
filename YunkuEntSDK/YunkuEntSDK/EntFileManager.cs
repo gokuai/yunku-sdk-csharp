@@ -6,9 +6,9 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public class EntFileManager:SignAbility
+    public class EntFileManager : SignAbility
     {
-        private const long UploadSizeLimit = 52428800;//50MB
+        private const long UploadSizeLimit = 52428800; //50MB
         private const string LibHost = HostConfig.LibHost;
         private const string UrlApiFilelist = LibHost + "/1/file/ls";
         private const string UrlApiUpdateList = LibHost + "/1/file/updates";
@@ -21,10 +21,15 @@ namespace YunkuEntSDK
         private const string UrlApiSendmsg = LibHost + "/1/file/sendmsg";
         private const string UrlApiGetLink = LibHost + "/1/file/links";
         private const string UrlApiUpdateCount = LibHost + "/1/file/updates_count";
+        private const string UrlApiGetServerSite = LibHost + "/1/file/servers";
+        private const string UrlApiCreateFileByUrl = LibHost + "/1/file/create_file_by_url";
+        private const string UrlApiUploadServers = LibHost + "/1/file/upload_servers";
+
 
         private readonly string _orgClientId;
 
         public delegate void CompletedEventHandler(object sender, CompletedEventArgs e);
+
         public delegate void ProgressChangeEventHandler(object sender, ProgressEventArgs e);
 
         public EntFileManager(string orgClientId, string orgClientSecret)
@@ -40,7 +45,7 @@ namespace YunkuEntSDK
         /// <param name="start"></param>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string GetFileList( int start, string fullPath)
+        public string GetFileList(int start, string fullPath)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiFilelist};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -59,7 +64,7 @@ namespace YunkuEntSDK
         /// <param name="isCompare"></param>
         /// <param name="fetchDateline"></param>
         /// <returns></returns>
-        public string GetUpdateList( bool isCompare, long fetchDateline)
+        public string GetUpdateList(bool isCompare, long fetchDateline)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiUpdateList};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -82,8 +87,7 @@ namespace YunkuEntSDK
         /// <param name="endDateline"></param>
         /// <param name="showDelete"></param>
         /// <returns></returns>
-
-        public string GetUpdateCount( long beginDateline, long endDateline, bool showDelete)
+        public string GetUpdateCount(long beginDateline, long endDateline, bool showDelete)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiUpdateCount};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -92,7 +96,7 @@ namespace YunkuEntSDK
             request.AppendParameter("end_dateline", endDateline + "");
             if (showDelete)
             {
-                request.AppendParameter("showdel","1");
+                request.AppendParameter("showdel", "1");
             }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
@@ -105,12 +109,20 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string GetFileInfo( string fullPath)
+        public string GetFileInfo(string fullPath, NetType type)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiFileInfo};
             request.AppendParameter("org_client_id", _orgClientId);
             request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("fullpath", fullPath);
+            switch (type)
+            {
+                case NetType.Default:
+                    break;
+                case NetType.In:
+                    request.AppendHeaderParameter("net", type.ToString().ToLower());
+                    break;
+            }
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();
@@ -123,7 +135,7 @@ namespace YunkuEntSDK
         /// <param name="fullPath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string CreateFolder( string fullPath, string opName)
+        public string CreateFolder(string fullPath, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiCreateFolder};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -143,7 +155,7 @@ namespace YunkuEntSDK
         /// <param name="opName"></param>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public string CreateFile( string fullPath, string opName, Stream stream)
+        public string CreateFile(string fullPath, string opName, Stream stream)
         {
             if (stream.Length > UploadSizeLimit)
             {
@@ -179,14 +191,14 @@ namespace YunkuEntSDK
         /// <param name="opName"></param>
         /// <param name="localPath"></param>
         /// <returns></returns>
-        public string CreateFile( string fullPath, string opName, string localPath)
+        public string CreateFile(string fullPath, string opName, string localPath)
         {
             if (File.Exists(fullPath))
             {
                 using (var fs = new FileStream(localPath, FileMode.Open))
                 {
                     Stream stream = fs;
-                    return CreateFile( fullPath, opName, stream);
+                    return CreateFile(fullPath, opName, stream);
                 }
             }
             else
@@ -197,13 +209,12 @@ namespace YunkuEntSDK
         }
 
 
-
-        public Thread UploadByBlock( string fullPath, string opName, int opId, string localFilePath,bool overWrite
-            ,CompletedEventHandler completedEventHandler,ProgressChangeEventHandler progressChangeEventHandler)
+        public Thread UploadByBlock(string fullPath, string opName, int opId, string localFilePath, bool overWrite
+            , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
         {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, localFilePath,
                 fullPath, opName, opId, _orgClientId, Util.GetUnixDataline(), ClientSecret, overWrite);
-            uploadManager.Completed +=new UploadManager.CompletedEventHandler(completedEventHandler);
+            uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 
             Thread thread = new Thread(uploadManager.DoUpload);
@@ -217,7 +228,7 @@ namespace YunkuEntSDK
         /// <param name="fullPaths"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Del( string fullPaths, string opName)
+        public string Del(string fullPaths, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelFile};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -237,7 +248,7 @@ namespace YunkuEntSDK
         /// <param name="destFullPath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Move( string fullPath, string destFullPath, string opName)
+        public string Move(string fullPath, string destFullPath, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiMoveFile};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -256,7 +267,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullPath"></param>
         /// <returns></returns>
-        public string Link( string fullPath,int deadline,AuthType authType,string password)
+        public string Link(string fullPath, int deadline, AuthType authType, string password)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiLinkFile};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -272,9 +283,8 @@ namespace YunkuEntSDK
             if (!authType.Equals(AuthType.Default))
             {
                 request.AppendParameter("auth", authType.ToString().ToLower());
-
             }
-            
+
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();
@@ -290,7 +300,7 @@ namespace YunkuEntSDK
         /// <param name="linkUrl"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string SendMsg( string title, string text, string image, string linkUrl, string opName)
+        public string SendMsg(string title, string text, string image, string linkUrl, string opName)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiSendmsg};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -311,7 +321,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fileOnly"></param>
         /// <returns></returns>
-        public string Links( bool fileOnly)
+        public string Links(bool fileOnly)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetLink};
             request.AppendParameter("org_client_id", _orgClientId);
@@ -326,12 +336,77 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 通过链接上传文件
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <param name="opId"></param>
+        /// <param name="opName"></param>
+        /// <param name="overwrite"></param>
+        /// <param name="fileUrl"></param>
+        /// <returns></returns>
+        public string CreateFileByUrl(string fullPath, int opId, string opName, bool overwrite, string fileUrl)
+        {
+            var request = new HttpRequestSyn {RequestUrl = UrlApiCreateFileByUrl};
+            request.AppendParameter("org_client_id", _orgClientId);
+            request.AppendParameter("fullpath", fullPath);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            if (opId > 0)
+            {
+                request.AppendParameter("op_id", opId + "");
+            }
+            else
+            {
+                request.AppendParameter("op_name", opName);
+            }
+            request.AppendParameter("overwrite", (overwrite ? 1 : 0) + "");
+            request.AppendParameter("url", fileUrl);
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Post;
+            request.Request();
+            return request.Result;
+        }
+
+        /// <summary>
+        /// 获取上传地址
+        /// (支持50MB以上文件的上传)
+        /// </summary>
+        /// <returns></returns>
+        public string GetUploadServers()
+        {
+            var request = new HttpRequestSyn {RequestUrl = UrlApiUploadServers};
+            request.AppendParameter("org_client_id", _orgClientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Get;
+            request.Request();
+            return request.Result;
+        }
+
+        public string GetServerSite(string type)
+        {
+            var request = new HttpRequestSyn {RequestUrl = UrlApiGetServerSite};
+            request.AppendParameter("org_client_id", _orgClientId);
+            request.AppendParameter("type", type);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Get;
+            request.Request();
+            return request.Result;
+        }
+
         public enum AuthType
         {
             Default,
             Preview,
             Download,
             Upload
+        }
+
+        public enum NetType
+        {
+            Default,
+            In
         }
     }
 }

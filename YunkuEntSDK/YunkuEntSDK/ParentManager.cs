@@ -6,61 +6,67 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public abstract class ParentManager:SignAbility
+    public abstract class ParentManager : SignAbility
     {
         private const string OauthHost = HostConfig.OauthHost;
-        private const string UrlApiToken = OauthHost + "/oauth2/token";
+        private const string UrlApiToken = OauthHost + "/oauth2/token2";
 
-        private string _passsword;
-        private string _username;
         private string _clientId;
+        private bool _isEnt;
+        protected string _tokenType;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="password"></param>
-    /// <param name="clientId"></param>
-    /// <param name="clientSecret"></param>
-        internal ParentManager(string username, string password, string clientId, string clientSecret)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="clientId"></param>
+        /// <param name="clientSecret"></param>
+        internal ParentManager(string clientId, string clientSecret, bool isEnt)
         {
-            _username = username;
-            _passsword = MD5Core.GetHashString(password);
             _clientId = clientId;
             ClientSecret = clientSecret;
+            _isEnt = isEnt;
+            _tokenType = isEnt ? "ent" : "";
         }
 
         /// <summary>
         ///     获取到的身份验证token
         /// </summary>
-        public  string Token { internal  set; get; }
+        public string Token { internal set; get; }
 
 
-
-        public string AccessToken(bool isEnt)
+        public string AccessToken(string username,string password)
         {
-            var request = new HttpRequestSyn();
-            request.RequestUrl = UrlApiToken;
-            request.AppendParameter("username", _username);
-            request.AppendParameter("password", _passsword);
+            var request = new HttpRequestSyn {RequestUrl = UrlApiToken};
+            request.AppendParameter("username", username);
+
+            string passwordEncode;
+            if (username.Contains("/") || username.Contains("\\"))
+            {
+                passwordEncode = Util.EncodeBase64(password);
+            }
+            else
+            {
+                passwordEncode = MD5Core.GetHashString(password);
+            }
+
+            request.AppendParameter("password", passwordEncode);
             request.AppendParameter("client_id", _clientId);
-            request.AppendParameter("client_secret", ClientSecret);
-            request.AppendParameter("grant_type", isEnt ? "ent_password" : "password");
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            request.AppendParameter("grant_type", _isEnt ? "ent_password" : "password");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();
-            ReturnResult returnResult= ReturnResult.Create(request.Result);
+            ReturnResult returnResult = ReturnResult.Create(request.Result);
             string result = ReturnResult.Create(request.Result).Result;
 
             OauthData data = OauthData.Create(result);
-            if (returnResult.Code == (int)HttpStatusCode.OK)
+            if (returnResult.Code == (int) HttpStatusCode.OK)
             {
                 Token = data.Token;
             }
             return result;
         }
-
-        
-
-
     }
 }

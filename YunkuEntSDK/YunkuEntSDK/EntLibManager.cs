@@ -24,9 +24,7 @@ namespace YunkuEntSDK
         private const string UrlApiSet = LibHost + "/1/org/set";
         private const string UrlApiGetInfo = LibHost + "/1/org/info";
 
-
-        public EntLibManager(string uesrname, string password, string client_id, string client_secret)
-            : base(uesrname, password, client_id, client_secret)
+        public EntLibManager(string clientId, string clientSecret, bool isEnt) : base(clientId, clientSecret, isEnt)
         {
         }
 
@@ -42,7 +40,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiCreateLib};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_name", orgName);
             request.AppendParameter("org_capacity", orgCapacity );
             request.AppendParameter("storage_point_name", storagePointName);
@@ -62,7 +60,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetLibList};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();
@@ -80,7 +78,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiBind};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("title", title);
             request.AppendParameter("url", linkUrl);
@@ -99,7 +97,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiUnbind};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_client_id", orgClientId);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
@@ -118,7 +116,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetMembers};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("start", start + "");
             request.AppendParameter("size", size + "");
             request.AppendParameter("org_id", orgId + "");
@@ -139,7 +137,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetMember};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgid + "");
             request.AppendParameter("type", type.ToString().ToLower() + "");
             request.AppendParameter("ids", Util.StrArrayToString(ids,","));
@@ -161,7 +159,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiAddMembers};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("member_ids", Util.IntArrayToString(memberIds, ","));
@@ -182,7 +180,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiSetMemberRole};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("member_ids", Util.IntArrayToString(memberIds, ","));
@@ -202,7 +200,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelMember};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("member_ids", Util.IntArrayToString(memberIds, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -220,7 +218,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetGroups};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
@@ -239,7 +237,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiAddGroup};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("role_id", roleId + "");
             request.AppendParameter("group_id", groupId + "");
@@ -259,7 +257,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelGroup};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("group_id", groupId + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -279,7 +277,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiSetGroupRole};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", orgId + "");
             request.AppendParameter("group_id", groupId + "");
             request.AppendParameter("role_id", roleId + "");
@@ -298,7 +296,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDestroy};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_client_id", "" + orgClientId);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
@@ -319,7 +317,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiSet};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", "" + orgId);
             if (!string.IsNullOrEmpty(orgName))
             {
@@ -354,7 +352,7 @@ namespace YunkuEntSDK
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetInfo};
             request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("token_type", _tokenType);
             request.AppendParameter("org_id", "" + orgId);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
@@ -368,5 +366,6 @@ namespace YunkuEntSDK
             OutId,
             MemberId
         }
+
     }
 }

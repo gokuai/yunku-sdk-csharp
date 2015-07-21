@@ -62,10 +62,10 @@ namespace YunkuSDKEntDemo
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
-            var entLibManager = new EntLibManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId,
-                OuathConfig.ClientSecret);
+            var entLibManager = new EntLibManager( OuathConfig.ClientId,
+                OuathConfig.ClientSecret,true);
             //获取授权
-//            entLibManager.AccessToken(true);
+//           entLibManager.AccessToken(OuathConfig.Uesrname, OuathConfig.Password);
             //创建库 1T="1099511627776" 1G＝“1073741824”；
             //DeserializeReturn(entLibManager.Create("destroy","1073741824","destroy","testlib",""));
 
@@ -135,7 +135,7 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entFileManager.GetUpdateCount(beigin ,now , true));
 
             //获取文件（夹）信息
-            //DeserializeReturn(entFileManager.GetFileInfo( "test"));
+//            DeserializeReturn(entFileManager.GetFileInfo( "test",EntFileManager.NetType.Default));
 
             //创建文件夹
             //DeserializeReturn(entFileManager.CreateFolder( "testFolder", "Brandon"));
@@ -143,8 +143,12 @@ namespace YunkuSDKEntDemo
             //上传文件 文件不得超过50MB
             //DeserializeReturn(entFileManager.CreateFile( "test", "Brandon", "D:\\test.txt"));
 
-            entFileManager.UploadByBlock( "test.png", "Brandon", 0,
-                "C:\\Users\\Brandon\\Desktop\\test.jpg", true, UploadCompeleted, ProgressChanged);
+//            entFileManager.UploadByBlock( "test.png", "Brandon", 0,
+//                "C:\\Users\\Brandon\\Desktop\\test.jpg", true, UploadCompeleted, ProgressChanged);
+
+            //通过链接上传文件
+//            DeserializeReturn( entFileManager.CreateFileByUrl("1.jpg", 0, "Brandon", true,
+//                "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg")); 
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
 //            DeserializeReturn(entFileManager.Del( "test", "Brandon"));
@@ -162,10 +166,10 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entFileManager.Links(true));
 
             //=======企业操作========//
-            var entManager = new EntManager(OuathConfig.Uesrname, OuathConfig.Password, OuathConfig.ClientId,
-                OuathConfig.ClientSecret);
+            var entManager = new EntManager(OuathConfig.ClientId,
+                OuathConfig.ClientSecret,true);
             //获取授权
-//            entManager.AccessToken(true);
+//            entManager.AccessToken(OuathConfig.Uesrname, OuathConfig.Password);
 
             //获取成员
 //            DeserializeReturn(entManager.GetMembers(0, 20));
@@ -182,12 +186,15 @@ namespace YunkuSDKEntDemo
             //根据成员id获取成员个人库外链
 //            DeserializeReturn(entManager.GetMemberFileLink(52,true));
 
-            //根据外部成员id获取成员信息
-//            DeserializeReturn(entManager.GetMemberByOutid(new [] { "nishuonishuo", "dqwdqw" }));
+            //根据成员Id查询企业成员信息
+//            DeserializeReturn(entManager.GetMemberById(43));
 
-            //根据外部成员登陆帐号获取成员信息
-//            DeserializeReturn(entManager.GetMemberByUserIds(new[] { "nishuonishuo" }));
+            //根据外部系统唯一id查询企业成员信息
+//            DeserializeReturn(entManager.GetMemberByAccount("nishuonishuo"));
 
+            //根据外部系统登录帐号查询企业成员信息
+//            DeserializeReturn(entManager.GetMemberByOutId("dqwdqw"));
+            
             //添加或修改同步成员
 //            DeserializeReturn(entManager.AddSyncMember("MemberTest1", "Member1", "Member1", "", "",""));
 //             DeserializeReturn(entManager.AddSyncMember("MemberTest2", "Member2", "Member2", "", "",""));
