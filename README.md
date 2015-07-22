@@ -8,7 +8,7 @@ Robots: noindex,nofollow
 
 #够快云库CSharp SDK使用说明
 
-版本：1.0.3
+版本：1.0.18
 
 创建：2014-08-25
 
@@ -26,28 +26,27 @@ Robots: noindex,nofollow
 ###构造方法
 
 
-new EntLibManager（string username，string password,
-	string clientId, string clientSecret）
+new EntLibManager（string clientId, string clientSecret，bool isEnt）
 
 
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| username | 是 | string | 用户名 |
-| password | 是 | string | 密码|
 | clientId | 是 | string | 申请应用时分配的AppKey |
 | clientSecret | 是 | string | 申请应用时分配的AppSecret |
+| isEnt | 是 | bool | 是否是企业帐号登录|
 
 ---
 
 ### 授权
 
-	AccessToken(bool isEnt)
+	AccessToken(string username，string password)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| isEnt | 是 | bool | 是否是企业帐号登录|
+| username | 是 | string | 用户名 |
+| password | 是 | string | 密码|
 
 
 #### 返回结果
@@ -389,35 +388,30 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 
-
-
-
-
-
 ## 企业管理（**EntManager.cs** ）
 ###构造方法
 
 
-	new EntManager（string username，string password,string clientId,string clientSecret）
+	new EntManager（string clientId,string clientSecret，bool isEnt）
+
+#### 参数 
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| clientId | 是 | string | 申请应用时分配的AppKey |
+| clientSecret | 是 | string | 申请应用时分配的AppSecret |
+| isEnt | 是 | bool | 是否是企业帐号登录|
+
+---
+
+### 授权
+
+	AccessToken(string username，string password)
 
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | username | 是 | string | 用户名 |
 | password | 是 | string | 密码|
-| clientId | 是 | string | 申请应用时分配的AppKey |
-| clientSecret | 是 | string | 申请应用时分配的AppSecret |
-
----
-
-### 授权
-
-	AccessToken(bool isEnt)
-
-#### 参数 
-| 参数 | 必须 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| isEnt | 是 | bool | 是否是企业帐号登录|
 
 
 #### 返回结果
@@ -452,7 +446,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-###获取成员
+###获取成员列表
 
 	GetMembers(int start, int size)
 
@@ -476,6 +470,73 @@ org_client_secret用于调用库文件相关API签名时的密钥
 			...
 		],
 		count: 成员总数
+	}
+
+---
+### 根据成员Id查询企业成员信息
+	GetMemberById(int memberId)
+
+#### 参数 
+	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| memberId | 是 | int | 成员id |
+
+
+#### 返回结果
+
+	{
+      "member_id": 成员id,
+      "member_name": 成员显示名,
+      "member_email": 成员邮箱,
+      "out_id": 外部系统唯一id,
+      "account": 外部系统登录帐号,
+      "state": 成员状态。1：已接受，2：未接受
+	}
+
+---
+
+### 根据外部系统唯一id查询企业成员信息
+	GetMemberByOutId(string outId)
+
+#### 参数 
+	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| outId | 是 | string | 外部系统唯一id|
+
+
+#### 返回结果
+
+	{
+      "member_id": 成员id,
+      "member_name": 成员显示名,
+      "member_email": 成员邮箱,
+      "out_id": 外部系统唯一id,
+      "account": 外部系统登录帐号,
+      "state": 成员状态。1：已接受，2：未接受
+	}
+
+---
+### 根据外部系统登录帐号查询企业成员信息
+	GetMemberByAccount(string account)
+
+#### 参数 
+	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| account | 是 | String | 外部系统登录帐号 |
+
+
+#### 返回结果
+
+	{
+      "member_id": 成员id,
+      "member_name": 成员显示名,
+      "member_email": 成员邮箱,
+      "out_id": 外部系统唯一id,
+      "account": 外部系统登录帐号,
+      "state": 成员状态。1：已接受，2：未接受
 	}
 
 ---
@@ -551,47 +612,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	]
 
 ---
-###根据外部成员id获取成员信息
 
-	GetMemberByOutid(string outIds[])
-
-#### 参数 
-| 参数 | 必须 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| out_ids | 是 | array | 外部成员id数组 |
-#### 返回结果
-	{
-		out_id:{
-			"member_id": 成员id,
-			"account": 外部账号,
-			"member_name": 成员显示名,
-			"member_email": 成员邮箱,
-			"state": 成员状态。1：已接受，2：未接受
-		},
-		...
-	}
-
----
-
-###根据外部登录帐号获取成员信息
-	GetMemberByUserId(string userIds[])
-#### 参数 
-| 参数 | 必须 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| userIds | 是 | array | 外部成员登录帐号数组 |
-#### 返回结果
-	{
-		user_id:{
-			"member_id": 成员id,
-			"account": 外部账号,
-			"member_name": 成员显示名,
-			"member_email": 成员邮箱,
-			"state": 成员状态。1：已接受，2：未接受
-		},
-		...
-	}
-
----
 ### 添加或修改同步成员
 
 	AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone,string password)
@@ -796,12 +817,13 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ###获取文件信息
 
-	GetFileInfo( string fullPath) 
+	GetFileInfo( string fullPath，NetType type) 
 	
 #### 参数 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | fullPath | 是 | string | 文件路径 |
+| type | 是 | NetType | Default,返回公网下载地址；In，返回内网下载地址 |
 
 #### 返回结果
 
@@ -998,4 +1020,41 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	]
 
 ---
+
+###通过链接上传文件
+	
+	CreateFileByUrl(string fullpath,int opId,string opName,bool overwrite,string url)
+
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullpath | 是 | string | 文件路径 |
+| opId | 否 | int | 创建人id, 个人库默认是库拥有人id, 如果创建人不是云库用户, 可以用op_name代替|
+| opName | 否 | string | 创建人名称, 如果指定了opId, 就不需要opName|
+| overwrite | 是 | bool | 是否覆盖同名文件, true覆盖(默认) false不覆盖,文件名后增加数字标识|
+| url | 是 | string | 需要服务端获取的文件url|
+
+#### 返回结果
+	正常返回 HTTP 200 
+
+---
+
+###WEB直接上传文件
+	GetUploadServers()
+
+#### 参数 
+
+(无)
+
+#### 返回结果
+	{
+       "upload":
+       [
+          上传服务器地址 如:http://upload.domain.com,
+         ...
+       ]
+	}
+
+---
+
 
