@@ -10,7 +10,7 @@ namespace YunkuEntSDK
         
         }
 
-        protected string ClientSecret;
+        protected string _clientSecret;
         /// <summary>
         ///     生成签名
         /// </summary>
@@ -24,7 +24,7 @@ namespace YunkuEntSDK
                 stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
             }
 
-            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(stringSign, ClientSecret));
+            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(stringSign, _clientSecret));
         }
     }
 }

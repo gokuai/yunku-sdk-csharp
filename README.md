@@ -2,66 +2,41 @@
 Title:够快云库CSharp SDK使用说明
 Description:
 Author: Brandon
-Date: 2014/08/25
+Date: 2016/11/03
 Robots: noindex,nofollow
 */
 
-#够快云库CSharp SDK使用说明
+# 够快云库3.0 CSharp SDK使用说明
 
-版本：1.0.18
+版本：3.0
 
-创建：2014-08-25
+创建：2016-11-03
 
-## 引用 
-将**[yunku-csharp-sdk].dll**文件引用进项目，包括YunkucSDKlibs下的jar文件，或者将**YunkuEntSDK**做为依赖项目。
+## 引用
+
+将`[yunku-csharp-sdk].dll`文件引用进项目，或者将`YunkuEntSDK`做为依赖项目。
 
 ## 初始化
-要使用云库api，您需要有效的CLIENT_ID和CLIENT_SECRET,和获得云库后台管理账号。
+
+要使用云库3.0的API，您需要先在 <a href="http://developer.gokuai.com/yk/tutorial#yk3" target="_blank">企业授权</a> 中获取 `client_id` 和 `client_secret`
 
 ##参数使用
-以下使用到的方法中，如果是string类型的非必要参数，如果是不传，则传null
 
-## 企业库管理（**EntLibManager.cs** ）
+以下使用到的方法中，如果是string类型的非必要参数，如果是不传，则传`null`
 
-###构造方法
+## 企业库管理（EntLibManager.cs）
+
+### 构造方法
+
+	new EntLibManager（string clientId, string clientSecret）
 
 
-new EntLibManager（string clientId, string clientSecret，bool isEnt）
+#### 参数
 
-
-#### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | clientId | 是 | string | 申请应用时分配的AppKey |
 | clientSecret | 是 | string | 申请应用时分配的AppSecret |
-| isEnt | 是 | bool | 是否是企业帐号登录|
-
----
-
-### 授权
-
-	AccessToken(string username，string password)
-	
-#### 参数 
-| 参数 | 必须 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| username | 是 | string | 用户名 |
-| password | 是 | string | 密码|
-
-
-#### 返回结果
-
-	{
-		access_token:
-		expires_in:
-		refresh_token:
-	}
-
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| access_token | string | 用于调用access_token，接口获取授权后的access token |
-| expires_in |int | access_token的有效期，unix时间戳 |
-| refresh_token | string | 用于刷新access_token 的 refresh_token，有效期1个月 |
 
 ---
 
@@ -70,7 +45,8 @@ new EntLibManager（string clientId, string clientSecret，bool isEnt）
 	Create(string orgName, int orgCapacity, 
 	string storagePointName, string orgDesc,string orgLogo) 
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgName | 是 | string | 库名称|
@@ -91,16 +67,19 @@ new EntLibManager（string clientId, string clientSecret，bool isEnt）
 | org_id | int | 库ID |
 | mount_id | int | 库空间id |
 
-####数值参考
-1T="1099511627776" 
-1G＝“1073741824”；
+#### 数值参考
+
+	1T="1099511627776"
+	1G＝"1073741824"
 
 ---
 
 ### 修改库信息
 
 	Set(int orgId, string orgName, string orgCapacity, string orgDesc, string orgLogo) 
-#### 参数 
+	
+#### 参数
+ 
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
@@ -109,25 +88,29 @@ new EntLibManager（string clientId, string clientSecret，bool isEnt）
 | orgDesc | 否 | string | 库描述 |
 | orgLogo | 否 | string | 库logo |
 
-#### 返回结果 
+#### 返回结果
+
    正常返回 HTTP 200
    
-####数值参考
-1T="1099511627776" 
-1G＝“1073741824”；
+#### 数值参考
+
+	1T="1099511627776"
+	1G＝"1073741824"
    
 ---
 
 ### 获取库信息
 
 	GetInfo(int orgId)
-#### 参数 
+	
+#### 参数
+
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
-|
 
-#### 返回结果 
+#### 返回结果
+
 	{
       info:
       {
@@ -139,15 +122,18 @@ new EntLibManager（string clientId, string clientSecret，bool isEnt）
         size_org_use: 库已使用空间大小, 单位字节
         mount_id: 库空间id
       }
-	} 
-   
+	}
+
 ---
+
 ### 获取库列表
 
 	getLibList()
 
-#### 参数 
+#### 参数
+
 (无)
+
 #### 返回结果
 
     {
@@ -171,7 +157,8 @@ new EntLibManager（string clientId, string clientSecret，bool isEnt）
 
 	Bind(int orgId, string title, string linkUrl)
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库ID |
@@ -190,16 +177,16 @@ new EntLibManager（string clientId, string clientSecret，bool isEnt）
 | org_client_id | string | 库授权client_id |
 | org_client_secret | string | 库授权client_secret |
 
-org_client_secret用于调用库文件相关API签名时的密钥
+org\_client\_secret用于调用库文件相关API签名时的密钥
 
 ---
-
 
 ### 取消库授权
 
 	UnBind(string orgClientId) 
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgClientId | 是 | string | 库授权client_id |
@@ -214,12 +201,14 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 	GetMembers(int start, int size, int orgId)
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
 | start | 否 | int | 分页开始位置，默认0 |
 | size | 否 | int | 分页个数，默认20 |
+
 #### 返回结果
 	
 	{
@@ -241,9 +230,10 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 ### 查询库成员信息
+
 	GetMember(int orgid, MemberType type, String[] ids)
 
-#### 参数 
+#### 参数
 	
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -270,12 +260,14 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 	AddMembers(int orgId, int roleId, int[] memberIds) 
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
 | roleId | 是 | int | 角色id |
 | memberIds | 是 | array | 需要添加的成员id数组 |
+
 #### 返回结果
 	
 	正常返回 HTTP 200
@@ -286,7 +278,8 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 	SetMemberRole(int orgId, int roleId, int[] memberIds) 
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
@@ -298,78 +291,94 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ---
+
 ### 删除库成员
 
 	DelMember(int orgId, int[] memberIds)
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
 | memberIds | 是 | array | 成员id数组|
+
 #### 返回结果
 	
 	正常返回 HTTP 200
 
 ---
-### 获取库分组列表
+
+### 获取库部门列表
 
 	GetGroups(int orgId)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
+
 #### 返回结果
+
 	{
 		{
-			"id": 分组id
-			"name": 分组名称
-			"role_id": 分组角色id, 如果是0 表示分组中的成员使用在该分组上的角色
+			"id": 部门id
+			"name": 部门名称
+			"role_id": 部门角色id
 		},
 		...
 	}
 
 ---
-### 库上添加分组
+
+### 库上添加部门
 
 	AddGroup(int orgId, int groupId, int roleId)
 
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
-| groupId | 是 | int | 分组id|
-| roleId | 否 | int | 角色id,  默认0：分组中的成员使用在该分组上的角色 |
+| groupId | 是 | int | 部门id|
+| roleId | 否 | int | 角色id |
+
 #### 返回结果
 	
 	正常返回 HTTP 200
 
 ---
-### 删除库上的分组
+
+### 删除库上的部门
 
 	DelGroup(int orgId, int groupId)
 
 #### 参数 
- 参数 | 必须 | 类型 | 说明 |
+
+| 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
-| groupId | 是 | int | 分组id |
+| groupId | 是 | int | 部门id |
+
 #### 返回结果
 	
 	正常返回 HTTP 200
 
 ---
-### 修改库上分组的角色
+
+### 修改库上部门的角色
 
 	SetGroupRole(int orgId, int groupId, int roleId)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgId | 是 | int | 库id |
-| groupId | 是 | int | 分组id |
-| roleId | 否 | int | 角色id,  默认0：分组中的成员使用在该分组上的角色 |
+| groupId | 是 | int | 部门id |
+| roleId | 否 | int | 角色id |
+
 #### 返回结果
 	
 	正常返回 HTTP 200
@@ -377,24 +386,28 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 ### 删除库
+
 	Destroy(String orgClientId)
+
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | orgClientId | 否 | string | 库授权client_id|
+
 #### 返回结果
 	
 	正常返回 HTTP 200
 
 ---
 
+## 企业管理（EntManager.cs）
 
-## 企业管理（**EntManager.cs** ）
-###构造方法
-
+### 构造方法
 
 	new EntManager（string clientId,string clientSecret，bool isEnt）
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | clientId | 是 | string | 申请应用时分配的AppKey |
@@ -403,38 +416,14 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-### 授权
-
-	AccessToken(string username，string password)
-
-#### 参数 
-| 参数 | 必须 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| username | 是 | string | 用户名 |
-| password | 是 | string | 密码|
-
-
-#### 返回结果
-
-	{
-		access_token:
-		expires_in:
-		refresh_token:
-	}
-
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| access_token | string | 用于调用access_token，接口获取授权后的access token |
-| expires_in |int | access_token的有效期，unix时间戳 |
-| refresh_token | string | 用于刷新access_token 的 refresh_token，有效期1个月 |
-
----
-###获取角色
+### 获取角色
 
 	GetRoles() 
 
 #### 参数
+
 （无） 
+
 #### 返回结果
 	[
 		{
@@ -446,16 +435,19 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-###获取成员列表
+### 获取成员列表
 
 	GetMembers(int start, int size)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | start | 否 | int | 记录开始位置, 默认0 |
 | size | 否 | int | 返回条数, 默认20 |
+
 #### 返回结果
+
 	{
 		list:
 		[
@@ -473,7 +465,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}
 
 ---
+
 ### 根据成员Id查询企业成员信息
+
 	GetMemberById(int memberId)
 
 #### 参数 
@@ -497,6 +491,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 ---
 
 ### 根据外部系统唯一id查询企业成员信息
+
 	GetMemberByOutId(string outId)
 
 #### 参数 
@@ -505,7 +500,6 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | --- | --- | --- | --- |
 | outId | 是 | string | 外部系统唯一id|
 
-
 #### 返回结果
 
 	{
@@ -518,7 +512,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}
 
 ---
+
 ### 根据外部系统登录帐号查询企业成员信息
+
 	GetMemberByAccount(string account)
 
 #### 参数 
@@ -527,7 +523,6 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | --- | --- | --- | --- |
 | account | 是 | String | 外部系统登录帐号 |
 
-
 #### 返回结果
 
 	{
@@ -540,36 +535,43 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}
 
 ---
-###获取分组
+
+### 获取部门
 
 	GetGroups() 
 
 #### 参数 
+
 （无）
+
 #### 返回结果
 	{
 		"list":
 		[
 			{
-				"id": 分组id,
-				"name": 分组名称,
+				"id": 部门id,
+				"name": 部门名称,
 				"out_id": 外部唯一id,
-				"parent_id": 上级分组id, 0为顶级分组
+				"parent_id": 上级部门id, 0为顶层
 			}
 		]
 	}	
 
 ---
-### 分组成员列表
+
+### 部门成员列表
+
 	GetGroupMembers(int groupId, int start, int size, bool showChild) 
+
 #### 参数 
 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| groupId | 是 | int | 分组id |
+| groupId | 是 | int | 部门id |
 | start | 是 | int | 记录开始位置 |
 | size | 是 | int | 返回条数 |
-| showChild | 是 | bool | [0,1] 是否显示子分组内的成员 |
+| showChild | 是 | bool | [0,1] 是否显示子部门内的成员 |
+
 #### 返回结果
 	
 	
@@ -590,15 +592,18 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	}
 
 ---
-###根据成员id获取成员个人库外链
+
+### 根据成员id获取成员个人库外链
 
 	GetMemberFileLink(int memberId, bool fileOnly)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | memberId | 是 | int | 成员id |
 | fileOnly | 是 | bool | 是否只返回文件, 1只返回文件 |
+
 #### 返回结果
 	[
 		{
@@ -618,6 +623,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	AddSyncMember(string oudId,string memberName,string account,string memberEmail,string memberPhone,string password)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | oudId | 是 | string | 成员在外部系统的唯一id |
@@ -638,6 +644,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	DelSyncMember(string[] members)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | members | 是 | array | 成员在外部系统的唯一id数组|
@@ -648,80 +655,92 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-### 添加或修改同步分组
+### 添加或修改同步部门
 
 	AddSyncGroup(string outId,string name,string parentOutId)
 
 #### 参数 
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| outId | 是 | string | 分组在外部系统的唯一id |
+| outId | 是 | string | 部门在外部系统的唯一id |
 | name | 是 | string | 显示名称 |
-| parentOutId | 否 | string | 如果分组在另一个分组的下级, 需要指定上级分组唯一id, 不传表示在顶层, 修改分组时该字段无效 |
+| parentOutId | 否 | string | 如果部门在另一个部门的下级, 需要指定上级部门唯一id, 不传表示在顶层, 修改部门时该字段无效 |
 
 #### 返回结果
 
     HTTP 200
 
 ---
-### 删除同步分组
+
+### 删除同步部门
 
 	DelSyncGroup(string[]groups)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| groups | 是 | string | 分组在外部系统的唯一id数组|
+| groups | 是 | string | 部门在外部系统的唯一id数组|
 
 #### 返回结果
 
     HTTP 200
+
 ---
-### 添加同步分组的成员
+
+### 添加同步部门的成员
 
 	AddSyncGroupMember(string groupOutId,string[] members)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| groupOutId | 否 | string | 外部分组的唯一id, 不传表示顶层 |
+| groupOutId | 否 | string | 外部部门的唯一id, 不传表示顶层 |
 | members | 是 | array | 成员在外部系统的唯一id数组 |
+
 #### 返回结果
 
     HTTP 200
 ---
-### 删除同步分组的成员
+
+### 删除同步部门的成员
 
 	DelSyncGroupMember(string groupOutId, string[] members)
 	
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
-| groupOutId | 否 | string | 外部分组的唯一id, 不传表示顶层 |
+| groupOutId | 否 | string | 外部部门的唯一id, 不传表示顶层 |
 | members | 是 | array | 成员在外部系统的唯一id数组 |
+
 #### 返回结果
 
     HTTP 200
+
 ---
 
+## 企业文件管理（EntFileManager.cs）
 
-## 企业文件管理（**EntFileManager.cs** ）
-###构造方法
+### 构造方法
 
 	new EntFileManager(string orgClientId,string orgClientSecret);
 	
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | orgClientId | 是 | string | 库授权client_id  |
 | orgClientSecret | 是 | string | 库授权client_secret  |
 
 ---
-###获取文件列表
+
+### 获取文件列表
 
 	GetFileList( int start, string fullPath) 
 	
-#### 参数 
+#### 参数
+
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | start | 是 | int | 开始位置(每次返回100条数据) |
@@ -767,16 +786,20 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | last_dateline | int | 文件最后修改时间戳 |
 
 ---
-###获取更新列表
+
+### 获取更新列表
 
 	GetUpdateList( bool isCompare, long fetchDateline)
 	
-#### 参数 
+#### 参数
+
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | mode | 否 | string | 更新模式, 可不传, 当需要返回已删除的文件时使用compare |
 | fetchDateline | 是 | int | 13位时间戳, 获取该时间后的数据, 第一次获取用0 |
+
 #### 返回结果
+
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | fetch_dateline | int | 当前返回数据的最大时间戳（13位精确到毫秒） |
@@ -798,10 +821,11 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-###文件更新数量
+### 文件更新数量
 	GetUpdateCounts( long beginDateline, long endDateline, bool showDelete)
 	
-#### 参数 
+#### 参数
+
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | beginDateline | 是 | long | 13位时间戳, 开始时间 |
@@ -813,13 +837,15 @@ org_client_secret用于调用库文件相关API签名时的密钥
 	{
 		count: 更新数量
 	}
+
 ---
 
-###获取文件信息
+### 获取文件信息
 
 	GetFileInfo( string fullPath，NetType type) 
 	
-#### 参数 
+#### 参数
+
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | fullPath | 是 | string | 文件路径 |
@@ -857,7 +883,8 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | preiview | string | 文件预览地址 |
 
 ---
-###创建文件夹
+
+### 创建文件夹
 
 	CreateFolder( string fullPath, string opName)
 	
@@ -867,6 +894,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 |------|------|------|------|
 | fullPath | 是 |string| 文件夹路径 |
 | opName | 是 | string | 用户名称 |
+
 #### 返回结果
 
 | 字段 | 类型 | 说明 |
@@ -875,11 +903,13 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | fullpath | string | 文件夹的路径 |
 
 ---
-###通过文件流上传（50M以内文件）
+
+### 通过文件流上传（50M以内文件）
 
 	CreateFile( string fullPath,string opName, FileInputStream stream) 
 	
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
 | fullPath | 是 | string | 文件路径 |
@@ -888,6 +918,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 
 #### 返回结果
+
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | hash | string | 文件唯一标识 |
@@ -896,11 +927,13 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | filesize | long | 文件大小 |
 
 ---
-###通过本地路径上传（50M以内文件）
+
+### 通过本地路径上传（50M以内文件）
 
 	CreateFile( string fullPath, string opName, string localPath)
 	
-#### 参数 
+#### 参数
+
 | 参数 | 必须 | 类型 | 说明 |
 |------|------|------|------|
 | fullPath | 是 | string | 文件路径 |
@@ -908,6 +941,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | localPath | 是 | string | 文件流 |
 
 #### 返回结果
+
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | hash | string | 文件唯一标识 |
@@ -916,7 +950,8 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | filesize | long | 文件大小 |
 
 ---
-###通过本地路径上传（50M以内文件）
+
+### 通过本地路径上传（50M以内文件）
 
 	CreateFile( string fullPath, string opName, string localPath)
 	
@@ -927,7 +962,9 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | opName | 否 | string | 用户名称 |
 | localPath | 是 | string | 文件流 |
 | fileName | 是 | string | 文件名 |
+
 #### 返回结果
+
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | hash | string | 文件唯一标识 |
@@ -936,7 +973,8 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | filesize | long | 文件大小 |
 
 ---
-###文件分块上传
+
+### 文件分块上传
 
 	UploadByBlock( String fullPath, String opName,
 	 int opId, String localFilePath,boolean overWrite,CompletedHanlder completeHanlder,ProgressChangedHandler progressHandler)
@@ -954,7 +992,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-###移动文件
+### 移动文件
 
 	Move( string fullPath, string destFullPath, string opName)
 	
@@ -968,8 +1006,10 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 #### 返回结果
 	正常返回 HTTP 200
+	
 ---
-###获取文件链接
+
+### 获取文件链接
 
 	Link( String fullPath, int deadline, AuthType authType, String password)
 	
@@ -978,16 +1018,17 @@ org_client_secret用于调用库文件相关API签名时的密钥
 |------|------|------|------|
 | fullPath | 是 | string | 文件路径 |
 | deadline | 否 | int | 10位链接失效的时间戳 ，永久传－1 |
-| authtype | 是 | enum | 文件访问权限DEFAULT默认为预览，PREVIEW：预览，DOWNLOAD：下载、预览，UPLOAD：上传、下载、预览｜	
+| authtype | 是 | enum | 文件访问权限DEFAULT默认为预览，PREVIEW：预览，DOWNLOAD：下载、预览，UPLOAD：上传、下载、预览｜
 | password | 否 | string | 密码，不过不设置密码，传null |
 
-
 #### 返回结果
-###发送消息
+
+### 发送消息
 
 	Sendmsg( string title, string text, string image, string linkUrl, string opName) 
 	
-#### 参数 
+#### 参数
+
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
 | title | 是 | string | 消息标题 |
@@ -995,11 +1036,13 @@ org_client_secret用于调用库文件相关API签名时的密钥
 | image | 否 | string | 图片url |
 | linkUrl | 否 | string | 链接 |
 | opName | 是 | string | 用户名称 |
+
 #### 返回结果
 	正常返回 HTTP 200 
+	
 ---
 
-###获取当前库所有外链
+### 获取当前库所有外链
 
 	Links( bool fileOnly)
 	
@@ -1021,7 +1064,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-###通过链接上传文件
+### 通过链接上传文件
 	
 	CreateFileByUrl(string fullpath,int opId,string opName,bool overwrite,string url)
 
@@ -1039,7 +1082,7 @@ org_client_secret用于调用库文件相关API签名时的密钥
 
 ---
 
-###WEB直接上传文件
+### WEB直接上传文件
 	GetUploadServers()
 
 #### 参数 

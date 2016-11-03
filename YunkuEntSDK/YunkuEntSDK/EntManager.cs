@@ -7,41 +7,22 @@ namespace YunkuEntSDK
 {
     public class EntManager : ParentManager
     {
-        private const string LibHost = HostConfig.LibHost;
-        private const string UrlApiEntGetGroups = LibHost + "/1/ent/get_groups";
-        private const string UrlApiEntGetMembers = LibHost + "/1/ent/get_members";
-        private const string UrlApiGetMember = LibHost + "/1/ent/get_member";
-        private const string UrlApiEntGetRoles = LibHost + "/1/ent/get_roles";
-        private const string UrlApiEntSyncMember = LibHost + "/1/ent/sync_member";
-        private const string UrlApiGetMemberFileLink = LibHost + "/1/ent/get_member_file_link";
-        private const string UrlApiAddSyncMember = LibHost + "/1/ent/add_sync_member";
-        private const string UrlApiDelSyncMember = LibHost + "/1/ent/del_sync_member";
-        private const string UrlApiAddSyncGroup = LibHost + "/1/ent/add_sync_group";
-        private const string UrlApiDelSyncGroup = LibHost + "/1/ent/del_sync_group";
-        private const string UrlApiAddSyncGroupMember = LibHost + "/1/ent/add_sync_group_member";
-        private const string UrlApiDelSyncGroupMember = LibHost + "/1/ent/del_sync_group_member";
-        private const string UrlApiGetGroupMembers = LibHost + "/1/ent/get_group_members";
+        private const string ApiEntHost = HostConfig.ApiEntHost;
+        private const string UrlApiEntGetGroups = ApiEntHost + "/1/ent/get_groups";
+        private const string UrlApiEntGetMembers = ApiEntHost + "/1/ent/get_members";
+        private const string UrlApiGetMember = ApiEntHost + "/1/ent/get_member";
+        private const string UrlApiEntGetRoles = ApiEntHost + "/1/ent/get_roles";
+        private const string UrlApiEntSyncMember = ApiEntHost + "/1/ent/sync_member";
+        private const string UrlApiGetMemberFileLink = ApiEntHost + "/1/ent/get_member_file_link";
+        private const string UrlApiAddSyncMember = ApiEntHost + "/1/ent/add_sync_member";
+        private const string UrlApiDelSyncMember = ApiEntHost + "/1/ent/del_sync_member";
+        private const string UrlApiAddSyncGroup = ApiEntHost + "/1/ent/add_sync_group";
+        private const string UrlApiDelSyncGroup = ApiEntHost + "/1/ent/del_sync_group";
+        private const string UrlApiAddSyncGroupMember = ApiEntHost + "/1/ent/add_sync_group_member";
+        private const string UrlApiDelSyncGroupMember = ApiEntHost + "/1/ent/del_sync_group_member";
+        private const string UrlApiGetGroupMembers = ApiEntHost + "/1/ent/get_group_members";
 
-//        /// <summary>
-//        ///   同步成员和组织架构  
-//        /// </summary>
-//        /// <param name="structStr"></param>
-//        /// <returns></returns>
-//        public string SyncMembers(string structStr)
-//        {
-//            var request = new HttpRequestSyn();
-//            request.RequestUrl = UrlApiEntSyncMember;
-//            request.AppendParameter("token", Token);
-//            request.AppendParameter("token_type", "ent");
-//            request.AppendParameter("members", structStr);
-//            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-//            request.RequestMethod = RequestType.Post;
-//            request.Request();
-//            StatusCode = request.Code;
-//            return request.Result;
-//        }
-
-        public EntManager(string clientId, string clientSecret, bool isEnt) : base(clientId, clientSecret, isEnt)
+        public EntManager(string clientId, string clientSecret) : base(clientId, clientSecret, true)
         {
         }
 
@@ -54,8 +35,8 @@ namespace YunkuEntSDK
         public string GetMembers(int start, int size)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiEntGetMembers};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("start", start + "");
             request.AppendParameter("size", size + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -64,11 +45,11 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
-        private string GetMember(int memberId,string outId,string account)
+        private string GetMember(int memberId, string outId, string account)
         {
             var request = new HttpRequestSyn { RequestUrl = UrlApiGetMember };
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             if (memberId > 0)
             {
                 request.AppendParameter("member_id", memberId + "");
@@ -120,8 +101,8 @@ namespace YunkuEntSDK
         public string GetGroups()
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiEntGetGroups};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();
@@ -135,8 +116,8 @@ namespace YunkuEntSDK
         public string GetRoles()
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiEntGetRoles};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();
@@ -150,8 +131,8 @@ namespace YunkuEntSDK
         public string GetEntRoles()
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiEntGetRoles};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Get;
             request.Request();
@@ -166,8 +147,8 @@ namespace YunkuEntSDK
         public string GetMemberFileLink(int memberId,bool fileOnly)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetMemberFileLink};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             if (fileOnly)
             {
                 request.AppendParameter("file", "1");
@@ -193,8 +174,8 @@ namespace YunkuEntSDK
             string account,string memberEmail,string memberPhone,string password)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiAddSyncMember};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("out_id",oudId);
             request.AppendParameter("member_name", memberName);
             request.AppendParameter("account", account);
@@ -215,8 +196,8 @@ namespace YunkuEntSDK
         public string DelSyncMember(string[] members)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelSyncMember};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("members", Util.StrArrayToString(members, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
@@ -234,8 +215,8 @@ namespace YunkuEntSDK
         public string AddSyncGroup(string outId,string name,string parentOutId)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiAddSyncGroup};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("out_id", outId);
             request.AppendParameter("name", name);
             if (!string.IsNullOrEmpty(parentOutId))
@@ -257,8 +238,8 @@ namespace YunkuEntSDK
         public string DelSyncGroup(string[]groups)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelSyncGroup};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("groups", Util.StrArrayToString(groups, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
@@ -275,8 +256,8 @@ namespace YunkuEntSDK
         public string AddSyncGroupMember(string groupOutId,string[] members)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiAddSyncGroupMember};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("group_out_id", groupOutId);
             request.AppendParameter("members", Util.StrArrayToString(members, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -294,8 +275,8 @@ namespace YunkuEntSDK
         public string DelSyncGroupMember(string groupOutId, string[] members)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiDelSyncGroupMember};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("group_out_id", groupOutId);
             request.AppendParameter("members", Util.StrArrayToString(members, ","));
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
@@ -315,8 +296,8 @@ namespace YunkuEntSDK
         public string GetGroupMembers(int groupId, int start, int size, bool showChild)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiGetGroupMembers};
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("client_id", _clientId);
+            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
             request.AppendParameter("group_id", groupId+"");
             request.AppendParameter("start", start + "");
             request.AppendParameter("size", size + "");
@@ -326,12 +307,5 @@ namespace YunkuEntSDK
             request.Request();
             return request.Result;
         }
-
-
-
     }
-
-
-    
-
 }

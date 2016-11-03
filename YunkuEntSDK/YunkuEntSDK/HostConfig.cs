@@ -8,12 +8,11 @@ namespace YunkuEntSDK
 {
     internal class HostConfig
     {
-        public const string UserAgent = "YunkuCsharpSDK";
-//        public const string OauthHost = "http://zka.goukuai.cn";
-        public const string OauthHost = "http://a.goukuai.cn";
-//        public const string LibHost = "http://test4a-lib.goukuai.cn";
-//        public const string LibHost = "http://zka-lib.goukuai.cn";
-        public const string LibHost = "http://a-lib.goukuai.cn";
+        public const string UserAgent = "Yunku3CsharpSDK";
+        //public const string OauthHost = "http://yk3-api.goukuai.cn";
+        public const string OauthHost = "http://yk3-api.gokuai.com";
+        //public const string ApiEntHost = "http://yk3-api-ent.goukuai.cn";
+        public const string ApiEntHost = "http://yk3-api-ent.gokuai.com";
 
     }
 }

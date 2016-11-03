@@ -9,7 +9,7 @@ namespace YunkuEntSDK
     public class EntFileManager : SignAbility
     {
         private const long UploadSizeLimit = 52428800; //50MB
-        private const string LibHost = HostConfig.LibHost;
+        private const string LibHost = HostConfig.ApiEntHost;
         private const string UrlApiFilelist = LibHost + "/1/file/ls";
         private const string UrlApiUpdateList = LibHost + "/1/file/updates";
         private const string UrlApiFileInfo = LibHost + "/1/file/info";
@@ -35,7 +35,7 @@ namespace YunkuEntSDK
         public EntFileManager(string orgClientId, string orgClientSecret)
         {
             _orgClientId = orgClientId;
-            ClientSecret = orgClientSecret;
+            _clientSecret = orgClientSecret;
         }
 
 
@@ -213,7 +213,7 @@ namespace YunkuEntSDK
             , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
         {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, localFilePath,
-                fullPath, opName, opId, _orgClientId, Util.GetUnixDataline(), ClientSecret, overWrite);
+                fullPath, opName, opId, _orgClientId, Util.GetUnixDataline(), _clientSecret, overWrite);
             uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 

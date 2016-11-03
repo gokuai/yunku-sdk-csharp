@@ -62,11 +62,9 @@ namespace YunkuSDKEntDemo
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
-            var entLibManager = new EntLibManager( OuathConfig.ClientId,
-                OuathConfig.ClientSecret,true);
-            //获取授权
-//           entLibManager.AccessToken(OuathConfig.Uesrname, OuathConfig.Password);
-            //创建库 1T="1099511627776" 1G＝“1073741824”；
+            var entLibManager = new EntLibManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
+
+            //创建库 1T="1099511627776" 1G＝"1073741824"
             //DeserializeReturn(entLibManager.Create("destroy","1073741824","destroy","testlib",""));
 
             //修改库信息 1T="1099511627776" 1G＝“1073741824”；
@@ -116,8 +114,8 @@ namespace YunkuSDKEntDemo
 
 
             //==========企业文件操作============//
-            const string orgClientId = "294925cc5b65f075677a3227141b9467";
-            const string orgClientSecret = "e195dbb3f9c263890a269010f18bea50";
+            const string orgClientId = "";
+            const string orgClientSecret = "";
 
             var entFileManager = new EntFileManager(orgClientId, orgClientSecret);
 
@@ -166,10 +164,7 @@ namespace YunkuSDKEntDemo
 //            DeserializeReturn(entFileManager.Links(true));
 
             //=======企业操作========//
-            var entManager = new EntManager(OuathConfig.ClientId,
-                OuathConfig.ClientSecret,true);
-            //获取授权
-//            entManager.AccessToken(OuathConfig.Uesrname, OuathConfig.Password);
+            var entManager = new EntManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
 
             //获取成员
 //            DeserializeReturn(entManager.GetMembers(0, 20));

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace YunkuSDKEntDemo
 {
-    class OuathConfig
+    class SdkConfig
     {
-        public const string Uesrname = "";
-        public const string Password = "";
         public const string ClientId = "";
         public const string ClientSecret = "";
     }

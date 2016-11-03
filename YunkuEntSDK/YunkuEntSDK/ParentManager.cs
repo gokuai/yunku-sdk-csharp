@@ -11,8 +11,8 @@ namespace YunkuEntSDK
         private const string OauthHost = HostConfig.OauthHost;
         private const string UrlApiToken = OauthHost + "/oauth2/token2";
 
-        private string _clientId;
-        private bool _isEnt;
+        protected string _clientId;
+        protected bool _isEnt;
         protected string _tokenType;
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace YunkuEntSDK
         internal ParentManager(string clientId, string clientSecret, bool isEnt)
         {
             _clientId = clientId;
-            ClientSecret = clientSecret;
+            _clientSecret = clientSecret;
             _isEnt = isEnt;
             _tokenType = isEnt ? "ent" : "";
         }

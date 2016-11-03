@@ -47,7 +47,7 @@ namespace YunkuEntSDK.Net
             _opId = opId;
             _orgClientId = orgClientId;
             _dateline = dateline;
-            ClientSecret = clientSecret;
+            _clientSecret = clientSecret;
             _overWrite = overWrite;
         }
 
