@@ -23,8 +23,7 @@ namespace YunkuEntSDK
             {
                 stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
             }
-
-            return Uri.EscapeDataString(Util.EncodeToHMACSHA1(stringSign, _clientSecret));
+            return Util.EncodeToHMACSHA1(stringSign, _clientSecret);
         }
     }
 }
