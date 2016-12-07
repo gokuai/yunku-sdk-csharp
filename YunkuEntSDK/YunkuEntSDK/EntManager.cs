@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
@@ -327,6 +327,28 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
+        /// <summary>
+        /// 分组成员列表
+        /// </summary>
+        /// <param name="groupOutId"></param>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        /// <param name="showChild"></param>
+        /// <returns></returns>
+        public string GetGroupMembersByOutId(string groupOutId, int start, int size, bool showChild)
+        {
+            var request = new HttpRequestSyn {RequestUrl = UrlApiGetGroupMembers};
+            request.AppendParameter("token", Token);
+            request.AppendParameter("token_type", "ent");
+            request.AppendParameter("out_id", groupOutId);
+            request.AppendParameter("start", start + "");
+            request.AppendParameter("size", size + "");
+            request.AppendParameter("show_child", (showChild?1:0) + "");
+            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
+            request.RequestMethod = RequestType.Post;
+            request.Request();
+            return request.Result;
+        }
 
 
     }
