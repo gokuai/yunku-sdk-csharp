@@ -290,7 +290,7 @@ namespace YunkuEntSDK.Net
                 {
                     continue;
                 }
-                value = Uri.EscapeUriString(item.Value); //对传递的字符串进行编码操作
+                value = Uri.EscapeDataString(item.Value); //对传递的字符串进行编码操作
                 sb.Append(string.Format("{0}={1}&", item.Key, value));
             }
             if (hasParameter)
