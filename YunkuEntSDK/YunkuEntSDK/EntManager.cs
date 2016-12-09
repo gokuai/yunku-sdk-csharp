@@ -179,7 +179,7 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
-   
+
         /// <summary>
         /// 添加或修改同步成员
         /// </summary>
@@ -188,9 +188,11 @@ namespace YunkuEntSDK
         /// <param name="account"></param>
         /// <param name="memberEmail"></param>
         /// <param name="memberPhone"></param>
+        /// <param name="password"></param>
+        /// <param name="avatar"></param>
         /// <returns></returns>
         public string AddSyncMember(string oudId,string memberName,
-            string account,string memberEmail,string memberPhone,string password)
+            string account,string memberEmail,string memberPhone,string password, string avatar)
         {
             var request = new HttpRequestSyn {RequestUrl = UrlApiAddSyncMember};
             request.AppendParameter("token", Token);
@@ -201,6 +203,7 @@ namespace YunkuEntSDK
             request.AppendParameter("member_email", memberEmail);
             request.AppendParameter("member_phone", memberPhone);
             request.AppendParameter("password", password);
+            request.AppendParameter("avatar", avatar);
             request.AppendParameter("sign", GenerateSign(request.SortedParamter));
             request.RequestMethod = RequestType.Post;
             request.Request();
