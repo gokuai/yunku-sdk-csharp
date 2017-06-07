@@ -193,7 +193,7 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string CreateFile(string fullPath, string opName, string localPath)
         {
-            if (File.Exists(fullPath))
+            if (File.Exists(localPath))
             {
                 using (var fs = new FileStream(localPath, FileMode.Open))
                 {
