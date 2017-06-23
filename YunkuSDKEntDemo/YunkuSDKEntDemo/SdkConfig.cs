@@ -9,6 +9,6 @@ namespace YunkuSDKEntDemo
     class SdkConfig
     {
         public const string ClientId = "";
-        public const string ClientSecret = "";
+        public const string ClientSecret = ""; 
     }
 }

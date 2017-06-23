@@ -7,11 +7,12 @@ namespace YunkuEntSDK.Data
     class OauthData : BaseData
     {
 
-        private const string LogTag="OauthData";
+        private const string LogTag = "OauthData";
 
         private const string KeyAccessToken = "access_token";
         private const string KeyExpiresIn = "expires_in";
-        private const string KeyError= "error";
+        private const string KeyRefreshToken = "refresh_token";
+        private const string KeyError = "error";
 
 
         /// <summary>
@@ -38,6 +39,12 @@ namespace YunkuEntSDK.Data
             private set;
         }
 
+        public int Code
+        {
+            get;
+            set;
+        }
+
 
         new public static OauthData Create(string jsonString)
         {
@@ -53,6 +60,7 @@ namespace YunkuEntSDK.Data
 
                 data.Expires = SimpleJson.TryIntValue(json, KeyExpiresIn);
                 data.Token = SimpleJson.TryStringValue(json, KeyAccessToken);
+                data.RefreshToken = SimpleJson.TryStringValue(json, KeyAccessToken);
                 return data;
 
             }

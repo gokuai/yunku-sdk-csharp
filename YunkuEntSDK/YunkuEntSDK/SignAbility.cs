@@ -9,21 +9,20 @@ namespace YunkuEntSDK
         {
         
         }
-
-        protected string _clientSecret;
+        
         /// <summary>
         ///     生成签名
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        protected string GenerateSign(string[] array)
+        protected string GenerateSign(string[] array, string secret)
         {
             string stringSign = "";
             for (int i = 0; i < array.Length; i++)
             {
                 stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
             }
-            return Util.EncodeToHMACSHA1(stringSign, _clientSecret);
+            return Util.EncodeToHMACSHA1(stringSign, secret);
         }
     }
 }

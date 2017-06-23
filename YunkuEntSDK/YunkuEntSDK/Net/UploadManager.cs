@@ -8,7 +8,7 @@ using YunkuEntSDK.Data;
 
 namespace YunkuEntSDK.Net
 {
-    internal class UploadManager : SignAbility
+    internal class UploadManager : HttpEngine
     {
         private const string UrlUploadInit = "/upload_init";
         private const string UrlUploadPart = "/upload_part";
@@ -38,7 +38,7 @@ namespace YunkuEntSDK.Net
 
 
         public UploadManager(string apiUrl, string localFullPath, string fullPath,
-            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite)
+            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite) : base(orgClientId, clientSecret)
         {
             _apiUrl = apiUrl;
             _localFullPath = localFullPath;
