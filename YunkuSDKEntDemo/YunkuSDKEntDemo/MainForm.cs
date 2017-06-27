@@ -65,10 +65,10 @@ namespace YunkuSDKEntDemo
             var entLibManager = new EntLibManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
 
             //创建库 1T="1099511627776" 1G＝"1073741824"
-            //DeserializeReturn(entLibManager.Create("qpTest","1073741824","destroy","testlib",""));
+            //DeserializeReturn(entLibManager.Create("qpTest", "1073741824", "destroy", ""));
 
             //修改库信息 1T="1099511627776" 1G＝“1073741824”；
-            //            DeserializeReturn(entLibManager.Set(109654, "sss", "1099511627776", "", ""));
+            //DeserializeReturn(entLibManager.Set(1307065, "sss", "1099511627776", ""));
 
             //获取库信息
             //DeserializeReturn(entLibManager.GetInfo(1258748));
@@ -133,7 +133,7 @@ namespace YunkuSDKEntDemo
             //            DeserializeReturn(entFileManager.GetUpdateCount(beigin ,now , true));
 
             //获取文件（夹）信息
-            //            DeserializeReturn(entFileManager.GetFileInfo( "test",EntFileManager.NetType.Default));
+            //DeserializeReturn(entFileManager.GetFileInfo("test", EntFileManager.NetType.Default, false));
 
             //创建文件夹
             //DeserializeReturn(entFileManager.CreateFolder( "testFolder", "Brandon"));
