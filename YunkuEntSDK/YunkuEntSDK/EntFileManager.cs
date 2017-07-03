@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -155,6 +156,18 @@ namespace YunkuEntSDK
             request.RequestMethod = RequestType.Post;
             request.Request();
             return request.Result;
+        }
+
+        public string TestCreateFolder(string fullPath, string opName)
+        {
+            string url = UrlApiCreateFolder;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("op_name", opName);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -567,26 +580,21 @@ namespace YunkuEntSDK
         /// <param name="size"></param>
         /// <param name="scopes"></param>
         /// <returns></returns>
-        public string Search(string keyWords, string path, int start, int size, params ScopeType[] scopes)
+        public string Search(string keyWords, string path, int start, int size, ScopeType scopes)
         {
             var request = new HttpRequestSyn { RequestUrl = UrlApiSearchFile };
             request.AppendParameter("org_client_id", _clientId);
             request.AppendParameter("keywords", keyWords);
             request.AppendParameter("path", path);
-            //if (scopes != null)
-            //{
-            //    // TODO 需要解决组json
-            //   JsonArray array =  new JsonArray();
-            //    if(scopes != null)
-            //    {
-            //        foreach (var s in Enum.GetValues(typeof(ScopeType)))
-            //        {
-            //            string name = Enum.GetName(typeof(ScopeType), scopes);
-            //            //array.Add(name);
-            //        }
-            //    }
-            //    request.AppendParameter("scope", array.ToString().ToLower());
-            //}
+            JsonArray array = new JsonArray();
+            if (scopes != null)
+            {
+                foreach (string scope in Enum.GetNames(typeof(ScopeType)))
+                {
+                    array.Add(scope);
+                }
+            }
+            request.AppendParameter("scope", array.ToString().ToLower());
             request.AppendParameter("start", start + "");
             request.AppendParameter("size", size + "");
             request.AppendParameter("dateline", Util.GetUnixDataline() + "");
@@ -643,8 +651,9 @@ namespace YunkuEntSDK
         /// <param name="memberId"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public string SetPermission(string fullpath, int memberId, params FilePermissions[] permissions)
+        public string SetPermission(string fullpath, int memberId, FilePermissions permissions)
         {
+            var s2 = permissions;
             var request = new HttpRequestSyn { RequestUrl = UrlApiSetPermission };
             request.AppendParameter("org_client_id", _clientId);
             request.AppendParameter("fullpath", fullpath);
@@ -653,7 +662,7 @@ namespace YunkuEntSDK
             {
                 var jsonArray = new JsonArray();
                 var jsonObject = new JsonObject();
-                foreach (var p in permissions)
+                foreach (string p in Enum.GetNames(typeof(FilePermissions)))
                 {
                     jsonArray.Add(p);
                 }
@@ -720,19 +729,20 @@ namespace YunkuEntSDK
         }
 
         [Flags]
-        public enum ScopeType : int 
+        public enum ScopeType
         {
             Tag = 1,
             Content = 2,
             FileName = 4
         }
 
+        [Flags]
         public enum FilePermissions
         {
-            FileRead,
-            FilePreview,
-            FileWrite,
-            FileDelete
+            FileRead = 1,
+            FilePreview = 2,
+            FileWrite = 4,
+            FileDelete = 8
         }
     }
 }

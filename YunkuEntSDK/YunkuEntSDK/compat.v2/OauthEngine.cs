@@ -12,6 +12,8 @@ namespace YunkuEntSDK.compat.v2
 {
     class OauthEngine : HttpEngine
     {
+        private const string Log_Tag = "OauthEngine_V2";
+
         private const string OauthHost = HostConfig.OauthHostV2;
         private const string UrlApiToken = OauthHost + "/oauth2/token2";
 
@@ -31,19 +33,30 @@ namespace YunkuEntSDK.compat.v2
             _tokenType = isEnt ? "ent" : "";
         }
 
+        internal OauthEngine(string clientId, string clientSecret, bool isEnt, string token) : this(clientId, clientSecret, isEnt)
+        {
+            Token = token;
+        }
+
         /// <summary>
         ///     获取到的身份验证token
         /// </summary>
         public string Token { internal set; get; }
 
 
+        /// <summary>
+        /// 使用帐号用户名获取token
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public string AccessToken(string username, string password)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiToken };
-            request.AppendParameter("username", username);
-
+            string url = UrlApiToken;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("username", username);
             string passwordEncode;
-            if (username.Contains("/") || username.Contains("\\"))
+            if (username.IndexOf("/") > 0 || username.IndexOf("\\") > 0)
             {
                 passwordEncode = Util.EncodeBase64(password);
             }
@@ -51,22 +64,20 @@ namespace YunkuEntSDK.compat.v2
             {
                 passwordEncode = MD5Core.GetHashString(password);
             }
+            parameter.Add("password", passwordEncode);
+            parameter.Add("client_id", _clientId);
+            parameter.Add("grant_type", _isEnt ? "ent_password" : "password");
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
 
-            request.AppendParameter("password", passwordEncode);
-            request.AppendParameter("client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("grant_type", _isEnt ? "ent_password" : "password");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            ReturnResult returnResult = ReturnResult.Create(request.Result);
-            string result = ReturnResult.Create(request.Result).Result;
-            LogPrint.Print("accessToken:==>result:" + result);
+            string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            ReturnResult returnResult = ReturnResult.Create(result);
+            LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + result);
 
             if (returnResult.Code == (int)HttpStatusCode.OK)
             {
-                LogPrint.Print("accessToken:==>StatusCode:200");
-                OauthData data = OauthData.Create(result);
+                LogPrint.Print(Log_Tag + "==>accessToken:==>StatusCode:200");
+                OauthData data = OauthData.Create(returnResult.Result);
                 Token = data.Token;
             }
             return result;
@@ -76,6 +87,12 @@ namespace YunkuEntSDK.compat.v2
         {
             request.AppendParameter("token", Token);
             request.AppendParameter("token_type", _tokenType);
+        }
+
+        protected void AddAuthParams(Dictionary<string, string> parameter)
+        {
+            parameter.Add("token", Token);
+            parameter.Add("token_type", _tokenType);
         }
     }
 }

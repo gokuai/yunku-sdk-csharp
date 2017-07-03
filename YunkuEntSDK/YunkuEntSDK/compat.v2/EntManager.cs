@@ -15,7 +15,7 @@ namespace YunkuEntSDK.compat.v2
         private const string UrlApiEntGetMembers = ApiEntHost + "/1/ent/get_members";
         private const string UrlApiGetMember = ApiEntHost + "/1/ent/get_member";
         private const string UrlApiEntGetRoles = ApiEntHost + "/1/ent/get_roles";
-        private const string UrlApiEntSyncMember = ApiEntHost + "/1/ent/sync_member";
+        //private const string UrlApiEntSyncMember = ApiEntHost + "/1/ent/sync_member";
         private const string UrlApiGetMemberFileLink = ApiEntHost + "/1/ent/get_member_file_link";
         private const string UrlApiAddSyncMember = ApiEntHost + "/1/ent/add_sync_member";
         private const string UrlApiDelSyncMember = ApiEntHost + "/1/ent/del_sync_member";
@@ -30,7 +30,7 @@ namespace YunkuEntSDK.compat.v2
         {
         }
 
-        public EntManager(string clientId, string clientSecret, bool isEnt, string token) : base(clientId, clientSecret, isEnt)
+        public EntManager(string clientId, string clientSecret, bool isEnt, string token) : base(clientId, clientSecret, isEnt, token)
         {
             Token = token;
         }
@@ -41,12 +41,12 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetRoles()
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiEntGetRoles };
-            AddAuthParams(request);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiEntGetRoles;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+
         }
 
         /// <summary>
@@ -57,31 +57,28 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetMembers(int start, int size)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiEntGetMembers };
-            AddAuthParams(request);
-            request.AppendParameter("start", start + "");
-            request.AppendParameter("size", size + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiEntGetMembers;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("start", start + "");
+            parameter.Add("size", size + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         private string GetMember(int memberId, string outId, string account)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetMember };
-            AddAuthParams(request);
+            string url = UrlApiGetMember;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
             if (memberId > 0)
             {
-                request.AppendParameter("member_id", memberId + "");
+                parameter.Add("member_id", memberId + "");
             }
-            request.AppendParameter("out_id", outId);
-            request.AppendParameter("account", account);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
-
+            parameter.Add("out_id", outId);
+            parameter.Add("account", account);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -121,28 +118,11 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetGroups()
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiEntGetGroups };
-            AddAuthParams(request);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
-        }
-
-
-
-        /// <summary>
-        ///     获取角色
-        /// </summary>
-        /// <returns></returns>
-        public string GetEntRoles()
-        {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiEntGetRoles };
-            AddAuthParams(request);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiEntGetGroups;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -152,17 +132,17 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetMemberFileLink(int memberId, bool fileOnly)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetMemberFileLink };
-            AddAuthParams(request);
+            string url = UrlApiGetMemberFileLink;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("member_id", memberId + "");
             if (fileOnly)
             {
-                request.AppendParameter("file", "1");
+                parameter.Add("file", "1");
             }
-            request.AppendParameter("member_id", memberId + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
 
@@ -178,18 +158,17 @@ namespace YunkuEntSDK.compat.v2
         public string AddSyncMember(string outId, string memberName,
             string account, string memberEmail, string memberPhone, string password)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiAddSyncMember };
-            AddAuthParams(request);
-            request.AppendParameter("out_id", outId);
-            request.AppendParameter("member_name", memberName);
-            request.AppendParameter("account", account);
-            request.AppendParameter("member_email", memberEmail);
-            request.AppendParameter("member_phone", memberPhone);
-            request.AppendParameter("password", password);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiAddSyncMember;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("out_id", outId);
+            parameter.Add("member_name", memberName);
+            parameter.Add("account", account);
+            parameter.Add("member_email", memberEmail);
+            parameter.Add("member_phone", memberPhone);
+            parameter.Add("password", password);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -200,14 +179,13 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string SetSyncMemberState(string outId, bool state)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiAddSyncMember };
-            AddAuthParams(request);
-            request.AppendParameter("out_id", outId);
-            request.AppendParameter("state", state ? "1" : "0");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiAddSyncMember;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("out_id", outId);
+            parameter.Add("state", state ? "1" : "0");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -217,13 +195,12 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string DelSyncMember(string[] members)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiDelSyncMember };
-            AddAuthParams(request);
-            request.AppendParameter("members", Util.StrArrayToString(members, ","));
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiDelSyncMember;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("members", Util.StrArrayToString(members, ","));
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -235,19 +212,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string AddSyncGroup(string outId, string name, string parentOutId)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiAddSyncGroup };
-            AddAuthParams(request);
-            request.AppendParameter("out_id", outId);
-            request.AppendParameter("name", name);
-            if (!string.IsNullOrEmpty(parentOutId))
-            {
-                request.AppendParameter("parent_out_id", parentOutId);
-            }
-
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiAddSyncGroup;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("out_id", outId);
+            parameter.Add("name", name);
+            parameter.Add("parent_out_id", parentOutId);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -257,13 +229,12 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string DelSyncGroup(string[] groups)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiDelSyncGroup };
-            AddAuthParams(request);
-            request.AppendParameter("groups", Util.StrArrayToString(groups, ","));
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiDelSyncGroup;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("groups", Util.StrArrayToString(groups, ","));
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -274,14 +245,13 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string AddSyncGroupMember(string groupOutId, string[] members)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiAddSyncGroupMember };
-            AddAuthParams(request);
-            request.AppendParameter("group_out_id", groupOutId);
-            request.AppendParameter("members", Util.StrArrayToString(members, ","));
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiAddSyncGroupMember;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("group_out_id", groupOutId);
+            parameter.Add("members", Util.StrArrayToString(members, ","));
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -292,14 +262,13 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string DelSyncGroupMember(string groupOutId, string[] members)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiDelSyncGroupMember };
-            AddAuthParams(request);
-            request.AppendParameter("group_out_id", groupOutId);
-            request.AppendParameter("members", Util.StrArrayToString(members, ","));
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiDelSyncGroupMember;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("group_out_id", groupOutId);
+            parameter.Add("members", Util.StrArrayToString(members, ","));
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -312,16 +281,15 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetGroupMembers(int groupId, int start, int size, bool showChild)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetGroupMembers };
-            AddAuthParams(request);
-            request.AppendParameter("group_id", groupId + "");
-            request.AppendParameter("start", start + "");
-            request.AppendParameter("size", size + "");
-            request.AppendParameter("show_child", (showChild ? 1 : 0) + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiGetGroupMembers;
+            var parameter = new Dictionary<string, string>();
+            AddAuthParams(parameter);
+            parameter.Add("group_id", groupId + "");
+            parameter.Add("start", start + "");
+            parameter.Add("size", size + "");
+            parameter.Add("show_child", (showChild ? 1 : 0) + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -331,13 +299,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string DelSyncMemberGroup(string[] members)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiDelSyncMemberGroup };
-            AddAuthParams(request);
-            request.AppendParameter("members", Util.StrArrayToString(members, ","));
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            {
+                string url = UrlApiDelSyncMemberGroup;
+                var parameter = new Dictionary<string, string>();
+                AddAuthParams(parameter);
+                parameter.Add("members", Util.StrArrayToString(members, ","));
+                parameter.Add("sign", GenerateSign(parameter));
+                return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            }
         }
 
         /// <summary>

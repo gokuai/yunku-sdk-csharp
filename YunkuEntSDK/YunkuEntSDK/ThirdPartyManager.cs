@@ -39,19 +39,7 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string CreateEnt(string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiCreateEnt };
-            request.AppendParameter("client_id", "");
-            request.AppendParameter("out_id", _outId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("ent_name", entName);
-            request.AppendParameter("contact_name", entName);
-            request.AppendParameter("contact_mobile", contactMobile);
-            request.AppendParameter("contact_email", contactEmail);
-            request.AppendParameter("contact_address", contactAddress);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            return CreateEnt(null, entName, contactName, contactMobile, contactEmail, contactAddress);
         }
 
         /// <summary>
@@ -64,29 +52,28 @@ namespace YunkuEntSDK
         /// <param name="contactEmail"></param>
         /// <param name="contactAddress"></param>
         /// <returns></returns>
-        public string CreateEnt( IDictionary<string, string> dic, string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
+        public string CreateEnt(IDictionary<string, string> dic, string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiCreateEnt };
-            request.AppendParameter("client_id", "");
-            request.AppendParameter("out_id", _outId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("ent_name", entName);
-            request.AppendParameter("contact_name", entName);
-            request.AppendParameter("contact_mobile", contactMobile);
-            request.AppendParameter("contact_email", contactEmail);
-            request.AppendParameter("contact_address", contactAddress);
-            if(dic != null)
+            string url = UrlApiCreateEnt;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("client_id", _clientId);
+            parameter.Add("out_id", _outId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("ent_name", entName);
+            parameter.Add("contact_name", contactName);
+            parameter.Add("contact_mobile", contactMobile);
+            parameter.Add("contact_email", contactEmail);
+            parameter.Add("contact_address", contactAddress);
+            if (dic != null)
             {
-                // TODO
-                foreach(var c in dic)
+                foreach (var dics in dic)
                 {
-                    request.AppendParameter(c.Key, c.Value);
+                    parameter.Add(dics.Key, dics.Value);
                 }
             }
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+
         }
 
         /// <summary>
@@ -95,14 +82,13 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string GetEntInfo()
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiEntInfo };
-            request.AppendParameter("client_id", "");
-            request.AppendParameter("out_id", _outId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiEntInfo;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("client_id", _clientId);
+            parameter.Add("out_id", _outId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -157,33 +143,32 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string Order(string type, int memberCount, int space, int month)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiOrder };
-            request.AppendParameter("client_id", "");
-            request.AppendParameter("out_id", _outId);
+            string url = UrlApiOrder;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("client_id", _clientId);
+            parameter.Add("out_id", _outId);
             if (!string.IsNullOrEmpty(type))
             {
-                request.AppendParameter("type", type);
+                parameter.Add("type", type);
                 switch (type)
                 {
                     case Subscribe:
-                        request.AppendParameter("member_count", memberCount + "");
-                        request.AppendParameter("space", space + "");
-                        request.AppendParameter("month", month + "");
+                        parameter.Add("member_count", memberCount + "");
+                        parameter.Add("space", space + "");
+                        parameter.Add("month", month + "");
                         break;
                     case Upgrade:
-                        request.AppendParameter("member_count", memberCount + "");
-                        request.AppendParameter("space", space + "");
+                        parameter.Add("member_count", memberCount + "");
+                        parameter.Add("space", space + "");
                         break;
                     case Renew:
-                        request.AppendParameter("month", month + "");
+                        parameter.Add("month", month + "");
                         break;
                 }
             }
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -192,14 +177,13 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string GetEntToken()
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetToken };
-            request.AppendParameter("client_id", "");
-            request.AppendParameter("out_id", _outId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiGetToken;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("client_id", _clientId);
+            parameter.Add("out_id", _outId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -209,15 +193,14 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string GetSsoUrl(string ticket)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetSsO };
-            request.AppendParameter("client_id", "");
-            request.AppendParameter("out_id", _outId);
-            request.AppendParameter("ticket", ticket);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiGetSsO;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("client_id", _clientId);
+            parameter.Add("out_id", _outId);
+            parameter.Add("ticket", ticket);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
@@ -44,9 +45,9 @@ namespace YunkuEntSDK
 
         public string AccessToken(string username, string password)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiToken };
-            request.AppendParameter("username", username);
-
+            string url = UrlApiToken;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("username", username);
             string passwordEncode;
             if (username.IndexOf("/") > 0 || username.IndexOf("\\") > 0)
             {
@@ -56,23 +57,20 @@ namespace YunkuEntSDK
             {
                 passwordEncode = MD5Core.GetHashString(password);
             }
+            parameter.Add("password", passwordEncode);
+            parameter.Add("client_id", _clientId);
+            parameter.Add("grant_type", _isEnt ? "ent_password" : "password");
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
 
-            request.AppendParameter("password", passwordEncode);
-            request.AppendParameter("client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("grant_type", _isEnt ? "ent_password" : "password");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            ReturnResult returnResult = ReturnResult.Create(request.Result);
-            string result = ReturnResult.Create(request.Result).Result;
-            LogPrint.Print(Log_Tag + "accessToken:==>result:" + result);
-
+            string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            ReturnResult returnResult = ReturnResult.Create(result);
+            LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + result);
 
             if (returnResult.Code == (int)HttpStatusCode.OK)
             {
-                LogPrint.Print(Log_Tag + "accessToken:==>StatusCode:200");
-                OauthData data = OauthData.Create(result);
+                LogPrint.Print(Log_Tag + "==>accessToken:==>StatusCode:200");
+                OauthData data = OauthData.Create(returnResult.Result);
                 Token = data.Token;
             }
             return result;
@@ -96,6 +94,20 @@ namespace YunkuEntSDK
             }
         }
 
+        internal void AddAuthParams(Dictionary<string, string> parameter)
+        {
+            if (Token == null)
+            {
+                parameter.Add("client_id", _clientId);
+                parameter.Add("dateline", Util.GetUnixDataline() + "");
+            }
+            else
+            {
+                parameter.Add("token", Token);
+                parameter.Add("token_type", _tokenType);
+            }
+        }
+
         /// <summary>
         /// 使用第三方API OUTID 登录
         /// </summary>
@@ -116,34 +128,37 @@ namespace YunkuEntSDK
             {
                 return false;
             }
-            var request = new HttpRequestSyn { RequestUrl = UrlApiToken };
-            request.AppendParameter("grant_type", "refresh_token");
-            request.AppendParameter("refresh_token", _refreshToken);
-            request.AppendParameter("client_id", _clientId);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
+            string url = UrlApiToken;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("grant_type", "refresh_token");
+            parameter.Add("refresh_token", _refreshToken);
+            parameter.Add("client_id", _clientId);
+            parameter.Add("sign", GenerateSign(parameter));
 
-            ReturnResult returnResult = ReturnResult.Create(request.Result);
-            string returnString = ReturnResult.Create(returnResult.Result).Result;
-
+            string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            ReturnResult returnResult = ReturnResult.Create(result);
             OauthData data = OauthData.Create(returnResult.Result);
-            if (data != null)
+            if(data != null)
             {
                 data.Code = returnResult.Code;
-                if (data.Code == (int)HttpStatusCode.OK)
+                if(data.Code == (int)HttpStatusCode.OK)
                 {
                     Token = data.Token;
                     _refreshToken = data.RefreshToken;
                     return true;
                 }
-                LogPrint.Print(Log_Tag + "token" + Token + "_refreshToken" + _refreshToken);
+                LogPrint.Print(Log_Tag + "==>token:" + Token + "==>refreshToken:" + _refreshToken);
             }
             return false;
         }
 
-        //public string SendRequestWithAuth(string url, RequestType requestType, string[] array)
+        //异步请求待解决
+
+        //internal string SendRequestWithAuth(string url, RequestType requestType, Dictionary<string, string> parameter,
+        //    Dictionary<string, string> headParameter, List<string> ignoreKeys)
         //{
+        //    string returnString = new RequestHelper().SetParams(parameter).SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+
         //    var request = new HttpRequestAsync { RequestUrl = url };
         //    request.RequestMethod = requestType;
         //    request.Request();

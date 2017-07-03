@@ -493,17 +493,16 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="memberId"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public string SetPermission(string fullpath, int memberId, params FilePermissions[] permissions)
+        public string SetPermission(string fullpath, int memberId, FilePermissions permissions)
         {
             var request = new HttpRequestSyn { RequestUrl = UrlApiSetPermission };
             request.AppendParameter("org_client_id", _clientId);
             request.AppendParameter("fullpath", fullpath);
             if (permissions != null)
             {
-                // TODO 组参数
                 var jsonArray = new JsonArray();
                 var jsonObject = new JsonObject();
-                foreach(var p in permissions)
+                foreach (string p in Enum.GetNames(typeof(FilePermissions)))
                 {
                     jsonArray.Add(p);
                 }
@@ -579,19 +578,12 @@ namespace YunkuEntSDK.compat.v2
         }
 
         [Flags]
-        public enum ScopeType
-        {
-            FileName,
-            Tag,
-            Content
-        }
-
         public enum FilePermissions
         {
-            FileRead,
-            FilePreview,
-            FileWrite,
-            FileDelete
+            FileRead = 1,
+            FilePreview = 2,
+            FileWrite = 4,
+            FileDelete = 8
         }
     }
 }

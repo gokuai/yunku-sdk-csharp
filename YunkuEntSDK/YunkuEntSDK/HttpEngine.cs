@@ -11,7 +11,7 @@ namespace YunkuEntSDK
     public abstract class HttpEngine : SignAbility
     {
 
-        private const string Log_Tag = "ParentManager";
+        private const string Log_Tag = "HttpEngine";
 
         protected string _clientId;
         protected string _clientSecret;
@@ -26,13 +26,23 @@ namespace YunkuEntSDK
         {
             return GenerateSign(array, _clientSecret);
         }
+
+        public string GenerateSign(Dictionary<string, string> parameter)
+        {
+            return GenerateSign(parameter, _clientSecret);
+        }
+
+        public string GenerateSign(Dictionary<string, string> parameter, List<string> ignoreKeys)
+        {
+            return GenerateSign(parameter, _clientSecret, ignoreKeys);
+        }
     }
 
     public class RequestHelper
     {
         RequestType method;
-        IDictionary<string, string> _params;
-        IDictionary<string, string> _headParams;
+        Dictionary<string, string> _params;
+        Dictionary<string, string> _headParams;
         string url;
         bool checkAuth;
 
@@ -80,8 +90,8 @@ namespace YunkuEntSDK
             CheckNecessaryParams(url, method);
 
             var request = new HttpRequestSyn { RequestUrl = url };
-            request.AppendParameter("", "");
-            request.AppendHeaderParameter("", "");
+            request.AppendParameter(_params);
+            request.AppendHeaderParameter(_headParams);
             request.RequestMethod = method;
             request.Request();
             return request.Result;
@@ -92,11 +102,6 @@ namespace YunkuEntSDK
             if (string.IsNullOrEmpty(url))
             {
                 throw new ArgumentException("url must not be null");
-            }
-            
-            if (method == null)
-            {
-                throw new ArgumentException("method must not be null");
             }
         }
     }

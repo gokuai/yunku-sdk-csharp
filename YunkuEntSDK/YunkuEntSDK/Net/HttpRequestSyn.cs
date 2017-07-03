@@ -12,8 +12,8 @@ namespace YunkuEntSDK.Net
     {
         #region 私有成员
 
-        private readonly IDictionary<string, string> _headParameter;
-        private readonly IDictionary<string, string> _parameter;
+        private IDictionary<string, string> _headParameter;
+        private IDictionary<string, string> _parameter;
 
         #endregion
 
@@ -119,6 +119,21 @@ namespace YunkuEntSDK.Net
             }
         }
 
+        public void AppendParameter(Dictionary<string, string> paramter)
+        {
+            _parameter = paramter;
+        }
+
+        /// <summary>
+        ///     追加头参数
+        /// </summary>
+        /// <param name="key">追加键</param>
+        /// <param name="value">键对应的值</param>
+        public void AppendHeaderParameter(Dictionary<string, string> headParamter)
+        {
+                _headParameter = headParamter;        
+        }
+
         public void Request()
         {
             switch (RequestMethod)
@@ -198,7 +213,11 @@ namespace YunkuEntSDK.Net
             Result = GetResponeResult(webRequest);
 
             _parameter.Clear();
-            _headParameter.Clear();
+            if(_headParameter !=null)
+            {
+                _headParameter.Clear();
+            }
+            
         }
 
         private string GetResponeResult(HttpWebRequest webRequest)
@@ -262,13 +281,17 @@ namespace YunkuEntSDK.Net
             }
             var myurl = new Uri(strrequesturl);
             var webRequest = (HttpWebRequest) WebRequest.Create(myurl);
+            webRequest.ServicePoint.ConnectionLimit = 2;
             webRequest.UserAgent = HostConfig.UserAgent;
             webRequest.Method = "GET";
                 setHeaderCollection(webRequest.Headers);
             Result = GetResponeResult(webRequest);
             //清空参数列表
             _parameter.Clear();
-            _headParameter.Clear();
+            if (_headParameter != null)
+            {
+                _headParameter.Clear();
+            }
         }
 
         /// <summary>
@@ -310,18 +333,21 @@ namespace YunkuEntSDK.Net
         /// <returns></returns>
         private void setHeaderCollection(WebHeaderCollection header)
         {
-
-            if (_headParameter.Count > 0)
+            if(_headParameter != null)
             {
-                foreach (var item in _headParameter)
+                if (_headParameter.Count > 0)
                 {
-                    if (item.Value == null)
+                    foreach (var item in _headParameter)
                     {
-                        continue;
+                        if (item.Value == null)
+                        {
+                            continue;
+                        }
+                        header[item.Key] = item.Value;
                     }
-                    header[item.Key] = item.Value;
                 }
             }
+            
 
         }
     }
