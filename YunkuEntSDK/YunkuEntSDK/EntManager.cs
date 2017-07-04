@@ -26,11 +26,11 @@ namespace YunkuEntSDK
         private const string UrlApiAddAdmin = ApiEntHost + "/1/ent/add_sync_admin";
         private const string UrlApiMemberLoginReport = ApiEntHost + "/1/ent/member_login_report";
 
-        private EntManager(string clientId, string clientSecret) : base(clientId, clientSecret, true)
+        public EntManager(string clientId, string clientSecret) : base(clientId, clientSecret, true)
         {
         }
 
-        private EntManager(string clientId, string clientSecret, bool isEnt, string token) : base(clientId, clientSecret, isEnt, token)
+        public EntManager(string clientId, string clientSecret, bool isEnt, string token) : base(clientId, clientSecret, isEnt, token)
         {
 
         }

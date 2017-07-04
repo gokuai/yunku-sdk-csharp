@@ -121,10 +121,10 @@ namespace YunkuSDKEntDemo
 
 
             //获取文件列表
-            //            DeserializeReturn(entFileManager.GetFileList( 0, ""));
+            //DeserializeReturn(entFileManager.GetFileList());
 
             //获取更新列表
-            //DeserializeReturn(entFileManager.GetUpdateList( false, 0));
+            //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
 
             //            long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
             //            long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
@@ -136,7 +136,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.GetFileInfo("test", EntFileManager.NetType.Default, false));
 
             //创建文件夹
-            //DeserializeReturn(entFileManager.CreateFolder( "testFolder", "Brandon"));
+            //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
 
             //上传文件 文件不得超过50MB
             //DeserializeReturn(entFileManager.CreateFile( "test", "Brandon", "D:\\test.txt"));
@@ -149,13 +149,13 @@ namespace YunkuSDKEntDemo
             //                "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg")); 
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
-            //            DeserializeReturn(entFileManager.Del( "test", "Brandon"));
+            //DeserializeReturn(entFileManager.Del("test", "Brandon"));
 
             //移动文件
-            //DeserializeReturn(entFileManager.Move( "testFolder", "1/testFolder", "Brandon"));
+            //DeserializeReturn(entFileManager.Move("qq.jpg", "test/qq.jpg", "Brandon"));
 
             ////文件连接
-            //            DeserializeReturn(entFileManager.Link( "test.png", 0, EntFileManager.AuthType.Default, null));
+            //DeserializeReturn(entFileManager.Link("qq.jpg", 0, EntFileManager.AuthType.Default, null));
 
             ////发送消息
             //DeserializeReturn(entFileManager.SendMsg( "msgTest", "msg", "", "", "Brandon"));
@@ -167,39 +167,41 @@ namespace YunkuSDKEntDemo
             //            DeserializeReturn(entFileManager.History("test", 0 ,100));
 
             //复制文件
-            //            DeserializeReturn(entFileManager.Copy("qq.jpg", "test/qq.jpg" ,"qp"));
+            //DeserializeReturn(entFileManager.Copy("test/qq.jpg", "qq.jpg", "qp"));
 
             // 回收站
             //DeserializeReturn(entFileManager.Recyle(0, 100));
 
             //恢复删除文件
-            //DeserializeReturn(entFileManager.Recover("qq.jpg", "qp"));
+            //DeserializeReturn(entFileManager.Recover("test", "qp"));
 
             //彻底删除文件
             //DeserializeReturn(entFileManager.CompletelyDelFile(new string[] {"aaa.jpg"}, "qp"));
 
             //通过文件路径获取下载地址
-            //DeserializeReturn(entFileManager.GetDownloadUrlByFullPath("qq.jpg", false, EntFileManager.NetType.Default));
+            //DeserializeReturn(entFileManager.GetDownloadUrlByFullPath("test/qq.jpg", false, EntFileManager.NetType.Default));
 
             //通过文件唯一标识获取下载地址
-            //DeserializeReturn(entFileManager.GetDownloadUrlByHash("DeserializeReturn", false, EntFileManager.NetType.Default));
+            //DeserializeReturn(entFileManager.GetDownloadUrlByHash("5ef2b3b8449cf3440b8a3b1874da5e4236b06dd8", false, EntFileManager.NetType.Default));
 
             //文件搜索
-            //var scopes = EntFileManager.ScopeType.Content | EntFileManager.ScopeType.FileName | EntFileManager.ScopeType.Tag;
-            //DeserializeReturn(entFileManager.Search("tes", "", 0, 100, scopes));
+            //var scopes = EntFileManager.ScopeType.FileName | EntFileManager.ScopeType.Tag;
+            //DeserializeReturn(entFileManager.Search("qq", "", 0, 100, scopes));
 
             //文件预览地址
-            //DeserializeReturn(entFileManager.PreviewUrl("test.jpg", false, ""));
+            //DeserializeReturn(entFileManager.PreviewUrl("test/qq.jpg", false, ""));
 
             //获取文件夹权限
             //DeserializeReturn(entFileManager.GetPermission("test", 4));
 
             //修改文件夹权限
-            //DeserializeReturn(entFileManager.SetPermission("test", 4, EntFileManager.FilePermissions.FileDelete | EntFileManager.FilePermissions.FilePreview |
-            //EntFileManager.FilePermissions.FileRead | EntFileManager.FilePermissions.FileWrite));
+            //DeserializeReturn(entFileManager.SetPermission("test", 4, EntFileManager.FilePermissions.FileDelete | EntFileManager.FilePermissions.FilePreview));
 
             //添加标签
-            //DeserializeReturn(entFileManager.AddTag("test", new string[] {"test", "testTag"}));
+            //DeserializeReturn(entFileManager.AddTag("test", new string[] { "test", "testTag" }));
+
+            //删除标签
+            //DeserializeReturn(entFileManager.DelTag("test", new string[] { "test", "testTag" }));
 
             //=======企业操作========//
             var entManager = new EntManager(SdkConfig.ClientId, SdkConfig.ClientSecret);

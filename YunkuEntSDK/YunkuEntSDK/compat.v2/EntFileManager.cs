@@ -12,6 +12,8 @@ namespace YunkuEntSDK.compat.v2
 {
     public class EntFileManager : HttpEngine
     {
+        private const string Log_Tag = "EntFileManager_V2";
+
         private const long UploadSizeLimit = 52428800; //50MB
         private const string LibHost = HostConfig.ApiEntHostV2;
         private const string UrlApiFilelist = LibHost + "/1/file/ls";
@@ -71,20 +73,19 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetFileList(int start, string fullPath, int size, bool dirOnly)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiFilelist };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("start", start + "");
-            request.AppendParameter("size", size + "");
-            request.AppendParameter("fullpath", fullPath);
+            string url = UrlApiFilelist;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("start", start + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("size", size + "");
             if (dirOnly)
             {
-                request.AppendParameter("dir", "1");
+                parameter.Add("dir", "1");
             }
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -95,18 +96,17 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetUpdateList(bool isCompare, long fetchDateline)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiUpdateList };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            string url = UrlApiUpdateList;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
             if (isCompare)
             {
-                request.AppendParameter("mode", "compare");
+                parameter.Add("mode", "compare");
             }
-            request.AppendParameter("fetch_dateline", fetchDateline + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            parameter.Add("fetch_dateline", fetchDateline + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -118,16 +118,15 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetUpdateCount(long beginDateline, long endDateline, bool showDelete)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiUpdateCount };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("begin_dateline", beginDateline + "");
-            request.AppendParameter("end_dateline", endDateline + "");
-            request.AppendParameter("showdel", (showDelete ? 1 : 0) + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiUpdateCount;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("begin_dateline", beginDateline + "");
+            parameter.Add("end_dateline", endDateline + "");
+            parameter.Add("showdel", (showDelete ? 1 : 0) + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -137,23 +136,22 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetFileInfo(string fullPath, NetType type, bool getAttribute)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiFileInfo };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("attribute", (getAttribute ? 1 : 0) + "");
+            string url = UrlApiFileInfo;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("attribute", (getAttribute ? 1 : 0) + "");
             switch (type)
             {
                 case NetType.Default:
                     break;
                 case NetType.In:
-                    request.AppendHeaderParameter("net", type.ToString().ToLower());
+                    parameter.Add("net", type.ToString().ToLower());
                     break;
             }
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -164,15 +162,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string CreateFolder(string fullPath, string opName)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiCreateFolder };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiCreateFolder;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("op_name", opName);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -257,15 +254,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string Del(string fullPaths, string opName)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiDelFile };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("fullpaths", fullPaths);
-            request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiDelFile;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpaths", fullPaths);
+            parameter.Add("op_name", opName);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -277,16 +273,15 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string Move(string fullPath, string destFullPath, string opName)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiMoveFile };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("dest_fullpath", destFullPath);
-            request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiMoveFile;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("dest_fullpath", destFullPath);
+            parameter.Add("op_name", opName);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -296,26 +291,24 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string Link(string fullPath, int deadline, AuthType authType, string password)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiLinkFile };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("password", password);
+            string url = UrlApiLinkFile;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullPath);
 
             if (deadline != 0)
             {
-                request.AppendParameter("deadline", deadline + "");
+                parameter.Add("deadline", deadline + "");
             }
 
             if (!authType.Equals(AuthType.Default))
             {
-                request.AppendParameter("auth", authType.ToString().ToLower());
+                parameter.Add("auth", authType.ToString().ToLower());
             }
-
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            parameter.Add("password", password);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -329,18 +322,17 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string SendMsg(string title, string text, string image, string linkUrl, string opName)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiSendmsg };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("title", title);
-            request.AppendParameter("text", text);
-            request.AppendParameter("image", image);
-            request.AppendParameter("url", linkUrl);
-            request.AppendParameter("op_name", opName);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiSendmsg;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("title", title);
+            parameter.Add("text", text);
+            parameter.Add("image", image);
+            parameter.Add("url", linkUrl);
+            parameter.Add("op_name", opName);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -350,17 +342,17 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string Links(bool fileOnly)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetLink };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            string url = UrlApiGetLink;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
             if (fileOnly)
             {
-                request.AppendParameter("file", "1");
+                parameter.Add("file", "1");
             }
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -374,24 +366,23 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string CreateFileByUrl(string fullPath, int opId, string opName, bool overwrite, string fileUrl)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiCreateFileByUrl };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("fullpath", fullPath);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
+            string url = UrlApiCreateFileByUrl;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
             if (opId > 0)
             {
-                request.AppendParameter("op_id", opId + "");
+                parameter.Add("op_id", opId + "");
             }
             else
             {
-                request.AppendParameter("op_name", opName);
+                parameter.Add("op_name", opName);
             }
-            request.AppendParameter("overwrite", (overwrite ? 1 : 0) + "");
-            request.AppendParameter("url", fileUrl);
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            parameter.Add("overwrite", (overwrite ? 1 : 0) + "");
+            parameter.Add("url", fileUrl);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -401,25 +392,28 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetUploadServers()
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiUploadServers };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiUploadServers;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
+        /// <summary>
+        /// 获取服务器地址
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public string GetServerSite(string type)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetServerSite };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("type", type);
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiGetServerSite;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("type", type);
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -431,16 +425,15 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string History(string fullpath, int start, int size)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiHistoryFile };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("fullpath", fullpath);
-            request.AppendParameter("start", start + "");
-            request.AppendParameter("size", size + "");
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiHistoryFile;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullpath);
+            parameter.Add("start", start + "");
+            parameter.Add("size", size + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -454,17 +447,16 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string Search(string keyWords, string path, int start, int size)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiSearchFile };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("keywords", keyWords);
-            request.AppendParameter("path", path);
-            request.AppendParameter("start", start + "");
-            request.AppendParameter("size", size + "");
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Get;
-            request.Request();
-            return request.Result;
+            string url = UrlApiSearchFile;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("keywords", keyWords);
+            parameter.Add("path", path);
+            parameter.Add("start", start + "");
+            parameter.Add("size", size + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
         /// <summary>
@@ -475,15 +467,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string GetPermission(string fullpath, int memberId)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiGetPermission };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("fullpath", fullpath);
-            request.AppendParameter("member_id", memberId + "");
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiGetPermission;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullpath);
+            parameter.Add("member_id", memberId + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -495,25 +486,23 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string SetPermission(string fullpath, int memberId, FilePermissions permissions)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiSetPermission };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("fullpath", fullpath);
-            if (permissions != null)
-            {
-                var jsonArray = new JsonArray();
-                var jsonObject = new JsonObject();
-                foreach (string p in Enum.GetNames(typeof(FilePermissions)))
-                {
-                    jsonArray.Add(p);
-                }
-                jsonObject.Add(memberId + "", jsonArray);
-                request.AppendParameter("permissions", jsonObject.ToString().ToLower());
+            string url = UrlApiSetPermission;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullpath);
+
+            //TODO
+            var jsonArray = new JsonArray();
+            var jsonObject = new JsonObject();
+            foreach (string p in Enum.GetNames(typeof(FilePermissions)))
+            {   
+                jsonArray.Add(p);
             }
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            jsonObject.Add(memberId + "", jsonArray);
+            parameter.Add("permissions", jsonObject.ToString().ToLower());
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -524,15 +513,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string AddTag(string fullpath, string[] tags)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiAddTag };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("fullpath", fullpath);
-            request.AppendParameter("tag", Util.StrArrayToString(tags, ";") + "");
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiAddTag;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullpath);
+            parameter.Add("tag", Util.StrArrayToString(tags, ";") + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -543,15 +531,14 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string DelTag(string fullpath, string[] tags)
         {
-            var request = new HttpRequestSyn { RequestUrl = UrlApiDelTag };
-            request.AppendParameter("org_client_id", _clientId);
-            request.AppendParameter("fullpath", fullpath);
-            request.AppendParameter("tag", Util.StrArrayToString(tags, ";") + "");
-            request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            string url = UrlApiDelTag;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("fullpath", fullpath);
+            parameter.Add("tag", Util.StrArrayToString(tags, ";") + "");
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
