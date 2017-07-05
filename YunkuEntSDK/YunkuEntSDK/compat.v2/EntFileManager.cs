@@ -217,7 +217,7 @@ namespace YunkuEntSDK.compat.v2
         /// <returns></returns>
         public string CreateFile(string fullPath, string opName, string localPath)
         {
-            if (File.Exists(fullPath))
+            if (File.Exists(localPath))
             {
                 using (var fs = new FileStream(localPath, FileMode.Open))
                 {
@@ -484,7 +484,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="memberId"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public string SetPermission(string fullpath, int memberId, FilePermissions permissions)
+        public string SetPermission(string fullpath, int memberId, params FilePermissions[] permissions)
         {
             string url = UrlApiSetPermission;
             var parameter = new Dictionary<string, string>();
@@ -492,13 +492,14 @@ namespace YunkuEntSDK.compat.v2
             parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("fullpath", fullpath);
 
-            //TODO
             var jsonArray = new JsonArray();
             var jsonObject = new JsonObject();
-            foreach (string p in Enum.GetNames(typeof(FilePermissions)))
-            {   
-                jsonArray.Add(p);
+            foreach (var s in permissions)
+            {
+                string scope = Enum.GetName(typeof(FilePermissions), s);
+                jsonArray.Add(scope);
             }
+
             jsonObject.Add(memberId + "", jsonArray);
             parameter.Add("permissions", jsonObject.ToString().ToLower());
             parameter.Add("sign", GenerateSign(parameter));
@@ -564,13 +565,12 @@ namespace YunkuEntSDK.compat.v2
             In
         }
 
-        [Flags]
         public enum FilePermissions
         {
-            FileRead = 1,
-            FilePreview = 2,
-            FileWrite = 4,
-            FileDelete = 8
+            FileRead ,
+            FilePreview,
+            FileWrite,
+            FileDelete
         }
     }
 }

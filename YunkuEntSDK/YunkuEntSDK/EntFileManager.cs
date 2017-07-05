@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using YunkuEntSDK.Net;
@@ -220,7 +221,7 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public string CreateFile(string fullPath, string opName, string localPath)
         {
-            if (File.Exists(fullPath))
+            if (File.Exists(localPath))
             {
                 using (var fs = new FileStream(localPath, FileMode.Open))
                 {
@@ -577,7 +578,7 @@ namespace YunkuEntSDK
         /// <param name="size"></param>
         /// <param name="scopes"></param>
         /// <returns></returns>
-        public string Search(string keyWords, string path, int start, int size, ScopeType scopes)
+        public string Search(string keyWords, string path, int start, int size, params ScopeType[] scopes)
         {
             string url = UrlApiSearchFile;
             var parameter = new Dictionary<string, string>();
@@ -585,11 +586,10 @@ namespace YunkuEntSDK
             parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("keywords", keyWords);
             parameter.Add("path", path);
-
             JsonArray array = new JsonArray();
-            foreach (string scope in Enum.GetNames(typeof(ScopeType)))
+            foreach (var s in scopes)
             {
-                //TODO 
+                string scope = Enum.GetName(typeof(ScopeType), s);
                 array.Add(scope);
             }
             parameter.Add("scope", array.ToString().ToLower());
@@ -644,7 +644,7 @@ namespace YunkuEntSDK
         /// <param name="memberId"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public string SetPermission(string fullpath, int memberId, FilePermissions permissions)
+        public string SetPermission(string fullpath, int memberId, params FilePermissions[] permissions)
         {
             string url = UrlApiSetPermission;
             var parameter = new Dictionary<string, string>();
@@ -654,10 +654,12 @@ namespace YunkuEntSDK
 
             var jsonArray = new JsonArray();
             var jsonObject = new JsonObject();
-            foreach (string p in Enum.GetNames(typeof(FilePermissions)))
-            {   //TODO
-                jsonArray.Add(p);
+            foreach (var s in permissions)
+            {
+                string scope = Enum.GetName(typeof(FilePermissions), s);
+                jsonArray.Add(scope);
             }
+
             jsonObject.Add(memberId + "", jsonArray);
             parameter.Add("permissions", jsonObject.ToString().ToLower());
             parameter.Add("sign", GenerateSign(parameter));
@@ -714,21 +716,19 @@ namespace YunkuEntSDK
             In
         }
 
-        [Flags]
         public enum ScopeType
         {
-            Tag = 1,
-            Content = 2,
-            FileName = 4
+            Tag,
+            Content,
+            FileName
         }
 
-        [Flags]
         public enum FilePermissions
         {
-            FileRead = 1,
-            FilePreview = 2,
-            FileWrite = 4,
-            FileDelete = 8
+            FileRead,
+            FilePreview,
+            FileWrite,
+            FileDelete
         }
     }
 }

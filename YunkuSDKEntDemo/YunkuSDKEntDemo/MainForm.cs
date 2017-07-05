@@ -114,11 +114,7 @@ namespace YunkuSDKEntDemo
 
 
             //==========企业文件操作============//
-            const string orgClientId = "";
-            const string orgClientSecret = "";
-
-            var entFileManager = new EntFileManager(orgClientId, orgClientSecret);
-
+            var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
 
             //获取文件列表
             //DeserializeReturn(entFileManager.GetFileList());
@@ -139,10 +135,10 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
 
             //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile( "test", "Brandon", "D:\\test.txt"));
+            //DeserializeReturn(entFileManager.CreateFile("testCsharp.txt", "Brandon", "D:\\test.txt"));
 
-            //            entFileManager.UploadByBlock( "test.png", "Brandon", 0,
-            //                "C:\\Users\\Brandon\\Desktop\\test.jpg", true, UploadCompeleted, ProgressChanged);
+            //entFileManager.UploadByBlock("testCsharpUp.txt", "Brandon", 0,
+            //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
 
             //通过链接上传文件
             //            DeserializeReturn( entFileManager.CreateFileByUrl("1.jpg", 0, "Brandon", true,
@@ -185,8 +181,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.GetDownloadUrlByHash("5ef2b3b8449cf3440b8a3b1874da5e4236b06dd8", false, EntFileManager.NetType.Default));
 
             //文件搜索
-            //var scopes = EntFileManager.ScopeType.FileName | EntFileManager.ScopeType.Tag;
-            //DeserializeReturn(entFileManager.Search("qq", "", 0, 100, scopes));
+            //DeserializeReturn(entFileManager.Search("test", "", 0, 100, EntFileManager.ScopeType.FileName, EntFileManager.ScopeType.Tag));
 
             //文件预览地址
             //DeserializeReturn(entFileManager.PreviewUrl("test/qq.jpg", false, ""));
@@ -195,7 +190,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.GetPermission("test", 4));
 
             //修改文件夹权限
-            //DeserializeReturn(entFileManager.SetPermission("test", 4, EntFileManager.FilePermissions.FileDelete | EntFileManager.FilePermissions.FilePreview));
+            //DeserializeReturn(entFileManager.SetPermission("test", 4, EntFileManager.FilePermissions.FileDelete, EntFileManager.FilePermissions.FilePreview));
 
             //添加标签
             //DeserializeReturn(entFileManager.AddTag("test", new string[] { "test", "testTag" }));
@@ -255,9 +250,8 @@ namespace YunkuSDKEntDemo
             //添加管理员
             //DeserializeReturn(entManager.AddSyncAdmin("$:LWCP_v1:$ypc3i0Op0Tn0Ge2GvyShWA==", "", false));
 
-            const string outId = "";
-
-            var thirdParty = new ThirdPartyManager(SdkConfig.ClientId, SdkConfig.ClientSecret, outId);
+            //合作方API
+            var thirdParty = new ThirdPartyManager(SdkConfig.ClientId, SdkConfig.ClientSecret, SdkConfig.outId);
 
             //开通企业
             //DeserializeReturn(thirdParty.CreateEnt("yunku3", "yunku3", "", "", ""));
