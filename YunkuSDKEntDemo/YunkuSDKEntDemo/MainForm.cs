@@ -58,7 +58,7 @@ namespace YunkuSDKEntDemo
         private void MainForm_Load(object sender, EventArgs e)
         {
             //=======条件设置=======//
-            DebugConfig.LogPrintAvialable = false;
+            DebugConfig.LogPrintAvialable = true;
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
@@ -68,49 +68,49 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entLibManager.Create("qpTest", "1073741824", "destroy", ""));
 
             //修改库信息 1T="1099511627776" 1G＝“1073741824”；
-            //DeserializeReturn(entLibManager.Set(1307065, "sss", "1099511627776", ""));
+            //DeserializeReturn(entLibManager.Set(1317448, "qp", "1099511627776", ""));
 
             //获取库信息
-            //DeserializeReturn(entLibManager.GetInfo(1258748));
+            //DeserializeReturn(entLibManager.GetInfo(1317448));
 
             //获取库列表
             //DeserializeReturn(entLibManager.GetLibList());
 
             //获取库授权
-            //            DeserializeReturn(entLibManager.Bind(5235, "", ""));
+            //DeserializeReturn(entLibManager.Bind(1317448, "", ""));
 
             //取消库授权
-            //            DeserializeReturn(entLibManager.UnBind("9affb8f78fd5914a7218d7561db6ddec"));
+            //DeserializeReturn(entLibManager.UnBind("l56SYNzK6N9z2ZDMhYqC1Oo"));
 
-            //DeserializeReturn(entLibManager.AddMembers(32662, 1194, new int[] { 21122 }));
             //添加成员
+            //DeserializeReturn(entLibManager.AddMembers(1317448, 3208, new int[] { 216144 }));
 
             //批量修改单库中成员角色
-            //DeserializeReturn(entLibManager.SetMemberRole(32662, 1194, new int[] { 21122 }));
+            //DeserializeReturn(entLibManager.SetMemberRole(1317448, 3208, new int[] { 216144 }));
 
             //获取某一个库的成员
-            //            DeserializeReturn(entLibManager.GetMembers(0, 20, 32662));
+            //DeserializeReturn(entLibManager.GetMembers(0, 20, 1317448));
 
             //查询库成员信息
-            //            DeserializeReturn(entLibManager.GetMember(4405, EntLibManager.MemberType.Account, new[] { "qwdqwdq1" }));
+            //DeserializeReturn(entLibManager.GetMember(1317448, EntLibManager.MemberType.Account, new[] { "qwdqwdq1" }));
 
             //从库中删除成员
-            //DeserializeReturn(entLibManager.DelMember(32662, new int[] { 21122 }));
+            //DeserializeReturn(entLibManager.DelMember(1317448, new int[] { 216144 }));
 
             //获取某一个企业的分组列表
-            //DeserializeReturn(entLibManager.GetGroups(32662));
+            //DeserializeReturn(entLibManager.GetGroups(1317448));
 
             //库上添加分组
-            //DeserializeReturn(entLibManager.AddGroup(32662, 1086, 1194));
+            //DeserializeReturn(entLibManager.AddGroup(1317448, 4448, 3208));
 
             //设置分组上的角色
-            //DeserializeReturn(entLibManager.SetGroupRole(32662, 1086, 1194));
+            //DeserializeReturn(entLibManager.SetGroupRole(1317448, 4448, 1194));
 
             //库上删除分组
-            //DeserializeReturn(entLibManager.DelGroup(32662,1086));
+            //DeserializeReturn(entLibManager.DelGroup(1317448, 4448));
 
             //删除库
-            //            DeserializeReturn(entLibManager.Destroy("651a1ce28c4ad834ae6cb90ba494a755"));
+            //DeserializeReturn(entLibManager.Destroy("jvj4DYQFFPoV98to7wu4ZUQ"));
 
 
             //==========企业文件操作============//
@@ -122,11 +122,11 @@ namespace YunkuSDKEntDemo
             //获取更新列表
             //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
 
-            //            long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
-            //            long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
+            //long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
+            //long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
 
             //文件更新数量
-            //            DeserializeReturn(entFileManager.GetUpdateCount(beigin ,now , true));
+            //DeserializeReturn(entFileManager.GetUpdateCount(beigin, now, true));
 
             //获取文件（夹）信息
             //DeserializeReturn(entFileManager.GetFileInfo("test", EntFileManager.NetType.Default, false));
@@ -135,14 +135,14 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
 
             //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile("testCsharp.txt", "Brandon", "D:\\test.txt"));
+            //DeserializeReturn(entFileManager.CreateFile("testqqq.txt", "Brandon", "D:\\test.txt"));
 
-            //entFileManager.UploadByBlock("testCsharpUp.txt", "Brandon", 0,
+            //entFileManager.UploadByBlock("testqwe.txt", "Brandon", 0,
             //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
 
             //通过链接上传文件
-            //            DeserializeReturn( entFileManager.CreateFileByUrl("1.jpg", 0, "Brandon", true,
-            //                "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg")); 
+            //DeserializeReturn(entFileManager.CreateFileByUrl("1q.jpg", 0, "Brandon", true,
+            //    "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg"));
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
             //DeserializeReturn(entFileManager.Del("test", "Brandon"));
@@ -202,25 +202,25 @@ namespace YunkuSDKEntDemo
             var entManager = new EntManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
 
             //获取成员
-            //            DeserializeReturn(entManager.GetMembers(0, 20));
+            //DeserializeReturn(entManager.GetMembers(0, 20));
 
             //获取分组
-            //            DeserializeReturn(entManager.GetGroups());
+            //DeserializeReturn(entManager.GetGroups());
 
             //获取角色
             //DeserializeReturn(entManager.GetRoles());
 
             //分组成员列表获取
-            //            DeserializeReturn(entManager.GetGroupMembers(1086, 0, 3, true));
+            //DeserializeReturn(entManager.GetGroupMembers(1317448, 0, 3, true));
 
             //根据成员id获取成员个人库外链
-            //            DeserializeReturn(entManager.GetMemberFileLink(52,true));
+            //DeserializeReturn(entManager.GetMemberFileLink(4, true));
 
             //根据成员Id查询企业成员信息
-            //            DeserializeReturn(entManager.GetMemberById(43));
+            //DeserializeReturn(entManager.GetMemberById(4));
 
             //根据外部系统唯一id查询企业成员信息
-            //            DeserializeReturn(entManager.GetMemberByAccount("nishuonishuo"));
+            //DeserializeReturn(entManager.GetMemberByAccount("nishuonishuo"));
 
             //根据外部系统登录帐号查询企业成员信息
             //            DeserializeReturn(entManager.GetMemberByOutId("dqwdqw"));

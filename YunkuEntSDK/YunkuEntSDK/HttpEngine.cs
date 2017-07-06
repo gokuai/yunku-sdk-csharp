@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,18 +41,20 @@ namespace YunkuEntSDK
 
     public class RequestHelper
     {
-        RequestType method;
+        RequestType _method;
         Dictionary<string, string> _params;
         Dictionary<string, string> _headParams;
-        string url;
-        bool checkAuth;
+        string _url;
+        bool _checkAuth;
 
-        List<string> ignoreKeys;
-
+        List<string> _ignoreKeys;
+        List<byte> _postDateByte;
+        Stream _stream;
+        string _contentType;
 
         internal RequestHelper SetMethod(RequestType method)
         {
-            this.method = method;
+            this._method = method;
             return this;
         }
 
@@ -69,30 +72,50 @@ namespace YunkuEntSDK
 
         RequestHelper SetCheckAuth(bool checkAuth)
         {
-            this.checkAuth = checkAuth;
+            this._checkAuth = checkAuth;
             return this;
         }
 
         public RequestHelper SetUrl(string url)
         {
-            this.url = url;
+            this._url = url;
             return this;
         }
 
         public RequestHelper SetIgnoreKeys(List<string> ignoreKeys)
         {
-            this.ignoreKeys = ignoreKeys;
+            this._ignoreKeys = ignoreKeys;
+            return this;
+        }
+
+        public RequestHelper SetPostDataByte(List<byte> postDataByte)
+        {
+            this._postDateByte = postDataByte;
+            return this;
+        }
+
+        public RequestHelper SetContent(Stream stream)
+        {
+            this._stream = stream;
+            return this;
+        }
+
+        public RequestHelper SetContentType(string contentType)
+        {
+            this._contentType = contentType;
             return this;
         }
 
         public string ExecuteSync()
         {
-            CheckNecessaryParams(url, method);
+            CheckNecessaryParams(_url, _method);
 
-            var request = new HttpRequestSyn { RequestUrl = url };
+            var request = new HttpRequestSyn { RequestUrl = _url };
             request.AppendParameter(_params);
             request.AppendHeaderParameter(_headParams);
-            request.RequestMethod = method;
+            request.ContentType = _contentType;
+            request.PostDataByte = _postDateByte;
+            request.RequestMethod = _method;
             request.Request();
             return request.Result;
         }

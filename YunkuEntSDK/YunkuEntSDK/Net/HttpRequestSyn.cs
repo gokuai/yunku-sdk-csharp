@@ -121,7 +121,11 @@ namespace YunkuEntSDK.Net
 
         public void AppendParameter(Dictionary<string, string> paramter)
         {
-            _parameter = paramter;
+            if (paramter != null)
+            {
+                _parameter = paramter;
+            }
+
         }
 
         /// <summary>
@@ -131,7 +135,10 @@ namespace YunkuEntSDK.Net
         /// <param name="value">键对应的值</param>
         public void AppendHeaderParameter(Dictionary<string, string> headParamter)
         {
-                _headParameter = headParamter;        
+            if (headParamter != null)
+            {
+                _headParameter = headParamter;
+            }
         }
 
         public void Request()
@@ -153,14 +160,14 @@ namespace YunkuEntSDK.Net
         private void DefautRequest()
         {
             var myurl = new Uri(RequestUrl);
-            var webRequest = (HttpWebRequest) WebRequest.Create(myurl);
+            var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
             webRequest.UserAgent = HostConfig.UserAgent;
             if (string.IsNullOrEmpty(ContentType))
             {
                 webRequest.ContentType = "application/x-www-form-urlencoded";
             }
             else
-            {                
+            {
                 webRequest.ContentType = ContentType;
             }
             if (RequestMethod == RequestType.Put)
@@ -174,7 +181,7 @@ namespace YunkuEntSDK.Net
 
 
             setHeaderCollection(webRequest.Headers);
-            
+
 
             using (Stream stream = webRequest.GetRequestStream())
             {
@@ -194,7 +201,7 @@ namespace YunkuEntSDK.Net
                         foreach (byte b in PostDataByte)
                         {
                             count++;
-                            if (count%(1024*1024*100) == 0) LogPrint.Print("uploading" + count);
+                            if (count % (1024 * 1024 * 100) == 0) LogPrint.Print("uploading" + count);
 
                             stream.WriteByte(b);
                         }
@@ -213,11 +220,8 @@ namespace YunkuEntSDK.Net
             Result = GetResponeResult(webRequest);
 
             _parameter.Clear();
-            if(_headParameter !=null)
-            {
-                _headParameter.Clear();
-            }
-            
+            _headParameter.Clear();
+
         }
 
         private string GetResponeResult(HttpWebRequest webRequest)
@@ -226,7 +230,7 @@ namespace YunkuEntSDK.Net
             int code;
             try
             {
-                using (var response = (HttpWebResponse) webRequest.GetResponse())
+                using (var response = (HttpWebResponse)webRequest.GetResponse())
                 {
                     // 服务器返回成功消息
                     code = (int)response.StatusCode;
@@ -241,7 +245,7 @@ namespace YunkuEntSDK.Net
             }
             catch (WebException ex)
             {
-                var response = ((HttpWebResponse) ex.Response);
+                var response = ((HttpWebResponse)ex.Response);
                 try
                 {
                     using (Stream stream = response.GetResponseStream())
@@ -257,10 +261,10 @@ namespace YunkuEntSDK.Net
                 }
                 code = (int)response.StatusCode;
 
-              
-                
+
+
             }
-            return  new ReturnResult()
+            return new ReturnResult()
             {
                 Code = code,
                 Result = result
@@ -280,18 +284,15 @@ namespace YunkuEntSDK.Net
                 strrequesturl += "?" + parastring;
             }
             var myurl = new Uri(strrequesturl);
-            var webRequest = (HttpWebRequest) WebRequest.Create(myurl);
+            var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
             webRequest.ServicePoint.ConnectionLimit = 2;
             webRequest.UserAgent = HostConfig.UserAgent;
             webRequest.Method = "GET";
-                setHeaderCollection(webRequest.Headers);
+            setHeaderCollection(webRequest.Headers);
             Result = GetResponeResult(webRequest);
             //清空参数列表
             _parameter.Clear();
-            if (_headParameter != null)
-            {
-                _headParameter.Clear();
-            }
+            _headParameter.Clear();
         }
 
         /// <summary>
@@ -333,7 +334,7 @@ namespace YunkuEntSDK.Net
         /// <returns></returns>
         private void setHeaderCollection(WebHeaderCollection header)
         {
-            if(_headParameter != null)
+            if (_headParameter != null)
             {
                 if (_headParameter.Count > 0)
                 {
@@ -347,7 +348,7 @@ namespace YunkuEntSDK.Net
                     }
                 }
             }
-            
+
 
         }
     }

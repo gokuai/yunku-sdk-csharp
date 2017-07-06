@@ -183,33 +183,41 @@ namespace YunkuEntSDK
         /// <param name="opName"></param>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public string CreateFile(string fullPath, string opName, Stream stream)
-        {   //TODO
+        public string CreateFile(string fullPath, string opName, Stream stream, bool overWrite)
+        {  
             if (stream.Length > UploadSizeLimit)
             {
                 LogPrint.Print("文件大小超过50MB");
                 return "";
             }
             long dateline = Util.GetUnixDataline();
-            var request = new HttpRequestSyn { RequestUrl = UrlApiCreateFile };
-            string[] arr = { dateline + "", "file", fullPath, opName, _clientId };
+
+
+            string url = UrlApiCreateFile;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", dateline + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("op_name", opName);
+            parameter.Add("overwrite", (overWrite ? 1 : 0) + "");
+            parameter.Add("filefield", "file");
+
             var data = new MsMultiPartFormData();
-            request.ContentType = "multipart/form-data;boundary=" + data.Boundary;
-            string filename = Util.GetFileNameFromPath(fullPath);
-            data.AddStreamFile("file", filename, Util.ReadToEnd(stream));
+            string fileName = Util.GetFileNameFromPath(fullPath);
+            data.AddStreamFile("file", fileName, Util.ReadToEnd(stream));
             data.AddParams("org_client_id", _clientId);
             data.AddParams("dateline", dateline + "");
             data.AddParams("fullpath", fullPath);
             data.AddParams("op_name", opName);
+            data.AddParams("overwrite", (overWrite ? 1 : 0) + "");
             data.AddParams("filefield", "file");
-            data.AddParams("sign", GenerateSign(arr));
+            data.AddParams("sign", GenerateSign(parameter));
             data.PrepareFormData();
-            request.PostDataByte = data.GetFormData();
-            request.RequestMethod = RequestType.Post;
-            LogPrint.Print("------------->Begin to Upload<------------------");
-            request.Request();
-            LogPrint.Print("--------------------->Upload Request Compeleted<--------------");
-            return request.Result;
+
+            string contentType = "multipart/form-data;boundary=" + data.Boundary;
+            var postDataByte = data.GetFormData();
+
+            return new RequestHelper().SetUrl(url).SetContentType(contentType).SetPostDataByte(postDataByte).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -226,7 +234,7 @@ namespace YunkuEntSDK
                 using (var fs = new FileStream(localPath, FileMode.Open))
                 {
                     Stream stream = fs;
-                    return CreateFile(fullPath, opName, stream);
+                    return CreateFile(fullPath, opName, stream, true);
                 }
             }
             else
