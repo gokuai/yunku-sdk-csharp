@@ -285,7 +285,6 @@ namespace YunkuEntSDK.Net
             }
             var myurl = new Uri(strrequesturl);
             var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
-            webRequest.ServicePoint.ConnectionLimit = 2;
             webRequest.UserAgent = HostConfig.UserAgent;
             webRequest.Method = "GET";
             setHeaderCollection(webRequest.Headers);

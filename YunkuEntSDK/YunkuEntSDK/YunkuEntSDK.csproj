@@ -64,6 +64,7 @@
     <Compile Include="Net\HttpRequestEnum.cs" />
     <Compile Include="Net\HttpRequestAsync.cs" />
     <Compile Include="Net\HttpRequestSyn.cs" />
+    <Compile Include="Net\IAuthRequest.cs" />
     <Compile Include="Net\MsMultiPartFormData.cs" />
     <Compile Include="Net\CompletedEventArgs.cs" />
     <Compile Include="Net\ProgressEventArgs.cs" />

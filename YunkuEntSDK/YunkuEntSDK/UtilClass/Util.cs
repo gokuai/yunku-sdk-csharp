@@ -20,7 +20,7 @@ namespace YunkuEntSDK.UtilClass
         /// <param name="toEncodeString"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string EncodeToHMACSHA1(string toEncodeString,string key)
+        public static string EncodeToHMACSHA1(string toEncodeString, string key)
         {
             HMACSHA1 hmacsha1 = new HMACSHA1();
             hmacsha1.Key = Encoding.UTF8.GetBytes(key);
@@ -30,16 +30,16 @@ namespace YunkuEntSDK.UtilClass
             return Convert.ToBase64String(hashBytes);
         }
 
-        public static string DecodeBase64(string toDecodeString) 
+        public static string DecodeBase64(string toDecodeString)
         {
             byte[] decodedBytes = Convert.FromBase64String(toDecodeString);
             string decodedText = Convert.ToString(decodedBytes);
             return decodedText;
         }
-            
+
 
         public static string EncodeBase64(string toEncodeString)
-        { 
+        {
             byte[] dataBuffer = Encoding.UTF8.GetBytes(toEncodeString);
             return Convert.ToBase64String(dataBuffer);
         }
@@ -133,9 +133,9 @@ namespace YunkuEntSDK.UtilClass
                 strReturn += strArray[length - 1];
             }
             return strReturn;
-            
+
         }
-     
+
         /// <summary>
         /// 获取文件父级路径
         /// </summary>
@@ -147,7 +147,7 @@ namespace YunkuEntSDK.UtilClass
             string seperatorString = UtilFile.Seperator;
             if (path.EndsWith(seperatorString))
             {
-                int index=path.Remove(path.Length - seperatorString.Length).LastIndexOf(seperatorString);
+                int index = path.Remove(path.Length - seperatorString.Length).LastIndexOf(seperatorString);
                 if (index == -1)
                 {
                     return "";
@@ -163,7 +163,7 @@ namespace YunkuEntSDK.UtilClass
                 }
                 return path.Substring(0, index);
             }
-            
+
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace YunkuEntSDK.UtilClass
             else
             {
                 int index = path.LastIndexOf(seperatorString);
-                return path.Substring(index+seperatorString.Length);
+                return path.Substring(index + seperatorString.Length);
             }
         }
 
@@ -243,7 +243,7 @@ namespace YunkuEntSDK.UtilClass
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static string CaculateSha1(string text) 
+        public static string CaculateSha1(string text)
         {
             SHA1Managed s = new SHA1Managed();
             UTF8Encoding enc = new UTF8Encoding();
@@ -275,9 +275,9 @@ namespace YunkuEntSDK.UtilClass
         public const string TIMEFORMAT_WITHOUT_SECONDS = "yyyy/MM/dd HH:mm";
         public const string TIMEFORMAT_HS = "HH:mm";
 
-        public static string TimeFormat(long dateline,string format)
+        public static string TimeFormat(long dateline, string format)
         {
-            DateTime time=UnixTimestampConverter.ConvertLocalFromTimestamp(dateline*1000);
+            DateTime time = UnixTimestampConverter.ConvertLocalFromTimestamp(dateline * 1000);
             return time.ToString(format);
         }
 
@@ -321,7 +321,7 @@ namespace YunkuEntSDK.UtilClass
 
         //    }
         //    return path;
-        
+
         //}
 
         /// <summary>
@@ -335,14 +335,21 @@ namespace YunkuEntSDK.UtilClass
             UTF8Encoding enc = new UTF8Encoding();
             s.ComputeHash(ReadToEnd(fileStream));
             return BitConverter.ToString(s.Hash).Replace("-", "").ToLower();
-            
+
         }
 
 
         public static long GetUnixDataline()
         {
-            return UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now)/1000;
+            return UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now) / 1000;
         }
+
+        public static bool IsNetworkAvailableEx()
+        {
+            //FIXME 这里可以加网络判断执行的方法
+            return true;
+        }
+
 
 
     }

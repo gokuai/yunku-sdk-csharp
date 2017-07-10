@@ -7,7 +7,7 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public abstract class OauthEngine : HttpEngine
+    public abstract class OauthEngine : HttpEngine, IAuthRequest
     {
         private const string Log_Tag = "OauthEngine";
 
@@ -138,10 +138,10 @@ namespace YunkuEntSDK
             string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
             ReturnResult returnResult = ReturnResult.Create(result);
             OauthData data = OauthData.Create(returnResult.Result);
-            if(data != null)
+            if (data != null)
             {
                 data.Code = returnResult.Code;
-                if(data.Code == (int)HttpStatusCode.OK)
+                if (data.Code == (int)HttpStatusCode.OK)
                 {
                     Token = data.Token;
                     _refreshToken = data.RefreshToken;
@@ -152,26 +152,53 @@ namespace YunkuEntSDK
             return false;
         }
 
-        //异步请求待解决
+        /// <summary>
+        /// 重新进行签名
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="ignoreKeys"></param>
+        private void ReSignParams(Dictionary<string, string> parameter, List<string> ignoreKeys)
+        {
+            ReSignParams(parameter, _clientSecret, ignoreKeys);
+        }
 
-        //internal string SendRequestWithAuth(string url, RequestType requestType, Dictionary<string, string> parameter,
-        //    Dictionary<string, string> headParameter, List<string> ignoreKeys)
-        //{
-        //    string returnString = new RequestHelper().SetParams(parameter).SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+        /// <summary>
+        /// 重新根据参数进行签名
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="secret"></param>
+        /// <param name="ignoreKeys"></param>
+        protected void ReSignParams(Dictionary<string, string> parameter, string secret, List<string> ignoreKeys)
+        {
+            parameter.Remove("token");
+            parameter.Remove("sign");
+            parameter.Add("token", Token);
+            parameter.Add("sign", GenerateSign(parameter, secret, ignoreKeys));
+        }
 
-        //    var request = new HttpRequestAsync { RequestUrl = url };
-        //    request.RequestMethod = requestType;
-        //    request.Request();
+        string IAuthRequest.SendRequestWithAuth(string url, RequestType method, Dictionary<string, string> parameter, Dictionary<string, string> headParameter, List<string> ignoreKeys)
+        {
+            var request = new HttpRequestSyn { RequestUrl = url };
+            request.AppendParameter(parameter);
+            request.AppendHeaderParameter(headParameter);
+            request.RequestMethod = method;
+            request.Request();
 
-        //    ReturnResult returnResult = ReturnResult.Create(request.Result);
-        //    string returnString = ReturnResult.Create(returnResult.Result).Result;
-        //    if (returnResult.Code == (int)HttpStatusCode.Unauthorized)
-        //    {
-        //        RefreshToken();
-        //        request.RemoveParamter();
-        //        request.AppendParameter("token", Token);
-        //        request.AppendParameter("sign", GenerateSign(request.SortedParamter, _clientSecret));
-        //    }
-        //}
+            ReturnResult returnResult = ReturnResult.Create(request.Result);
+            string returnString = ReturnResult.Create(request.Result).Result;
+            if (returnResult.Code == (int)HttpStatusCode.Unauthorized)
+            {
+                RefreshToken();
+                ReSignParams(parameter, ignoreKeys);
+
+                var requestAgain = new HttpRequestSyn { RequestUrl = url };
+                requestAgain.AppendParameter(parameter);
+                requestAgain.AppendHeaderParameter(headParameter);
+                requestAgain.RequestMethod = method;
+                requestAgain.Request();
+                returnString = requestAgain.Result;
+            }
+            return returnString;
+        }
     }
 }
