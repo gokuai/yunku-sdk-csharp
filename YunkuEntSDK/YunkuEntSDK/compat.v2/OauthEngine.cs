@@ -10,7 +10,7 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK.compat.v2
 {
-    class OauthEngine : HttpEngine
+    public class OauthEngine : HttpEngine
     {
         private const string Log_Tag = "OauthEngine_V2";
 
@@ -81,12 +81,6 @@ namespace YunkuEntSDK.compat.v2
                 Token = data.Token;
             }
             return result;
-        }
-
-        protected void AddAuthParams(HttpRequestSyn request)
-        {
-            request.AppendParameter("token", Token);
-            request.AppendParameter("token_type", _tokenType);
         }
 
         protected void AddAuthParams(Dictionary<string, string> parameter)

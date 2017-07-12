@@ -8,7 +8,7 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK.compat.v2
 {
-    class EntLibManager : OauthEngine
+    public class EntLibManager : OauthEngine
     {
         private const string ApiEntHost = HostConfig.ApiEntHostV2;
 

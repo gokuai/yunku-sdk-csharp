@@ -97,16 +97,16 @@ namespace YunkuEntSDK.Net
                     FileOperationData data = FileOperationData.Create(returnResult.Result, returnResult.Code);
                     if (data != null)
                     {
-                        if (data.Code == (int) HttpStatusCode.OK)
+                        if (data.Code == (int)HttpStatusCode.OK)
                         {
                             if (data.Status != FileOperationData.StateNoupload)
                             {
                                 _server = data.Server;
                                 UploadInit(data.UuidHash, filename, _fullPath, filehash, filesize);
 
-//                                long range_index = 0;
-//                                long range_end = 0;
-//                                long datalength = -1;
+                                //                                long range_index = 0;
+                                //                                long range_end = 0;
+                                //                                long datalength = -1;
                                 long crc32 = 0;
                                 long offset = 0;
                                 long rang_end = 0;
@@ -119,7 +119,7 @@ namespace YunkuEntSDK.Net
                                     {
                                         ProgresChanged(this, new ProgressEventArgs()
                                         {
-                                            ProgressPercent = (int) (((float) offset/filesize)*100),
+                                            ProgressPercent = (int)(((float)offset / filesize) * 100),
                                             LocalFullPath = _localFullPath
                                         });
                                     }
@@ -128,7 +128,7 @@ namespace YunkuEntSDK.Net
 
                                     if (offset + buffer.Length >= filesize)
                                     {
-                                        int length_end = (int) (filesize - offset);
+                                        int length_end = (int)(filesize - offset);
                                         byte[] buffer_end = new byte[length_end];
                                         for (int i = 0; i < buffer_end.Length; i++)
                                         {
@@ -145,7 +145,7 @@ namespace YunkuEntSDK.Net
                                             buffer[i] = dataBytes[i + offset];
                                         }
 
-//                                            crc.ComputeHash(buffer, 0, buffer.Length);
+                                        //                                            crc.ComputeHash(buffer, 0, buffer.Length);
                                         crc32 = CRC32.Compute(buffer);
                                         rang_end = offset + buffer.Length - 1;
                                     }
@@ -154,25 +154,25 @@ namespace YunkuEntSDK.Net
                                     returnResult = UploadPart(range, new MemoryStream(buffer), crc32);
                                     code = returnResult.Code;
 
-                                    if (code == (int) HttpStatusCode.OK)
+                                    if (code == (int)HttpStatusCode.OK)
                                     {
                                         offset += RangSize;
                                     }
-                                    else if (code == (int) HttpStatusCode.Accepted)
+                                    else if (code == (int)HttpStatusCode.Accepted)
                                     {
                                         break;
                                     }
-                                    else if (code >= (int) HttpStatusCode.InternalServerError)
+                                    else if (code >= (int)HttpStatusCode.InternalServerError)
                                     {
                                         ReGetUpoadServer(fullpath, filehash, filesize);
                                         continue;
                                     }
-                                    else if (code == (int) HttpStatusCode.Unauthorized)
+                                    else if (code == (int)HttpStatusCode.Unauthorized)
                                     {
                                         UploadInit(data.UuidHash, filename, fullpath, filehash, filesize);
                                         continue;
                                     }
-                                    else if (code == (int) HttpStatusCode.Conflict)
+                                    else if (code == (int)HttpStatusCode.Conflict)
                                     {
                                         var json =
                                             (IDictionary<string, object>)
@@ -191,7 +191,7 @@ namespace YunkuEntSDK.Net
                             //file upload success if reach here
                             if (Completed != null)
                             {
-                                Completed(this, new CompletedEventArgs() {LocalFullPath = _localFullPath});
+                                Completed(this, new CompletedEventArgs() { LocalFullPath = _localFullPath });
                             }
                         }
                         else
@@ -220,23 +220,22 @@ namespace YunkuEntSDK.Net
         /// <param name="filesize"></param>
         private void UploadInit(string hash, string filename, string fullpath, string filehash, long filesize)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestMethod = RequestType.Post;
-            request.AppendHeaderParameter("x-gk-upload-pathhash", hash);
-            request.AppendHeaderParameter("x-gk-upload-filename", filename);
-            request.AppendHeaderParameter("x-gk-upload-filehash", filehash);
-            request.AppendHeaderParameter("x-gk-upload-filesize", filesize.ToString());
+            string url = _server + UrlUploadInit + "?org_client_id=" + _orgClientId;
 
-            request.RequestUrl = _server + UrlUploadInit + "?org_client_id=" + _orgClientId;
-            request.Request();
+            var headParameter = new Dictionary<string, string>();
+            headParameter.Add("x-gk-upload-pathhash", hash);
+            headParameter.Add("x-gk-upload-filename", filename);
+            headParameter.Add("x-gk-upload-filehash", filehash);
+            headParameter.Add("x-gk-upload-filesize", filesize.ToString());
 
-            ReturnResult returnResult = ReturnResult.Create(request.Result);
-            if (returnResult.Code == (int) HttpStatusCode.OK)
+            string returnString = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            ReturnResult returnResult = ReturnResult.Create(returnString);
+            if (returnResult.Code == (int)HttpStatusCode.OK)
             {
-                var json = (IDictionary<string, object>) SimpleJson.DeserializeObject(returnResult.Result);
+                var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(returnResult.Result);
                 _session = SimpleJson.TryStringValue(json, "session");
             }
-            else if (returnResult.Code >= (int) HttpStatusCode.InternalServerError)
+            else if (returnResult.Code >= (int)HttpStatusCode.InternalServerError)
             {
                 ReGetUpoadServer(fullpath, filehash, filesize);
                 UploadInit(hash, filename, fullpath, filehash, filesize);
@@ -256,23 +255,24 @@ namespace YunkuEntSDK.Net
         /// <param name="crc32"></param>
         private ReturnResult UploadPart(String range, MemoryStream data, long crc32)
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = _server + UrlUploadPart;
-            request.RequestMethod = RequestType.Put;
-            //request.AppendHeaderParameter("Connection", "keep-alive");
-            request.AppendHeaderParameter("x-gk-upload-session", _session);
-            request.AppendHeaderParameter("x-gk-upload-range", range);
-            request.AppendHeaderParameter("x-gk-upload-crc", crc32.ToString());
-            request.Content = data;
-            request.Request();
-            return ReturnResult.Create(request.Result);
+            string url = _server + UrlUploadPart;
+
+            var headParameter = new Dictionary<string, string>();
+            //headParameter.Add("Connection", "keep-alive");
+            headParameter.Add("x-gk-upload-session", _session);
+            headParameter.Add("x-gk-upload-range", range);
+            headParameter.Add("x-gk-upload-crc", crc32.ToString());
+
+            string returnString = new RequestHelper().SetContent(data).SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Put).ExecuteSync();
+
+            return ReturnResult.Create(returnString);
         }
 
         public void UploadCheck()
         {
             string returnString = UploadFinish();
             ReturnResult returnResult = ReturnResult.Create(returnString);
-            if (returnResult.Code == (int) HttpStatusCode.OK)
+            if (returnResult.Code == (int)HttpStatusCode.OK)
             {
             }
             else
@@ -286,12 +286,12 @@ namespace YunkuEntSDK.Net
         /// </summary>
         public string UploadFinish()
         {
-            HttpRequestSyn request = new HttpRequestSyn();
-            request.RequestUrl = _server + UrlUploadFinish;
-            request.RequestMethod = RequestType.Post;
-            request.AppendHeaderParameter("x-gk-upload-session", _session);
-            request.Request();
-            return request.Result;
+            string url = _server + UrlUploadFinish;
+
+            var headParameter = new Dictionary<string, string>();
+            headParameter.Add("x-gk-upload-session", _session);
+
+            return new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         /// <summary>
@@ -311,34 +311,37 @@ namespace YunkuEntSDK.Net
         private void UploadAbort()
         {
             string url = _server + UrlUploadAbort;
-            var request = new HttpRequestSyn {RequestUrl = url};
-            request.AppendParameter("x-gk-upload-session", _session);
-            request.Request();
+            var headParameter = new Dictionary<string, string>();
+            headParameter.Add("x-gk-upload-session", _session);
+
+            new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
 
         private string AddFile(long filesize, string filehash, string fullpath)
         {
-            var request = new HttpRequestSyn {RequestUrl = _apiUrl};
-            request.AppendParameter("org_client_id", _orgClientId);
-            request.AppendParameter("dateline", _dateline + "");
-            request.AppendParameter("fullpath", fullpath);
+            string url = _apiUrl;
+
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _orgClientId);
+            parameter.Add("dateline", _dateline + "");
+            parameter.Add("fullpath", fullpath);
+
             if (_opId > 0)
             {
-                request.AppendParameter("op_id", _opId + "");
+                parameter.Add("op_id", _opId + "");
             }
             else if (!string.IsNullOrEmpty(_opName))
             {
-                request.AppendParameter("op_name", _opName);
+                parameter.Add("op_name", _opName);
             }
-            request.AppendParameter("overwrite", (_overWrite ? 1 : 0) + "");
-            request.AppendParameter("sign", GenerateSign(request.SortedParamter));
 
-            request.AppendParameter("filesize", filesize + "");
-            request.AppendParameter("filehash", filehash);
+            parameter.Add("overwrite", (_overWrite ? 1 : 0) + "");
+            parameter.Add("sign", GenerateSign(parameter));
 
-            request.RequestMethod = RequestType.Post;
-            request.Request();
-            return request.Result;
+            parameter.Add("filesize", filesize + "");
+            parameter.Add("filehash", filehash);
+
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
     }
 }
