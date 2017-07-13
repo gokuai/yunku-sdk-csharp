@@ -20,7 +20,7 @@ Robots: noindex,nofollow
 
 要使用云库3.0的API，您需要先在 <a href="http://developer.gokuai.com/yk/tutorial#yk3" target="_blank">企业授权</a> 中获取 `client_id` 和 `client_secret`
 
-##参数使用
+## 参数使用
 
 以下使用到的方法中，如果是string类型的非必要参数，如果是不传，则传`null`
 
@@ -37,6 +37,21 @@ Robots: noindex,nofollow
 | --- | --- | --- | --- |
 | clientId | 是 | string | 申请应用时分配的AppKey |
 | clientSecret | 是 | string | 申请应用时分配的AppSecret |
+
+---
+
+### 使用合作方 OutID 进行认证
+	accessTokenWithThirdPartyOutId(String outId)
+#### 参数
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| outId | 是 | String | 企业在合作方系统中的唯一ID |
+
+#### 返回结果
+	{
+    access_token: 企业token
+    expires_in: token过期时间
+	}
 
 ---
 
@@ -416,6 +431,21 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 ---
 
+### 使用合作方 OutID 进行认证
+	accessTokenWithThirdPartyOutId(String outId)
+#### 参数
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| outId | 是 | String | 企业在合作方系统中的唯一ID |
+
+#### 返回结果
+	{
+    access_token: 企业token
+    expires_in: token过期时间
+	}
+
+---
+
 ### 获取角色
 
 	GetRoles() 
@@ -720,7 +750,22 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 ---
 
+### 添加管理员
+	addSyncAdmin(String outId, String memberEmail, boolean isSuperAdmin)
+#### 参数
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| outId | 是 | string | 成员在外部系统的唯一id数组 |
+| memberEmail | 是 | string | 成员邮箱 |
+| isSuperAdmin | 是 | boolean | 是否为超级管理员，否表示管理员 |
+#### 返回结果
+
+    HTTP 200
+---
+
 ## 企业文件管理（EntFileManager.cs）
+
+`orgClientId`和`orgClientSecret`需要通过`EntLibManager`.`bind`方法获取
 
 ### 构造方法
 
@@ -1082,6 +1127,39 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 ---
 
+### 通过文件唯一标识获取下载地址
+     getDownloadUrlByHash(String hash, final boolean isOpen, NetType net)
+#### 参数
+
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| hash | 是 | string | 文件唯一标识 |
+| isOpen | 是 | boolean | 是否返回能直接在浏览器中打开的文件地址 |
+| net | 是 | NetType | DEFAULT,返回公网下载地址；IN，返回内网下载地址 |
+### 返回结果
+
+     	{
+     		"urls": [文件下载地址数组(可能有多个下载地址)]
+     	}
+
+---
+### 通过文件路径获取下载地址
+    getDownloadUrlByFullPath(String fullPath, final boolean isOpen, NetType net)
+#### 参数
+
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullPath | 是 | string | 文件路径 |
+| isOpen | 是 | boolean | 是否返回能直接在浏览器中打开的文件地址 |
+| net | 是 | NetType | DEFAULT,返回公网下载地址；IN，返回内网下载地址 |
+### 返回结果
+
+	{
+		"urls": [文件下载地址数组(可能有多个下载地址)]
+	}
+
+---
+
 ### WEB直接上传文件
 	GetUploadServers()
 
@@ -1100,4 +1178,312 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 ---
 
+### 复制文件
+	copy(String originFullPath, String targetFullPath, String opName)
+#### 参数 
 
+| 参数 | 必需 | 类型 | 说明 |
+|------|------|------|------|
+| originFullPath | 是 | string | 源文件路径 |
+| targetFullPath | 是 | string | 目标文件路径(含文件名称) |
+| opName | 否 | string | 操作人名称 |
+
+---  
+
+### 回收站
+	recycle(int start, int size)
+#### 参数 
+| 参数 | 必需 | 类型 | 说明 |
+|------|------|------|------|
+| start | 否 | int | 开始位置,默认0 |
+| size | 否 | int | 返回条数,默认100 |
+#### 返回结果
+	正常返回 HTTP 200
+	
+---
+### 恢复删除文件
+	recover(String fullpaths, String opName)
+#### 参数 
+| 参数 | 必需 | 类型 | 说明 |
+|------|------|------|------|
+| fullpaths | 是 | string | 要恢复文件的路径 |
+| opName | 否 | string | 操作人名称 |
+#### 返回结果
+	正常返回 HTTP 200
+	
+---
+
+### 彻底删除文件
+	delCompletely(String[] fullpaths, String opName)
+#### 参数 
+| 参数 | 必需 | 类型 | 说明 |
+|------|------|------|------|
+| fullpaths | 是 | string[] | 要彻底删除文件的路径 |
+| opName | 否 | string | 操作人名称 |
+#### 返回结果
+	正常返回 HTTP 200
+	
+---
+
+### 获取文件历史
+	history(String fullPath, int start, int size)
+#### 参数 
+
+| 参数 | 必需 | 类型 | 说明 |
+|------|------|------|------|
+| fullPath | 是 | string | 要移动文件的路径 |
+| start | 否 | int | 开始位置,默认0 |
+| size | 否 | int | 返回条数,默认20 |
+
+#### 返回结果
+```	
+{
+  count:
+  list:[
+      {
+            hid:
+            act:
+            act_name:
+            dir:
+            hash:
+            fullpath:
+            filehash:
+            filesize:
+            member_id:
+            member_name:
+            dateline:
+            property:
+      }
+      ...
+    ]
+}
+```
+
+---
+
+### 文件预览地址
+	previewUrl(String fullPath, final boolean showWaterMark, String memberName)
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullPath | 是 | string | 消息标题 |
+| showWaterMark | 是 | boolean | 是否显示水印 |
+| memberName | 否 | string | 在水印中显示的文档查看人姓名 |
+
+#### 返回结果
+	{
+    	"url" : 文档预览地址(10分钟有效)
+	}
+	
+---
+
+### 获取文件夹权限
+	getPermission(String fullPath, int memberId)
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullPath | 是 | string | 消息标题 |
+| memberId | 是 | int | 用户ID |
+
+#### 返回结果
+	{
+    	["file_read","file_preview","file_write","file_delete"]
+	}
+	
+---
+
+### 修改文件夹权限
+	setPermission(String fullPath, FilePermissions... permissions)
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullPath | 是 | string | 消息标题 |
+| permissions | 是 | FilePermissions | 权限,如 {member_id:["file_read","file_preview","file_write","file_delete"],...} |
+
+#### 返回结果
+	正常返回 HTTP 200 
+	
+---
+
+### 添加标签
+	addTag(String fullPath, String[] tags)
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullPath | 是 | string | 文件的路径 |
+| tags | 是 | string | 标签 |
+#### 返回结果
+	正常返回 HTTP 200 
+---
+
+### 删除标签
+	delTag(String fullPath, String[] tags)
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| fullPath | 是 | string | 文件的路径 |
+| tags | 是 | string | 标签 |
+#### 返回结果
+	正常返回 HTTP 200 
+---
+
+### 文件搜索
+	search(String keyWords, String path, int start, int size, ScopeType... scopes)
+
+#### 参数 
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| keyWords | 是 | string | 搜索关键字 |
+| path | 是 | string | 需要搜索的文件夹|
+| start | 是 | int | 开始位置|
+| size | 是 | int | 返回条数|
+| scopes | 是 | ScopeType... | 范围，FILENAME-文件名、TAG-标签、CONTENT-全文|
+
+#### 返回结果
+	{
+		count:
+		list:
+		[
+			{
+				hash:
+				dir:
+				fullpath:
+				filename:
+				filehash:
+				filesize:
+				create_member_name:
+				create_dateline:
+				last_member_name:
+				last_dateline:
+			},
+			...
+		]
+	}
+---
+
+## 企业合作API（ThirdPartyManager.java）
+### 构造方法
+	new ThirdPartyManager(String clientId, String clientSecret, String outId)
+### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| clientId | 是 | string | 够快分配的client_id |
+| clientSecret | 是 | string | 够快分配的clientSecret |
+| outId | 是 | string | 企业在合作方系统中的唯一ID |
+
+### 开通企业
+	createEnt(String entName, String contactName,
+				String contactMobile, String contactEmail, String contactAddress)
+
+#### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| entName | 是 | string | 	企业名称 |
+| contactName | 是 | string | 企业联系人姓名 |
+| contactMobile | 否 | string | 企业联系电话 |
+| contactEmail | 否 | string | 企业联系邮箱 |
+| contactAddress  | 否 | string | 企业联系地址 |
+
+### 扩展参数
+	createEnt(HashMap<String, String> map,String entName, String contactName,
+			String contactMobile, String contactEmail, String contactAddress)
+#### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| map | 是 | hashMap| 用于传递一些特殊用途的企业初始数据, 参数前缀为__setting _ , 例如: 	__ setting _ site _ url |
+| entName | 是 | string | 	企业名称 |
+| contactName | 是 | string | 企业联系人姓名 |
+| contactMobile | 否 | string | 企业联系电话 |
+| contactEmail | 否 | string | 企业联系邮箱 |
+| contactAddress  | 否 | string | 企业联系地址 |
+#### 返回结果
+	正常返回 HTTP 200
+
+### 获取企业信息
+	getEntInfo()
+#### 参数
+
+(无)
+
+#### 返回结果
+	{
+	  "id": 企业ID,
+	  "name": 企业名称,
+	  "trial": 是否试用, 1表示试用, 0表示正式开通,
+	  "end_dateline": 到期时间, unix时间戳,
+	  "member_limit": 成员数量上限,
+	  "member_count": 成员数量,
+	  "space": 空间上限, 单位字节,
+	  "size": 已使用空间, 单位字节
+	}
+
+### 购买
+	orderSubscribe(int memberCount, int space, int month)
+
+#### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| memberCount | 是 | int | 人数（不限是-1） |
+| space | 是 | int | 空间(G) |
+| month | 是 | int | 购买的月数 |
+#### 返回结果
+	正常返回 HTTP 200
+
+### 升级
+	orderUpgrade(int memberCount, int space)
+#### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| memberCount | 是 | int | 人数（不限是-1） |
+| space | 是 | int | 空间(G) |
+#### 返回结果
+	正常返回 HTTP 200
+
+### 续费
+	orderRenew(int month)
+#### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| month | 是 | int | 购买的月数 |
+#### 返回结果
+	正常返回 HTTP 200
+
+### 退订
+	orderUnsubscribe()
+#### 参数
+
+(无)
+
+#### 返回结果
+	正常返回 HTTP 200
+
+### 获取企业token
+	getEntToken()
+
+#### 参数
+
+(无)
+
+#### 返回结果
+	{
+    	access_token: 企业token
+    	expires_in: token过期时间
+	}
+
+### 获取单点登录地址
+	getSsoUrl(String ticket)
+#### 参数
+| 名称 | 必需 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| ticket | 是 | string | 	单点登录需要验证的票据 |
+
+#### 返回结果
+	{
+    	url: 单点登录URL
+	}
+
+### [单点登录流程][1]
+
+---
+
+[1]: http://developer.gokuai.com/other/thirdparty.html#单点登录流程
