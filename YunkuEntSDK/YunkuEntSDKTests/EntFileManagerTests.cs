@@ -61,7 +61,7 @@ namespace YunkuEntSDK.Tests
         public void CreateFolderTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.CreateFolder("test", "Vitali");
+            String returnString = entFile.CreateFolder("testV", "Vitali");
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }
@@ -70,7 +70,7 @@ namespace YunkuEntSDK.Tests
         public void CreateFileTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.CreateFile("testqqq.txt", "Brandon", "D:\\test.txt");
+            String returnString = entFile.CreateFile("testVV.txt", "Brandon", "D:\\test.txt");
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }
@@ -79,18 +79,19 @@ namespace YunkuEntSDK.Tests
         public void UploadByBlockTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            entFile.UploadByBlock("testUPp.txt", "Brandon", 0,
+            entFile.UploadByBlock("testABC.txt", "Brandon", 0,
                  "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
         }
 
         private void ProgressChanged(object sender, ProgressEventArgs e)
         {
-            throw new NotImplementedException();
+
+            LogPrint.Print(" onProgress:" + e.ProgressPercent);
         }
 
         private void UploadCompeleted(object sender, CompletedEventArgs e)
         {
-            throw new NotImplementedException();
+            Assert.IsFalse(e.IsError);
         }
 
         [TestMethod()]

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace YunkuEntSDK.UtilClass
 {
-    internal class LogPrint
+    public class LogPrint
     {
         private const string YunkuFile = "yunkusdk_{0}.log";
 

@@ -79,21 +79,7 @@ namespace YunkuEntSDK
         /// <summary>
         /// 添加认证参数
         /// </summary>
-        /// <param name="request"></param>
-        internal void AddAuthParams(HttpRequestSyn request)
-        {
-            if (Token == null)
-            {
-                request.AppendParameter("client_id", _clientId);
-                request.AppendParameter("dateline", Util.GetUnixDataline() + "");
-            }
-            else
-            {
-                request.AppendParameter("token", Token);
-                request.AppendParameter("token_type", _tokenType);
-            }
-        }
-
+        /// <param name="parameter"></param>
         internal void AddAuthParams(Dictionary<string, string> parameter)
         {
             if (Token == null)

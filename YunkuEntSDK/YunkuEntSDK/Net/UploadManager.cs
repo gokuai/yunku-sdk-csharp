@@ -102,6 +102,16 @@ namespace YunkuEntSDK.Net
                             if (data.Status != FileOperationData.StateNoupload)
                             {
                                 _server = data.Server;
+
+                                if (string.IsNullOrEmpty(_server))
+                                {
+                                    throw new Exception(" The server is empty ");
+                                }
+                                else
+                                {
+                                    LogPrint.Print(" The server is " + _server);
+                                }
+
                                 UploadInit(data.UuidHash, filename, _fullPath, filehash, filesize);
 
                                 //                                long range_index = 0;

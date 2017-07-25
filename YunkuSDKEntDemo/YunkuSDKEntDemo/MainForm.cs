@@ -58,7 +58,7 @@ namespace YunkuSDKEntDemo
         private void MainForm_Load(object sender, EventArgs e)
         {
             //=======条件设置=======//
-            DebugConfig.LogPrintAvialable = true;
+            DebugConfig.LogPrintAvialable = false;
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
             //=========企业库操作============//
@@ -129,15 +129,16 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.GetUpdateCount(beigin, now, true));
 
             //获取文件（夹）信息
-            //DeserializeReturn(entFileManager.GetFileInfo("test", EntFileManager.NetType.Default, false));
+            //DeserializeReturn(entFileManager.GetFileInfo("test001.txt", EntFileManager.NetType.Default, false));
+
 
             //创建文件夹
             //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
 
             //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile("testqqq.txt", "Brandon", "D:\\test.txt"));
+            //DeserializeReturn(entFileManager.CreateFile("test111.txt", "Brandon", "D:\\test.txt"));
 
-            //entFileManager.UploadByBlock("testqwe.txt", "Brandon", 0,
+            //entFileManager.UploadByBlock("test001.txt", "Brandon", 0,
             //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
 
             //通过链接上传文件

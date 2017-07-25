@@ -139,7 +139,7 @@ namespace YunkuEntSDK
             return request.Result;
         }
 
-        Thread ExecuteAsync(DataListener listener, int apiId, RequestHelperCallBack callBack)
+        public Thread ExecuteAsync(DataListener listener, int apiId, RequestHelperCallBack callBack)
         {
             CheckNecessaryParams(_url, _method);
 
@@ -192,6 +192,7 @@ namespace YunkuEntSDK
                 request.ContentType = _contentType;
                 request.PostDataByte = _postDateByte;
                 request.RequestMethod = _method;
+                request.isAsync = true;
                 request.Request();
                 returnString = request.Result;
             }
@@ -234,7 +235,7 @@ namespace YunkuEntSDK
         void OnReceivedData(int apiId, Object obj, int errorId);
     }
 
-    interface RequestHelperCallBack
+    public interface RequestHelperCallBack
     {
         Object GetReturnData(string returnString);
     }
