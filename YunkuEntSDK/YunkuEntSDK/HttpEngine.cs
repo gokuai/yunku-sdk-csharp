@@ -18,6 +18,18 @@ namespace YunkuEntSDK
         protected string _clientId;
         protected string _clientSecret;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class RequestEvents
+        {
+            public int ApiID { get; set; }
+            public string Result { get; set; }
+        }
+
+        public delegate void RequestEventHanlder(object sender, RequestEvents e);
+
         public HttpEngine(string clientId, string clientSecret)
         {
             _clientId = clientId;
@@ -38,205 +50,133 @@ namespace YunkuEntSDK
         {
             return GenerateSign(parameter, _clientSecret, ignoreKeys);
         }
-    }
 
-    public class RequestHelper
-    {
-        public const int ErrorId_NetDisconnect = -1;
-        RequestType _method;
-        Dictionary<string, string> _params;
-        Dictionary<string, string> _headParams;
-        string _url;
-        bool _checkAuth;
 
-        List<string> _ignoreKeys;
-        List<byte> _postDateByte;
-        Stream _stream;
-        string _contentType;
-
-        RequestHelperCallBack _callBack;
-        DataListener _listener;
-        int _apiId;
-
-        internal RequestHelper SetMethod(RequestType method)
+        internal class RequestHelper
         {
-            this._method = method;
-            return this;
-        }
+            RequestType _method;
+            Dictionary<string, string> _params;
+            Dictionary<string, string> _headParams;
+            string _url;
+            bool _checkAuth;
 
-        internal RequestHelper SetParams(Dictionary<string, string> parameter)
-        {
-            this._params = parameter;
-            return this;
-        }
+            List<string> _ignoreKeys;
+            List<byte> _postDateByte;
+            Stream _stream;
+            string _contentType;
 
-        internal RequestHelper SetHeadParams(Dictionary<string, string> headParams)
-        {
-            this._headParams = headParams;
-            return this;
-        }
+            public event RequestEventHanlder RequestCompleted;
 
-        RequestHelper SetCheckAuth(bool checkAuth)
-        {
-            this._checkAuth = checkAuth;
-            return this;
-        }
-
-        public RequestHelper SetUrl(string url)
-        {
-            this._url = url;
-            return this;
-        }
-
-        public RequestHelper SetIgnoreKeys(List<string> ignoreKeys)
-        {
-            this._ignoreKeys = ignoreKeys;
-            return this;
-        }
-
-        public RequestHelper SetPostDataByte(List<byte> postDataByte)
-        {
-            this._postDateByte = postDataByte;
-            return this;
-        }
-
-        public RequestHelper SetContent(Stream stream)
-        {
-            this._stream = stream;
-            return this;
-        }
-
-        public RequestHelper SetContentType(string contentType)
-        {
-            this._contentType = contentType;
-            return this;
-        }
-
-        public string ExecuteSync()
-        {
-            CheckNecessaryParams(_url, _method);
-
-            if (!Util.IsNetworkAvailableEx())
+            internal RequestHelper SetMethod(RequestType method)
             {
-                return "";
+                this._method = method;
+                return this;
             }
 
-            if (_checkAuth)
+            internal RequestHelper SetParams(Dictionary<string, string> parameter)
             {
-                if (this.GetType() == typeof(IAuthRequest))
+                this._params = parameter;
+                return this;
+            }
+
+            internal RequestHelper SetHeadParams(Dictionary<string, string> headParams)
+            {
+                this._headParams = headParams;
+                return this;
+            }
+
+            RequestHelper SetCheckAuth(bool checkAuth)
+            {
+                this._checkAuth = checkAuth;
+                return this;
+            }
+
+            public RequestHelper SetUrl(string url)
+            {
+                this._url = url;
+                return this;
+            }
+
+            public RequestHelper SetIgnoreKeys(List<string> ignoreKeys)
+            {
+                this._ignoreKeys = ignoreKeys;
+                return this;
+            }
+
+            public RequestHelper SetPostDataByte(List<byte> postDataByte)
+            {
+                this._postDateByte = postDataByte;
+                return this;
+            }
+
+            public RequestHelper SetContent(Stream stream)
+            {
+                this._stream = stream;
+                return this;
+            }
+ 
+
+            public RequestHelper SetContentType(string contentType)
+            {
+                this._contentType = contentType;
+                return this;
+            }
+
+            public string ExecuteSync()
+            {
+                CheckNecessaryParams(_url, _method);
+
+                if (!Util.IsNetworkAvailableEx())
                 {
-                    return ((IAuthRequest)this.GetType()).SendRequestWithAuth(_url, _method, _params, _headParams, _ignoreKeys);
+                    return "";
                 }
-            }
 
-            var request = new HttpRequestSyn { RequestUrl = _url };
-            request.AppendParameter(_params);
-            request.AppendHeaderParameter(_headParams);
-            request.ContentType = _contentType;
-            request.PostDataByte = _postDateByte;
-            request.RequestMethod = _method;
-            request.Request();
-            return request.Result;
-        }
-
-        public Thread ExecuteAsync(DataListener listener, int apiId, RequestHelperCallBack callBack)
-        {
-            CheckNecessaryParams(_url, _method);
-
-            if (callBack != null)
-            {
-                if (listener != null)
+                if (_checkAuth)
                 {
-                    _callBack = callBack;
-                    _listener = listener;
-                    _apiId = apiId;
-
-                    if (!Util.IsNetworkAvailableEx())
+                    if (this.GetType().Equals(typeof(IAuthRequest)))
                     {
-                        _listener.OnReceivedData(apiId, null, ErrorId_NetDisconnect);
-                        return null;
+                        return ((IAuthRequest)this).SendRequestWithAuth(_url, _method, _params, _headParams, _ignoreKeys);
                     }
                 }
-            }
 
-            Thread thread = new Thread(Run);
-
-            thread.Start();
-            return thread;
-        }
-
-        private void Run()
-        {
-            string returnString;
-
-            if (_checkAuth)
-            {
-                var context = typeof(HttpEngine).GetType();
-                if (context == typeof(IAuthRequest))
-                {
-                    returnString = ((IAuthRequest)context).SendRequestWithAuth(_url, _method, _params, _headParams, _ignoreKeys);
-                }
-                else
-                {
-                    returnString = "";
-
-                    LogPrint.Print("You need implement IAuthRequest before set checkAuth=true");
-                }
-
-            }
-            else
-            {
-                var request = new HttpRequestSyn { RequestUrl = _url };
+                var request = new HttpRequest { RequestUrl = _url };
                 request.AppendParameter(_params);
                 request.AppendHeaderParameter(_headParams);
                 request.ContentType = _contentType;
                 request.PostDataByte = _postDateByte;
                 request.RequestMethod = _method;
-                request.isAsync = true;
                 request.Request();
-                returnString = request.Result;
+                return request.Result;
             }
 
-            if (_callBack != null)
+
+            public Thread ExecuteAsync(int ApiID, RequestEventHanlder hanlder)
             {
-                if (_listener != null)
+                RequestCompleted += hanlder;
+                SynchronizationContext context = SynchronizationContext.Current;
+
+                Thread thread = new Thread(() =>
                 {
-                    Object obj = _callBack.GetReturnData(returnString);
-                    _listener.OnReceivedData(_apiId, obj, -1);
+                    string result = ExecuteSync();
+                    context.Post(state =>
+                    {
+                        RequestCompleted?.Invoke(this, new RequestEvents() { Result = result, ApiID = ApiID });
+                    }, null);
+                });
+                thread.Start();
+                return thread;
+            }
+
+            private void CheckNecessaryParams(string url, RequestType method)
+            {
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw new ArgumentException("url must not be null");
                 }
             }
-        }
 
-        private void CheckNecessaryParams(string url, RequestType method)
-        {
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new ArgumentException("url must not be null");
-            }
-        }
-
-        Thread ExecuteAsyncTask(Thread task, DataListener listener, int apiId)
-        {
-            if (listener != null)
-            {
-                if (!Util.IsNetworkAvailableEx())
-                {
-                    listener.OnReceivedData(apiId, null, ErrorId_NetDisconnect);
-                    return null;
-                }
-            }
-            task.Start();
-            return task;
         }
     }
 
-    public interface DataListener
-    {
-        void OnReceivedData(int apiId, Object obj, int errorId);
-    }
 
-    public interface RequestHelperCallBack
-    {
-        Object GetReturnData(string returnString);
-    }
 }

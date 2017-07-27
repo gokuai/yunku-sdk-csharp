@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
+using static YunkuEntSDK.HttpEngine.RequestHelper;
 
 namespace YunkuEntSDK
 {
@@ -57,6 +58,33 @@ namespace YunkuEntSDK
         public string GetFileList()
         {
             return GetFileList("", 0, 100, false);
+        }
+
+        /// <summary>
+        /// 获取文件列表异步异步请求示例
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        /// <param name="dirOnly"></param>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public Thread GetFileListAsync(string fullPath,int start,int size,bool dirOnly, RequestEventHanlder handler) {
+
+            string url = UrlApiFilelist;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_client_id", _clientId);
+            parameter.Add("dateline", Util.GetUnixDataline() + "");
+            parameter.Add("start", start + "");
+            parameter.Add("fullpath", fullPath);
+            parameter.Add("size", size + "");
+            if (dirOnly)
+            {
+                parameter.Add("dir", "1");
+            }
+            parameter.Add("sign", GenerateSign(parameter));
+            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteAsync(1, handler);
+
         }
 
         /// <summary>

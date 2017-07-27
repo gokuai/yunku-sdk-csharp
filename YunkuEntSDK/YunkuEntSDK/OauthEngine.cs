@@ -164,7 +164,7 @@ namespace YunkuEntSDK
 
         string IAuthRequest.SendRequestWithAuth(string url, RequestType method, Dictionary<string, string> parameter, Dictionary<string, string> headParameter, List<string> ignoreKeys)
         {
-            var request = new HttpRequestSyn { RequestUrl = url };
+            var request = new HttpRequest { RequestUrl = url };
             request.AppendParameter(parameter);
             request.AppendHeaderParameter(headParameter);
             request.RequestMethod = method;
@@ -177,7 +177,7 @@ namespace YunkuEntSDK
                 RefreshToken();
                 ReSignParams(parameter, ignoreKeys);
 
-                var requestAgain = new HttpRequestSyn { RequestUrl = url };
+                var requestAgain = new HttpRequest { RequestUrl = url };
                 requestAgain.AppendParameter(parameter);
                 requestAgain.AppendHeaderParameter(headParameter);
                 requestAgain.RequestMethod = method;

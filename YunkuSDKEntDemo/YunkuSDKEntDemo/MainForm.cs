@@ -118,6 +118,10 @@ namespace YunkuSDKEntDemo
 
             //获取文件列表
             //DeserializeReturn(entFileManager.GetFileList());
+            entFileManager.GetFileListAsync("", 0, 100, true, (s,requestEvent)=> {
+                DeserializeReturn(requestEvent.Result);
+            } );
+            
 
             //获取更新列表
             //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
@@ -279,6 +283,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(thirdParty.OrderUnsubscribe());
 
         }
+
 
         private void ProgressChanged(object sender, ProgressEventArgs e)
         {
