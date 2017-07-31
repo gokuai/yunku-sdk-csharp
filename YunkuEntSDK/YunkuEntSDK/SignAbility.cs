@@ -12,20 +12,11 @@ namespace YunkuEntSDK
         }
 
         /// <summary>
-        ///     生成签名
+        ///  生成签名
         /// </summary>
-        /// <param name="array"></param>
+        /// <param name="parameter"></param>
+        /// <param name="secret"></param>
         /// <returns></returns>
-        protected string GenerateSign(string[] array, string secret)
-        {
-            string stringSign = "";
-            for (int i = 0; i < array.Length; i++)
-            {
-                stringSign += array[i] + (i == array.Length - 1 ? string.Empty : "\n");
-            }
-            return Util.EncodeToHMACSHA1(stringSign, secret);
-        }
-
         protected string GenerateSign(Dictionary<string, string> parameter, string secret)
         {
             return GenerateSign(parameter, secret, new List<string>());

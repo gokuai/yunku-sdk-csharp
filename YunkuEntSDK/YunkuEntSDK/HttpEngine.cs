@@ -36,11 +36,6 @@ namespace YunkuEntSDK
             _clientSecret = clientSecret;
         }
 
-        public string GenerateSign(string[] array)
-        {
-            return GenerateSign(array, _clientSecret);
-        }
-
         public string GenerateSign(Dictionary<string, string> parameter)
         {
             return GenerateSign(parameter, _clientSecret);

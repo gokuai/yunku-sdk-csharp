@@ -14,8 +14,8 @@ namespace YunkuEntSDK.Net
         private const string UrlUploadPart = "/upload_part";
         private const string UrlUploadAbort = "/upload_abort";
         private const string UrlUploadFinish = "/upload_finish";
-        private const int RangSize = 65536; // 上传分块大小-64K
 
+        private int _rangSize = 524288; // 上传分块大小-512K
 
         private string _server = ""; // 上传服务器地址
         private string _session = ""; // 上传session
@@ -38,7 +38,7 @@ namespace YunkuEntSDK.Net
 
 
         public UploadManager(string apiUrl, string localFullPath, string fullPath,
-            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite) : base(orgClientId, clientSecret)
+            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite, int rangSize) : base(orgClientId, clientSecret)
         {
             _apiUrl = apiUrl;
             _localFullPath = localFullPath;
@@ -49,6 +49,8 @@ namespace YunkuEntSDK.Net
             _dateline = dateline;
             _clientSecret = clientSecret;
             _overWrite = overWrite;
+            _rangSize = rangSize;
+
         }
 
         public void DoUpload()
@@ -134,7 +136,7 @@ namespace YunkuEntSDK.Net
                                         });
                                     }
 
-                                    byte[] buffer = new byte[RangSize];
+                                    byte[] buffer = new byte[_rangSize];
 
                                     if (offset + buffer.Length >= filesize)
                                     {
@@ -166,7 +168,7 @@ namespace YunkuEntSDK.Net
 
                                     if (code == (int)HttpStatusCode.OK)
                                     {
-                                        offset += RangSize;
+                                        offset += _rangSize;
                                     }
                                     else if (code == (int)HttpStatusCode.Accepted)
                                     {

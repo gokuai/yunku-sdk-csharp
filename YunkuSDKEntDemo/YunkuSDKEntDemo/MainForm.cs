@@ -118,10 +118,12 @@ namespace YunkuSDKEntDemo
 
             //获取文件列表
             //DeserializeReturn(entFileManager.GetFileList());
-            entFileManager.GetFileListAsync("", 0, 100, true, (s,requestEvent)=> {
-                DeserializeReturn(requestEvent.Result);
-            } );
-            
+
+            //异步获取文件列表
+            //entFileManager.GetFileListAsync("", 0, 100, true, (s,requestEvent)=> {
+            //    DeserializeReturn(requestEvent.Result);
+            //} );
+
 
             //获取更新列表
             //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
@@ -133,7 +135,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.GetUpdateCount(beigin, now, true));
 
             //获取文件（夹）信息
-            //DeserializeReturn(entFileManager.GetFileInfo("test001.txt", EntFileManager.NetType.Default, false));
+            DeserializeReturn(entFileManager.GetFileInfo("testRangSize.txt", EntFileManager.NetType.Default, false));
 
 
             //创建文件夹
@@ -142,7 +144,8 @@ namespace YunkuSDKEntDemo
             //上传文件 文件不得超过50MB
             //DeserializeReturn(entFileManager.CreateFile("test111.txt", "Brandon", "D:\\test.txt"));
 
-            //entFileManager.UploadByBlock("test001.txt", "Brandon", 0,
+            //分块上传，默认分块上传大小为512K
+            //entFileManager.UploadByBlock("testRangSize.txt", "Brandon", 0,
             //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
 
             //通过链接上传文件

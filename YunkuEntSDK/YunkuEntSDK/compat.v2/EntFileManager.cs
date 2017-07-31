@@ -15,6 +15,7 @@ namespace YunkuEntSDK.compat.v2
         private const string Log_Tag = "EntFileManager_V2";
 
         private const long UploadSizeLimit = 52428800; //50MB
+        private const int RangSize = 524288; //512K
         private const string LibHost = HostConfig.ApiEntHostV2;
         private const string UrlApiFilelist = LibHost + "/1/file/ls";
         private const string UrlApiUpdateList = LibHost + "/1/file/updates";
@@ -240,12 +241,28 @@ namespace YunkuEntSDK.compat.v2
             }
         }
 
-
+        /// <summary>
+        /// 分块上传，默认分块上传大小512K
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <param name="opName"></param>
+        /// <param name="opId"></param>
+        /// <param name="localFilePath"></param>
+        /// <param name="overWrite"></param>
+        /// <param name="completedEventHandler"></param>
+        /// <param name="progressChangeEventHandler"></param>
+        /// <returns></returns>
         public Thread UploadByBlock(string fullPath, string opName, int opId, string localFilePath, bool overWrite
             , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
         {
+            return UploadByBlock(fullPath, opName, opId, localFilePath, overWrite, RangSize, completedEventHandler, progressChangeEventHandler);
+        }
+
+        public Thread UploadByBlock(string fullPath, string opName, int opId, string localFilePath, bool overWrite, int rangSize
+            , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, localFilePath,
-                fullPath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overWrite);
+                fullPath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overWrite, rangSize);
             uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 

@@ -1022,7 +1022,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 ### 文件分块上传
 
 	UploadByBlock( String fullPath, String opName,
-	 int opId, String localFilePath,boolean overWrite,CompletedHanlder completeHanlder,ProgressChangedHandler progressHandler)
+	 int opId, String localFilePath,boolean overWrite, int rangSize, CompletedHanlder completeHanlder,ProgressChangedHandler progressHandler)
 	
 #### 参数 
 | 参数 | 必须 | 类型 | 说明 |	
@@ -1032,6 +1032,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 | opId | 否 | int | 创建人id, 个人库默认是库拥有人id, 如果创建人不是云库用户, 可以用op_name代替,|
 | localFilePath | 是 | string | 文件本地路径 |
 | overWrite | 是 | boolean | 是否覆盖同名文件，true为覆盖 |
+| rangSize | 否 | int | 分块上传大小，不传默认为512K |
 | completeHanlder | 否 | CompletedHanlder | 上传完成回调 |
 | progressHandler | 否 | ProgressChangedHandler | 上传进度回调 |
 
@@ -1372,7 +1373,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 | outId | 是 | string | 企业在合作方系统中的唯一ID |
 
 ### 开通企业
-	createEnt(String entName, String contactName,
+	CreateEnt(String entName, String contactName,
 				String contactMobile, String contactEmail, String contactAddress)
 
 #### 参数
@@ -1385,7 +1386,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 | contactAddress  | 否 | string | 企业联系地址 |
 
 ### 扩展参数
-	createEnt(HashMap<String, String> map,String entName, String contactName,
+	CreateEnt(HashMap<String, String> map,String entName, String contactName,
 			String contactMobile, String contactEmail, String contactAddress)
 #### 参数
 | 名称 | 必需 | 类型 | 说明 |
@@ -1400,7 +1401,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ### 获取企业信息
-	getEntInfo()
+	GetEntInfo()
 #### 参数
 
 (无)
@@ -1418,7 +1419,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	}
 
 ### 购买
-	orderSubscribe(int memberCount, int space, int month)
+	OrderSubscribe(int memberCount, int space, int month)
 
 #### 参数
 | 名称 | 必需 | 类型 | 说明 |
@@ -1430,7 +1431,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ### 升级
-	orderUpgrade(int memberCount, int space)
+	OrderUpgrade(int memberCount, int space)
 #### 参数
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -1440,7 +1441,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ### 续费
-	orderRenew(int month)
+	OrderRenew(int month)
 #### 参数
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -1449,7 +1450,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ### 退订
-	orderUnsubscribe()
+	OrderUnsubscribe()
 #### 参数
 
 (无)
@@ -1458,7 +1459,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	正常返回 HTTP 200
 
 ### 获取企业token
-	getEntToken()
+	GetEntToken()
 
 #### 参数
 
@@ -1471,7 +1472,7 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	}
 
 ### 获取单点登录地址
-	getSsoUrl(String ticket)
+	GetSsoUrl(String ticket)
 #### 参数
 | 名称 | 必需 | 类型 | 说明 |
 | --- | --- | --- | --- |
@@ -1485,5 +1486,106 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 ### [单点登录流程][1]
 
 ---
+
+## 网络请求管理（HttpEngine.cs）
+
+### 构造方法	new HttpEngine（string clientId, string clientSecret）
+	
+#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || clientId | 是 | string | 申请应用时分配的AppKey || clientSecret | 是 | string | 申请应用时分配的AppSecret |---
+
+#### 生成签名
+
+	GenerateSign(Dictionary<string, string> parameter) 
+	
+#### 生成签名带忽略参数
+
+	GenerateSign(Dictionary<string, string> parameter, List<string> ignoreKeys)
+
+#### 请求协助类（RequestHelper）
+
+###### 设置请求方法
+	SetMethod(RequestType method)
+	
+###### 设置请求参数
+	 SetParams(Dictionary<string, string> parameter)
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || parameter | 是 | Dictionary | 请求参数|	 
+	 
+###### 设置请求头参数
+	 SetHeadParams(Dictionary<string, string> headParams)
+	 
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || headParams | 是 | Dictionary | 请求头参数|	 
+
+###### 设置检查验证
+	SetCheckAuth(bool checkAuth)
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || checkAuth | 是 | bool | 检查验证|
+
+###### 设置请求url
+	SetUrl(string url)
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || url | 是 | string | 请求url|	
+	
+###### 设置请求忽略参数
+	SetIgnoreKeys(List<string> ignoreKeys)
+
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || ignoreKeys | 是 | List | 忽略参数|		
+
+###### 设置请求内容
+	SetContent(Stream stream)
+	
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || stream | 是 | Stream | 请求内容|	
+		
+###### 设置请求内容类型
+	SetContentType(string contentType)
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || contentType | 是 | string | 请求内容类型|	
+	
+###### 设置请求数据
+	SetPostDataByte(List<byte> postDataByte)
+
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || postDataByte | 是 | List | 请求数据|	
+
+###### 发起同步请求
+	ExecuteSync()
+	
+###### 发起异步请求
+	ExecuteAsync(int ApiID, RequestEventHanlder hanlder)
+	
+###### 参数
+
+| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || ApiID | 是 | int | ApiID |		
+| hanlder | 是 | RequestEventHanlder | 请求回调|	
+---
+
+## 授权管理（OauthEngine.cs）	
+	
+### 构造方法	new OauthEngine(string clientId, string clientSecret, bool isEnt)
+	
+#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || clientId | 是 | string | 申请应用时分配的AppKey || clientSecret | 是 | string | 申请应用时分配的AppSecret || isEnt | 是 | bool | 是库 |
+---	
+
+### 获取Token
+	AccessToken(string username, string password)
+
+#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || username | 是 | string | 用户名 || password | 是 | string | 密码 |	---	### 使用第三方API OUTID 登录
+	AccessTokenWithThirdPartyOutId(string outId)
+
+#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || outId | 是 | string | 第三方outId |	
+
+---
+
 
 [1]: http://developer.gokuai.com/other/thirdparty.html#单点登录流程
