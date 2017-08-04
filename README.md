@@ -14,7 +14,31 @@ Robots: noindex,nofollow
 
 ## 引用
 
+### 直接引用
 将`[yunku-csharp-sdk].dll`文件引用进项目，或者将`YunkuEntSDK`做为依赖项目。
+
+### 使用nuget（以Visual Studio 2015 为例）
+
+#### 使用软件包管理器安装
+
+* 在解决方案资源管理器中，右键单击引用或项目，并选择管理的NuGet程序包...。（在网站项目中，右键单击Bin文件夹）
+
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20nuget.jpeg alt=“open nuget" title=“open nuget" width="50%" height="50%”/>
+
+* 搜索`YunkuSDKCsharp`，选中软件包，勾选需要安装的项目，点击安装。
+
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/install.jpeg alt=“install" title=“install" width="50%" height="50%”/>
+
+#### 使用 nuget CLI安装
+
+* 点击`工具`->`NuGet软件包管理器`->`程序包管理器控制台`打开控制台
+
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20CLI.jpeg alt=“open CLI" title=“open CLI" width="50%" height="50%”/>
+
+* 安装最新版请输入命令`Install-Package YunkuEntSDK`到默认项目，点这查看安装历史版本
+* 需要安装至不同的项目中请使用`Install-Package YunkuEntSDK -ProjectName [YourProject]`或在`程序包管理器控制台`设置需要安装的项目
+
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/CLI.jpeg alt=“CLI" title=“CLI" width="50%" height="50%”/>
 
 ## 初始化
 
@@ -1489,9 +1513,18 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 ## 网络请求管理（HttpEngine.cs）
 
-### 构造方法	new HttpEngine（string clientId, string clientSecret）
+### 构造方法
+
+	new HttpEngine（string clientId, string clientSecret）
 	
-#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || clientId | 是 | string | 申请应用时分配的AppKey || clientSecret | 是 | string | 申请应用时分配的AppSecret |---
+#### 参数
+
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| clientId | 是 | string | 申请应用时分配的AppKey |
+| clientSecret | 是 | string | 申请应用时分配的AppSecret |
+
+---
 
 #### 生成签名
 
@@ -1510,53 +1543,69 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	 SetParams(Dictionary<string, string> parameter)
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || parameter | 是 | Dictionary | 请求参数|	 
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| parameter | 是 | Dictionary | 请求参数|	 
 	 
 ###### 设置请求头参数
 	 SetHeadParams(Dictionary<string, string> headParams)
 	 
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || headParams | 是 | Dictionary | 请求头参数|	 
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| headParams | 是 | Dictionary | 请求头参数|	 
 
 ###### 设置检查验证
 	SetCheckAuth(bool checkAuth)
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || checkAuth | 是 | bool | 检查验证|
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| checkAuth | 是 | bool | 检查验证|
 
 ###### 设置请求url
 	SetUrl(string url)
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || url | 是 | string | 请求url|	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| url | 是 | string | 请求url|	
 	
 ###### 设置请求忽略参数
 	SetIgnoreKeys(List<string> ignoreKeys)
 
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || ignoreKeys | 是 | List | 忽略参数|		
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| ignoreKeys | 是 | List | 忽略参数|		
 
 ###### 设置请求内容
 	SetContent(Stream stream)
 	
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || stream | 是 | Stream | 请求内容|	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| stream | 是 | Stream | 请求内容|	
 		
 ###### 设置请求内容类型
 	SetContentType(string contentType)
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || contentType | 是 | string | 请求内容类型|	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| contentType | 是 | string | 请求内容类型|	
 	
 ###### 设置请求数据
 	SetPostDataByte(List<byte> postDataByte)
 
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || postDataByte | 是 | List | 请求数据|	
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| postDataByte | 是 | List | 请求数据|	
 
 ###### 发起同步请求
 	ExecuteSync()
@@ -1566,24 +1615,48 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 	
 ###### 参数
 
-| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || ApiID | 是 | int | ApiID |		
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| ApiID | 是 | int | ApiID |		
 | hanlder | 是 | RequestEventHanlder | 请求回调|	
 ---
 
 ## 授权管理（OauthEngine.cs）	
 	
-### 构造方法	new OauthEngine(string clientId, string clientSecret, bool isEnt)
+### 构造方法
+
+	new OauthEngine(string clientId, string clientSecret, bool isEnt)
 	
-#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || clientId | 是 | string | 申请应用时分配的AppKey || clientSecret | 是 | string | 申请应用时分配的AppSecret || isEnt | 是 | bool | 是库 |
----	
+#### 参数
+
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| clientId | 是 | string | 申请应用时分配的AppKey |
+| clientSecret | 是 | string | 申请应用时分配的AppSecret |
+| isEnt | 是 | bool | 是库 |
+
+---	
 
 ### 获取Token
 	AccessToken(string username, string password)
 
-#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || username | 是 | string | 用户名 || password | 是 | string | 密码 |	---	### 使用第三方API OUTID 登录
+#### 参数
+
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| username | 是 | string | 用户名 |
+| password | 是 | string | 密码 |
+	
+---	
+
+### 使用第三方API OUTID 登录
 	AccessTokenWithThirdPartyOutId(string outId)
 
-#### 参数| 参数 | 必须 | 类型 | 说明 || --- | --- | --- | --- || outId | 是 | string | 第三方outId |	
+#### 参数
+
+| 参数 | 必须 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| outId | 是 | string | 第三方outId |	
 
 ---
 
