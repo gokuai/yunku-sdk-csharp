@@ -33,7 +33,7 @@ Robots: noindex,nofollow
 
 * 点击`工具`->`NuGet软件包管理器`->`程序包管理器控制台`打开控制台
 
-<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20CLI.jpg alt="open CLI" title="open CLI" width="50%" height="50%"/>
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20CLI.jpeg alt="open CLI" title="open CLI" width="50%" height="50%"/>
 
 * 安装最新版请输入命令`Install-Package YunkuEntSDK`到默认项目，查看安装[历史版本][2]
 * 需要安装至不同的项目中请使用`Install-Package YunkuEntSDK -ProjectName [YourProject]`或在`程序包管理器控制台`设置需要安装的项目
