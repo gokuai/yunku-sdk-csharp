@@ -21,24 +21,24 @@ Robots: noindex,nofollow
 
 #### 使用软件包管理器安装
 
-* 在解决方案资源管理器中，右键单击引用或项目，并选择管理的NuGet程序包...。（在网站项目中，右键单击Bin文件夹）
+* 在解决方案资源管理器中，右键单击引用或项目，并选择管理的NuGet程序包。（在网站项目中，右键单击Bin文件夹）
 
-<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20nuget.jpeg alt=“open nuget" title=“open nuget" width="50%" height="50%”/>
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20nuget.jpeg alt="open nuget" title="open nuget" width="50%" height="50%"/>
 
 * 搜索`YunkuSDKCsharp`，选中软件包，勾选需要安装的项目，点击安装。
 
-<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/install.jpeg alt=“install" title=“install" width="50%" height="50%”/>
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/install.jpeg alt="install" title="install" width="50%" height="50%"/>
 
 #### 使用 nuget CLI安装
 
 * 点击`工具`->`NuGet软件包管理器`->`程序包管理器控制台`打开控制台
 
-<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20CLI.jpeg alt=“open CLI" title=“open CLI" width="50%" height="50%”/>
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/open%20CLI.jpg alt="open CLI" title="open CLI" width="50%" height="50%"/>
 
-* 安装最新版请输入命令`Install-Package YunkuEntSDK`到默认项目，点这查看安装历史版本
+* 安装最新版请输入命令`Install-Package YunkuEntSDK`到默认项目，查看安装[历史版本][2]
 * 需要安装至不同的项目中请使用`Install-Package YunkuEntSDK -ProjectName [YourProject]`或在`程序包管理器控制台`设置需要安装的项目
 
-<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/CLI.jpeg alt=“CLI" title=“CLI" width="50%" height="50%”/>
+<img src=https://repo.gokuai.cn/app/ImageResourceForMD/raw/master/YunkuCsharpSDK/CLI.jpeg alt="CLI" title="CLI" width="50%" height="50%"/>
 
 ## 初始化
 
@@ -1662,3 +1662,4 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 
 [1]: http://developer.gokuai.com/other/thirdparty.html#单点登录流程
+[2]: https://www.nuget.org/packages/YunkuEntSDK
