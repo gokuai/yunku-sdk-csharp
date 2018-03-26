@@ -6,25 +6,25 @@ namespace YunkuEntSDK
 {
     public class EntLibManager : OauthEngine
     {
-        private const string ApiEntHost = HostConfig.ApiEntHost;
+        private static string ApiEntHost = Config.ApiHost;
 
-        private const string UrlApiCreateLib = ApiEntHost + "/1/org/create";
-        private const string UrlApiGetLibList = ApiEntHost + "/1/org/ls";
-        private const string UrlApiBind = ApiEntHost + "/1/org/bind";
-        private const string UrlApiUnbind = ApiEntHost + "/1/org/unbind";
-        private const string UrlApiGetMembers = ApiEntHost + "/1/org/get_members";
-        private const string UrlApiAddMembers = ApiEntHost + "/1/org/add_member";
-        private const string UrlApiSetMemberRole = ApiEntHost + "/1/org/set_member_role";
-        private const string UrlApiDelMember = ApiEntHost + "/1/org/del_member";
-        private const string UrlApiGetGroups = ApiEntHost + "/1/org/get_groups";
-        private const string UrlApiAddGroup = ApiEntHost + "/1/org/add_group";
-        private const string UrlApiDelGroup = ApiEntHost + "/1/org/del_group";
-        private const string UrlApiSetGroupRole = ApiEntHost + "/1/org/set_group_role";
-        private const string UrlApiDestroy = ApiEntHost + "/1/org/destroy";
-        private const string UrlApiGetMember = ApiEntHost + "/1/org/get_member";
-        private const string UrlApiSet = ApiEntHost + "/1/org/set";
-        private const string UrlApiGetInfo = ApiEntHost + "/1/org/info";
-        private const string UrlApiGetLog = ApiEntHost + "/1/org/log";
+        private static string UrlApiCreateLib = ApiEntHost + "/1/org/create";
+        private static string UrlApiGetLibList = ApiEntHost + "/1/org/ls";
+        private static string UrlApiBind = ApiEntHost + "/1/org/bind";
+        private static string UrlApiUnbind = ApiEntHost + "/1/org/unbind";
+        private static string UrlApiGetMembers = ApiEntHost + "/1/org/get_members";
+        private static string UrlApiAddMembers = ApiEntHost + "/1/org/add_member";
+        private static string UrlApiSetMemberRole = ApiEntHost + "/1/org/set_member_role";
+        private static string UrlApiDelMember = ApiEntHost + "/1/org/del_member";
+        private static string UrlApiGetGroups = ApiEntHost + "/1/org/get_groups";
+        private static string UrlApiAddGroup = ApiEntHost + "/1/org/add_group";
+        private static string UrlApiDelGroup = ApiEntHost + "/1/org/del_group";
+        private static string UrlApiSetGroupRole = ApiEntHost + "/1/org/set_group_role";
+        private static string UrlApiDestroy = ApiEntHost + "/1/org/destroy";
+        private static string UrlApiGetMember = ApiEntHost + "/1/org/get_member";
+        private static string UrlApiSet = ApiEntHost + "/1/org/set";
+        private static string UrlApiGetInfo = ApiEntHost + "/1/org/info";
+        private static string UrlApiGetLog = ApiEntHost + "/1/org/log";
 
         public EntLibManager(string clientId, string clientSecret) : base(clientId, clientSecret, true)
         {

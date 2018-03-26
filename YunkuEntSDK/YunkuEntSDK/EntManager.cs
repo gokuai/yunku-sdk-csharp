@@ -8,23 +8,23 @@ namespace YunkuEntSDK
 {
     public class EntManager : OauthEngine
     {
-        private const string ApiEntHost = HostConfig.ApiEntHost;
-        private const string UrlApiEntGetGroups = ApiEntHost + "/1/ent/get_groups";
-        private const string UrlApiEntGetMembers = ApiEntHost + "/1/ent/get_members";
-        private const string UrlApiGetMember = ApiEntHost + "/1/ent/get_member";
-        private const string UrlApiEntGetRoles = ApiEntHost + "/1/ent/get_roles";
+        private static string ApiEntHost = Config.ApiHost;
+        private static string UrlApiEntGetGroups = ApiEntHost + "/1/ent/get_groups";
+        private static string UrlApiEntGetMembers = ApiEntHost + "/1/ent/get_members";
+        private static string UrlApiGetMember = ApiEntHost + "/1/ent/get_member";
+        private static string UrlApiEntGetRoles = ApiEntHost + "/1/ent/get_roles";
         //private const string UrlApiEntSyncMember = ApiEntHost + "/1/ent/sync_member";
-        private const string UrlApiGetMemberFileLink = ApiEntHost + "/1/ent/get_member_file_link";
-        private const string UrlApiAddSyncMember = ApiEntHost + "/1/ent/add_sync_member";
-        private const string UrlApiDelSyncMember = ApiEntHost + "/1/ent/del_sync_member";
-        private const string UrlApiAddSyncGroup = ApiEntHost + "/1/ent/add_sync_group";
-        private const string UrlApiDelSyncGroup = ApiEntHost + "/1/ent/del_sync_group";
-        private const string UrlApiAddSyncGroupMember = ApiEntHost + "/1/ent/add_sync_group_member";
-        private const string UrlApiDelSyncGroupMember = ApiEntHost + "/1/ent/del_sync_group_member";
-        private const string UrlApiDelSyncMemberGroup = ApiEntHost + "/1/ent/del_sync_member_group";
-        private const string UrlApiGetGroupMembers = ApiEntHost + "/1/ent/get_group_members";
-        private const string UrlApiAddAdmin = ApiEntHost + "/1/ent/add_sync_admin";
-        private const string UrlApiMemberLoginReport = ApiEntHost + "/1/ent/member_login_report";
+        private static string UrlApiGetMemberFileLink = ApiEntHost + "/1/ent/get_member_file_link";
+        private static string UrlApiAddSyncMember = ApiEntHost + "/1/ent/add_sync_member";
+        private static string UrlApiDelSyncMember = ApiEntHost + "/1/ent/del_sync_member";
+        private static string UrlApiAddSyncGroup = ApiEntHost + "/1/ent/add_sync_group";
+        private static string UrlApiDelSyncGroup = ApiEntHost + "/1/ent/del_sync_group";
+        private static string UrlApiAddSyncGroupMember = ApiEntHost + "/1/ent/add_sync_group_member";
+        private static string UrlApiDelSyncGroupMember = ApiEntHost + "/1/ent/del_sync_group_member";
+        private static string UrlApiDelSyncMemberGroup = ApiEntHost + "/1/ent/del_sync_member_group";
+        private static string UrlApiGetGroupMembers = ApiEntHost + "/1/ent/get_group_members";
+        private static string UrlApiAddAdmin = ApiEntHost + "/1/ent/add_sync_admin";
+        private static string UrlApiMemberLoginReport = ApiEntHost + "/1/ent/member_login_report";
 
         public EntManager(string clientId, string clientSecret) : base(clientId, clientSecret, true)
         {

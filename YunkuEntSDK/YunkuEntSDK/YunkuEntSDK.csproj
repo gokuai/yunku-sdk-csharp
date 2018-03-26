@@ -47,6 +47,7 @@
     <Compile Include="compat.v2\EntManager.cs" />
     <Compile Include="compat.v2\HostConfig.cs" />
     <Compile Include="compat.v2\OauthEngine.cs" />
+    <Compile Include="ConfigHelper.cs" />
     <Compile Include="Data\BaseData.cs" />
     <Compile Include="Data\FileOperationData.cs" />
     <Compile Include="Data\Group.cs" />
@@ -58,7 +59,7 @@
     <Compile Include="DebugConfig.cs" />
     <Compile Include="EntFileManager.cs" />
     <Compile Include="EntManager.cs" />
-    <Compile Include="HostConfig.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="HttpEngine.cs" />
     <Compile Include="Net\HttpEventArgs.cs" />
     <Compile Include="Net\HttpRequestEnum.cs" />

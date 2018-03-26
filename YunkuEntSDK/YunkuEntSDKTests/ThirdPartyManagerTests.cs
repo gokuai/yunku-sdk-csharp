@@ -72,15 +72,6 @@ namespace YunkuEntSDK.Tests
         }
 
         [TestMethod()]
-        public void GetEntTokenTest()
-        {
-            ThirdPartyManager thirdParty = new ThirdPartyManager(ClientId, ClientSecret, OutId);
-            String returnString = thirdParty.GetEntToken();
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
-        }
-
-        [TestMethod()]
         public void GetSsoUrlTest()
         {
             ThirdPartyManager thirdParty = new ThirdPartyManager(ClientId, ClientSecret, OutId);

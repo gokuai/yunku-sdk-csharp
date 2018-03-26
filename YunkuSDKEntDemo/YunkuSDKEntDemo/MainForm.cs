@@ -61,8 +61,104 @@ namespace YunkuSDKEntDemo
             DebugConfig.LogPrintAvialable = false;
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
+            ConfigHelper.SetApiHost("http://yk3-api-ent.goukuai.cn");
+            ConfigHelper.SetWebHost("http://yk3.goukuai.cn");
+
+
+            //==========企业文件操作============//
+            var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
+
+            //获取文件列表
+            DeserializeReturn(entFileManager.GetFileList());
+
+            //异步获取文件列表
+            //entFileManager.GetFileListAsync("", 0, 100, true, (s,requestEvent)=> {
+            //    DeserializeReturn(requestEvent.Result);
+            //} );
+
+
+            //获取更新列表
+            //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
+
+            //long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
+            //long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
+
+            //文件更新数量
+            //DeserializeReturn(entFileManager.GetUpdateCount(beigin, now, true));
+
+            //获取文件（夹）信息
+            //DeserializeReturn(entFileManager.GetFileInfoByFullpath("testRangSize.txt"));
+
+
+            //创建文件夹
+            //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
+
+            //上传文件 文件不得超过50MB
+            //DeserializeReturn(entFileManager.CreateFile("test111.txt", "Brandon", "D:\\test.txt"));
+
+            //分块上传，默认分块上传大小为512K
+            //entFileManager.UploadByBlock("testRangSize.txt", "Brandon", 0,
+            //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
+
+            //通过链接上传文件
+            //DeserializeReturn(entFileManager.CreateFileByUrl("1q.jpg", 0, "Brandon", true,
+            //    "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg"));
+
+            //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
+            //DeserializeReturn(entFileManager.Del("test", "Brandon"));
+
+            //移动文件
+            //DeserializeReturn(entFileManager.Move("qq.jpg", "test/qq.jpg", "Brandon"));
+
+            ////文件外链
+            //DeserializeReturn(entFileManager.Link("qq.jpg", 0, EntFileManager.AuthType.Default, null));
+
+            //获取当前库所有外链
+            //            DeserializeReturn(entFileManager.Links(true));
+
+            //获取文件历史
+            //            DeserializeReturn(entFileManager.History("test", 0 ,100));
+
+            //复制文件
+            //DeserializeReturn(entFileManager.Copy("test/qq.jpg", "qq.jpg", "qp"));
+
+            // 回收站
+            //DeserializeReturn(entFileManager.Recyle(0, 100));
+
+            //恢复删除文件
+            //DeserializeReturn(entFileManager.Recover("test", "qp"));
+
+            //彻底删除文件
+            //DeserializeReturn(entFileManager.CompletelyDelFile(new string[] {"aaa.jpg"}, "qp"));
+
+            //通过文件路径获取下载地址
+            //DeserializeReturn(entFileManager.GetDownloadUrlByFullpath("test/qq.jpg"));
+
+            //通过文件唯一标识获取下载地址
+            //DeserializeReturn(entFileManager.GetDownloadUrlByHash("5ef2b3b8449cf3440b8a3b1874da5e4236b06dd8"));
+
+            //文件搜索
+            //DeserializeReturn(entFileManager.Search("test", "", 0, 100, EntFileManager.ScopeType.FileName, EntFileManager.ScopeType.Tag));
+
+            //文件预览地址
+            //DeserializeReturn(entFileManager.GetPreviewUrlByFullpath("test/qq.jpg", false, "", false));
+
+            //获取文件夹权限
+            //DeserializeReturn(entFileManager.GetPermission("test", 4));
+
+            //修改文件夹权限
+            //DeserializeReturn(entFileManager.SetPermission("test", 4, EntFileManager.FilePermissions.FileDelete, EntFileManager.FilePermissions.FilePreview));
+
+            //添加标签
+            //DeserializeReturn(entFileManager.AddTag("test", new string[] { "test", "testTag" }));
+
+            //删除标签
+            //DeserializeReturn(entFileManager.DelTag("test", new string[] { "test", "testTag" }));
+
+
+
             //=========企业库操作============//
-            var entLibManager = new EntLibManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
+            //var entLibManager = new EntLibManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
 
             //创建库 1T="1099511627776" 1G＝"1073741824"
             //DeserializeReturn(entLibManager.Create("qpTest", "1073741824", "destroy", ""));
@@ -112,102 +208,8 @@ namespace YunkuSDKEntDemo
             //删除库
             //DeserializeReturn(entLibManager.Destroy("jvj4DYQFFPoV98to7wu4ZUQ"));
 
-
-            //==========企业文件操作============//
-            var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
-
-            //获取文件列表
-            //DeserializeReturn(entFileManager.GetFileList());
-
-            //异步获取文件列表
-            //entFileManager.GetFileListAsync("", 0, 100, true, (s,requestEvent)=> {
-            //    DeserializeReturn(requestEvent.Result);
-            //} );
-
-
-            //获取更新列表
-            //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
-
-            //long now = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now);
-            //long beigin = UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now.AddDays(-1));
-
-            //文件更新数量
-            //DeserializeReturn(entFileManager.GetUpdateCount(beigin, now, true));
-
-            //获取文件（夹）信息
-            DeserializeReturn(entFileManager.GetFileInfo("testRangSize.txt", EntFileManager.NetType.Default, false));
-
-
-            //创建文件夹
-            //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
-
-            //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile("test111.txt", "Brandon", "D:\\test.txt"));
-
-            //分块上传，默认分块上传大小为512K
-            //entFileManager.UploadByBlock("testRangSize.txt", "Brandon", 0,
-            //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
-
-            //通过链接上传文件
-            //DeserializeReturn(entFileManager.CreateFileByUrl("1q.jpg", 0, "Brandon", true,
-            //    "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg"));
-
-            //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
-            //DeserializeReturn(entFileManager.Del("test", "Brandon"));
-
-            //移动文件
-            //DeserializeReturn(entFileManager.Move("qq.jpg", "test/qq.jpg", "Brandon"));
-
-            ////文件连接
-            //DeserializeReturn(entFileManager.Link("qq.jpg", 0, EntFileManager.AuthType.Default, null));
-
-            ////发送消息
-            //DeserializeReturn(entFileManager.SendMsg( "msgTest", "msg", "", "", "Brandon"));
-
-            //获取当前库所有外链
-            //            DeserializeReturn(entFileManager.Links(true));
-
-            //获取文件历史
-            //            DeserializeReturn(entFileManager.History("test", 0 ,100));
-
-            //复制文件
-            //DeserializeReturn(entFileManager.Copy("test/qq.jpg", "qq.jpg", "qp"));
-
-            // 回收站
-            //DeserializeReturn(entFileManager.Recyle(0, 100));
-
-            //恢复删除文件
-            //DeserializeReturn(entFileManager.Recover("test", "qp"));
-
-            //彻底删除文件
-            //DeserializeReturn(entFileManager.CompletelyDelFile(new string[] {"aaa.jpg"}, "qp"));
-
-            //通过文件路径获取下载地址
-            //DeserializeReturn(entFileManager.GetDownloadUrlByFullPath("test/qq.jpg", false, EntFileManager.NetType.Default));
-
-            //通过文件唯一标识获取下载地址
-            //DeserializeReturn(entFileManager.GetDownloadUrlByHash("5ef2b3b8449cf3440b8a3b1874da5e4236b06dd8", false, EntFileManager.NetType.Default));
-
-            //文件搜索
-            //DeserializeReturn(entFileManager.Search("test", "", 0, 100, EntFileManager.ScopeType.FileName, EntFileManager.ScopeType.Tag));
-
-            //文件预览地址
-            //DeserializeReturn(entFileManager.PreviewUrl("test/qq.jpg", false, ""));
-
-            //获取文件夹权限
-            //DeserializeReturn(entFileManager.GetPermission("test", 4));
-
-            //修改文件夹权限
-            //DeserializeReturn(entFileManager.SetPermission("test", 4, EntFileManager.FilePermissions.FileDelete, EntFileManager.FilePermissions.FilePreview));
-
-            //添加标签
-            //DeserializeReturn(entFileManager.AddTag("test", new string[] { "test", "testTag" }));
-
-            //删除标签
-            //DeserializeReturn(entFileManager.DelTag("test", new string[] { "test", "testTag" }));
-
             //=======企业操作========//
-            var entManager = new EntManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
+            //var entManager = new EntManager(SdkConfig.ClientId, SdkConfig.ClientSecret);
 
             //获取成员
             //DeserializeReturn(entManager.GetMembers(0, 20));
@@ -257,34 +259,6 @@ namespace YunkuSDKEntDemo
 
             //添加管理员
             //DeserializeReturn(entManager.AddSyncAdmin("$:LWCP_v1:$ypc3i0Op0Tn0Ge2GvyShWA==", "", false));
-
-            //合作方API
-            var thirdParty = new ThirdPartyManager(SdkConfig.ClientId, SdkConfig.ClientSecret, SdkConfig.outId);
-
-            //开通企业
-            //DeserializeReturn(thirdParty.CreateEnt("yunku3", "yunku3", "", "", ""));
-
-            //获取企业信息
-            //DeserializeReturn(thirdParty.GetEntInfo());
-
-            //获取企业token
-            //DeserializeReturn(thirdParty.GetEntToken());
-
-            //获取单点登录地址
-            //DeserializeReturn(thirdParty.GetSsoUrl(""));
-
-            //购买
-            //DeserializeReturn(thirdParty.OrderSubscribe(-1, 1, 12));
-
-            //续费
-            //DeserializeReturn(thirdParty.OrderRenew(12));
-
-            //升级
-            //DeserializeReturn(thirdParty.OrderUpgrade(-1, 1));
-
-            //退订
-            //DeserializeReturn(thirdParty.OrderUnsubscribe());
-
         }
 
 
@@ -296,7 +270,7 @@ namespace YunkuSDKEntDemo
                 return;
             }
 
-            TB_Result.Text += e.LocalFullPath + ":" + e.ProgressPercent + "\r\n";
+            TB_Result.Text += e.LocalFullpath + ":" + e.ProgressPercent + "\r\n";
             TB_Result.Text += "==========================\r\n";
         }
 
@@ -310,12 +284,12 @@ namespace YunkuSDKEntDemo
 
             if (e.IsError)
             {
-                TB_Result.Text += e.LocalFullPath + ":" + e.ErrorMessage + "\r\n";
+                TB_Result.Text += e.LocalFullpath + ":" + e.ErrorMessage + "\r\n";
                 TB_Result.Text += "==========================\r\n";
             }
             else
             {
-                TB_Result.Text += e.LocalFullPath + ":" + "success" + "\r\n";
+                TB_Result.Text += e.LocalFullpath + ":" + "success" + "\r\n";
                 TB_Result.Text += "==========================\r\n";
             }
         }

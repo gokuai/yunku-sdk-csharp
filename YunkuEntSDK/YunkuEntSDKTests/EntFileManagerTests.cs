@@ -52,7 +52,7 @@ namespace YunkuEntSDK.Tests
         public void GetFileInfoTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.GetFileInfo("test", EntFileManager.NetType.Default, false);
+            String returnString = entFile.GetFileInfoByFullpath("test", EntFileManager.NetType.Default, false);
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }
@@ -117,15 +117,6 @@ namespace YunkuEntSDK.Tests
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
             String returnString = entFile.Link("qq.jpg", 0, EntFileManager.AuthType.Default, null);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
-        }
-
-        [TestMethod()]
-        public void SendMsgTest()
-        {
-            EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.SendMsg("msgTest", "msg", "", "", "Brandon");
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }
@@ -226,7 +217,7 @@ namespace YunkuEntSDK.Tests
         public void GetDownloadUrlByFullPathTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.GetDownloadUrlByFullPath("test/qq.jpg", false, EntFileManager.NetType.Default);
+            String returnString = entFile.GetDownloadUrlByFullpath("test/qq.jpg", false, EntFileManager.NetType.Default);
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }
@@ -244,7 +235,7 @@ namespace YunkuEntSDK.Tests
         public void PreviewUrlTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.PreviewUrl("test/qq.jpg", false, "");
+            String returnString = entFile.GetPreviewUrlByFullpath("test/qq.jpg", false, "", false);
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }

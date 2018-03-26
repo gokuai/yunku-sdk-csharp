@@ -10,11 +10,10 @@ namespace YunkuEntSDK
 {
     public class ThirdPartyManager : HttpEngine
     {
-        private const string UrlApiCreateEnt = HostConfig.OauthHost + "/1/thirdparty/create_ent";
-        private const string UrlApiEntInfo = HostConfig.OauthHost + "/1/thirdparty/ent_info";
-        private const string UrlApiOrder = HostConfig.OauthHost + "/1/thirdparty/order";
-        private const string UrlApiGetToken = HostConfig.OauthHost + "/1/thirdparty/get_token";
-        private const string UrlApiGetSsO = HostConfig.OauthHost + "/1/thirdparty/get_sso_url";
+        private static string UrlApiCreateEnt = Config.WebHost + "/1/thirdparty/create_ent";
+        private static string UrlApiEntInfo = Config.WebHost + "/1/thirdparty/ent_info";
+        private static string UrlApiOrder = Config.WebHost + "/1/thirdparty/order";
+        private static string UrlApiGetSsO = Config.WebHost + "/1/thirdparty/get_sso_url";
 
         public const string Subscribe = "orderSubscribe";
         public const string Upgrade = "orderUpgrade";
@@ -166,21 +165,6 @@ namespace YunkuEntSDK
                         break;
                 }
             }
-            parameter.Add("dateline", Util.GetUnixDataline() + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-        }
-
-        /// <summary>
-        /// 获取企业token
-        /// </summary>
-        /// <returns></returns>
-        public string GetEntToken()
-        {
-            string url = UrlApiGetToken;
-            var parameter = new Dictionary<string, string>();
-            parameter.Add("client_id", _clientId);
-            parameter.Add("out_id", _outId);
             parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("sign", GenerateSign(parameter));
             return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();

@@ -21,8 +21,8 @@ namespace YunkuEntSDK.Net
         private string _session = ""; // 上传session
         private string _apiUrl = "";
 
-        private string _localFullPath;
-        private string _fullPath;
+        private string _localFullpath;
+        private string _fullpath;
         private readonly string _orgClientId;
         private long _dateline;
         private string _opName;
@@ -37,12 +37,12 @@ namespace YunkuEntSDK.Net
         public delegate void ProgressChangeEventHandler(object sender, ProgressEventArgs e);
 
 
-        public UploadManager(string apiUrl, string localFullPath, string fullPath,
+        public UploadManager(string apiUrl, string localFullpath, string fullPath,
             string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite, int rangSize) : base(orgClientId, clientSecret)
         {
             _apiUrl = apiUrl;
-            _localFullPath = localFullPath;
-            _fullPath = fullPath;
+            _localFullpath = localFullpath;
+            _fullpath = fullPath;
             _opName = opName;
             _opId = opId;
             _orgClientId = orgClientId;
@@ -68,7 +68,7 @@ namespace YunkuEntSDK.Net
                         {
                             IsError = true,
                             ErrorMessage = e.Message,
-                            LocalFullPath = _localFullPath
+                            LocalFullpath = _localFullpath
                         });
                 }
                 // ignored
@@ -83,19 +83,19 @@ namespace YunkuEntSDK.Net
         /// <param name="item"></param>
         private void StartUpload()
         {
-            if (File.Exists(_localFullPath))
+            if (File.Exists(_localFullpath))
             {
-                using (var fs = new FileStream(_localFullPath, FileMode.Open))
+                using (var fs = new FileStream(_localFullpath, FileMode.Open))
                 {
                     int code;
                     Stream stream = fs;
-                    string fullpath = _fullPath;
+                    string fullpath = _fullpath;
                     string filehash = Util.CaculateFileHashCode(stream);
-                    string filename = Util.GetFileNameFromPath(_fullPath);
+                    string filename = Util.GetFileNameFromPath(_fullpath);
                     long filesize = stream.Length;
 
 
-                    ReturnResult returnResult = ReturnResult.Create(AddFile(filesize, filehash, _fullPath));
+                    ReturnResult returnResult = ReturnResult.Create(AddFile(filesize, filehash, _fullpath));
                     FileOperationData data = FileOperationData.Create(returnResult.Result, returnResult.Code);
                     if (data != null)
                     {
@@ -114,7 +114,7 @@ namespace YunkuEntSDK.Net
                                     LogPrint.Print(" The server is " + _server);
                                 }
 
-                                UploadInit(data.UuidHash, filename, _fullPath, filehash, filesize);
+                                UploadInit(data.UuidHash, filename, _fullpath, filehash, filesize);
 
                                 //                                long range_index = 0;
                                 //                                long range_end = 0;
@@ -132,7 +132,7 @@ namespace YunkuEntSDK.Net
                                         ProgresChanged(this, new ProgressEventArgs()
                                         {
                                             ProgressPercent = (int)(((float)offset / filesize) * 100),
-                                            LocalFullPath = _localFullPath
+                                            LocalFullpath = _localFullpath
                                         });
                                     }
 
@@ -203,7 +203,7 @@ namespace YunkuEntSDK.Net
                             //file upload success if reach here
                             if (Completed != null)
                             {
-                                Completed(this, new CompletedEventArgs() { LocalFullPath = _localFullPath });
+                                Completed(this, new CompletedEventArgs() { LocalFullpath = _localFullpath });
                             }
                         }
                         else
@@ -219,7 +219,7 @@ namespace YunkuEntSDK.Net
             }
             else
             {
-                LogPrint.Print(_localFullPath + " not exist");
+                LogPrint.Print(_localFullpath + " not exist");
             }
         }
 

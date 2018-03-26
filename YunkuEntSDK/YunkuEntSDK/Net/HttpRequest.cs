@@ -134,7 +134,10 @@ namespace YunkuEntSDK.Net
         {
             var myurl = new Uri(RequestUrl);
             var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
-            webRequest.UserAgent = HostConfig.UserAgent;
+            webRequest.Timeout = Config.HttpTimeout;
+            webRequest.ReadWriteTimeout = Config.HttpTimeout;
+            webRequest.UserAgent = Config.UserAgent;
+            webRequest.Headers.Add("Accept-Language", Config.Language);
             if (string.IsNullOrEmpty(ContentType))
             {
                 webRequest.ContentType = "application/x-www-form-urlencoded";
@@ -257,7 +260,10 @@ namespace YunkuEntSDK.Net
             }
             var myurl = new Uri(strrequesturl);
             var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
-            webRequest.UserAgent = HostConfig.UserAgent;
+            webRequest.Timeout = Config.HttpTimeout;
+            webRequest.ReadWriteTimeout = Config.HttpTimeout;
+            webRequest.UserAgent = Config.UserAgent;
+            webRequest.Headers.Add("Accept-Language", Config.Language);
             webRequest.Method = "GET";
             setHeaderCollection(webRequest.Headers);
 

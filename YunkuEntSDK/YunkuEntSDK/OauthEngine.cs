@@ -11,8 +11,8 @@ namespace YunkuEntSDK
     {
         private const string Log_Tag = "OauthEngine";
 
-        private const string OauthHost = HostConfig.OauthHost;
-        private const string UrlApiToken = OauthHost + "/oauth2/token2";
+        private static string OauthHost = Config.WebHost;
+        private static string UrlApiToken = OauthHost + "/oauth2/token2";
 
 
         protected bool _isEnt;
