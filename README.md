@@ -38,9 +38,9 @@
 
 ## 初始化设置
 
-···
+```
 ConfigHelper.SetApiHost("http://apihost");
-···
+```
 
 ## 参数使用
 
