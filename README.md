@@ -1,11 +1,3 @@
-/*
-Title:够快云库CSharp SDK使用说明
-Description:
-Author: Brandon
-Date: 2016/11/03
-Robots: noindex,nofollow
-*/
-
 # 够快云库3.0 CSharp SDK使用说明
 
 版本：3.0
@@ -43,6 +35,12 @@ Robots: noindex,nofollow
 ## 初始化
 
 要使用云库3.0的API，您需要先在 <a href="http://developer.gokuai.com/yk/tutorial#yk3" target="_blank">企业授权</a> 中获取 `client_id` 和 `client_secret`
+
+## 初始化设置
+
+···
+ConfigHelper.SetApiHost("http://apihost");
+···
 
 ## 参数使用
 
@@ -1093,23 +1091,6 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 #### 返回结果
 
-### 发送消息
-
-	Sendmsg( string title, string text, string image, string linkUrl, string opName) 
-	
-#### 参数
-
-| 名称 | 必需 | 类型 | 说明 |
-| --- | --- | --- | --- |
-| title | 是 | string | 消息标题 |
-| text | 是 | string | 消息正文 |
-| image | 否 | string | 图片url |
-| linkUrl | 否 | string | 链接 |
-| opName | 是 | string | 用户名称 |
-
-#### 返回结果
-	正常返回 HTTP 200 
-	
 ---
 
 ### 获取当前库所有外链
@@ -1481,19 +1462,6 @@ org\_client\_secret用于调用库文件相关API签名时的密钥
 
 #### 返回结果
 	正常返回 HTTP 200
-
-### 获取企业token
-	GetEntToken()
-
-#### 参数
-
-(无)
-
-#### 返回结果
-	{
-    	access_token: 企业token
-    	expires_in: token过期时间
-	}
 
 ### 获取单点登录地址
 	GetSsoUrl(String ticket)
