@@ -95,16 +95,6 @@ namespace YunkuEntSDK
         }
 
         /// <summary>
-        /// 使用第三方API OUTID 登录
-        /// </summary>
-        /// <param name="outId"></param>
-        /// <returns></returns>
-        public string AccessTokenWithThirdPartyOutId(string outId)
-        {
-            return new ThirdPartyManager(_clientId, _clientSecret, outId).GetEntToken();
-        }
-
-        /// <summary>
         /// 重新获得 token
         /// </summary>
         /// <returns></returns>
