@@ -375,8 +375,9 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullpaths"></param>
         /// <param name="opName"></param>
+        /// <param name="destroy"></param>
         /// <returns></returns>
-        public string Del(string fullpaths, string opName)
+        public string Del(string fullpaths, string opName, bool destroy)
         {
             string url = UrlApiDelFile;
             var parameter = new Dictionary<string, string>();
@@ -384,6 +385,10 @@ namespace YunkuEntSDK
             parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("fullpaths", fullpaths);
             parameter.Add("op_name", opName);
+            if (destroy)
+            {
+                parameter.Add("destroy", "1");
+            }
             parameter.Add("sign", GenerateSign(parameter));
             return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
         }
