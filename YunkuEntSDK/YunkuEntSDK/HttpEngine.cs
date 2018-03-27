@@ -135,11 +135,27 @@ namespace YunkuEntSDK
                 }
 
                 var request = new HttpRequest { RequestUrl = _url };
-                request.AppendParameter(_params);
-                request.AppendHeaderParameter(_headParams);
-                request.ContentType = _contentType;
-                request.PostDataByte = _postDateByte;
                 request.RequestMethod = _method;
+                if (_params != null && _params.Count > 0)
+                {
+                    request.AppendParameter(_params);
+                }
+                if (_headParams != null && _headParams.Count > 0)
+                {
+                    request.AppendHeaderParameter(_headParams);
+                }
+                if (_contentType != null && _contentType.Length > 0)
+                {
+                    request.ContentType = _contentType;
+                }
+                if (_postDateByte != null)
+                {
+                    request.PostDataByte = _postDateByte;
+                }
+                if (_stream != null)
+                {
+                    request.Content = _stream;
+                }
                 request.Request();
                 return request.Result;
             }

@@ -15,7 +15,7 @@ namespace YunkuEntSDK.Net
         private const string UrlUploadAbort = "/upload_abort";
         private const string UrlUploadFinish = "/upload_finish";
 
-        private int _rangSize = 524288; // 上传分块大小-512K
+        private int _blockSize = 524288; // 上传分块大小-512K
 
         private string _server = ""; // 上传服务器地址
         private string _session = ""; // 上传session
@@ -38,7 +38,7 @@ namespace YunkuEntSDK.Net
 
 
         public UploadManager(string apiUrl, string localFullpath, string fullPath,
-            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite, int rangSize) : base(orgClientId, clientSecret)
+            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite, int blockSize) : base(orgClientId, clientSecret)
         {
             _apiUrl = apiUrl;
             _localFullpath = localFullpath;
@@ -49,7 +49,7 @@ namespace YunkuEntSDK.Net
             _dateline = dateline;
             _clientSecret = clientSecret;
             _overWrite = overWrite;
-            _rangSize = rangSize;
+            _blockSize = blockSize;
 
         }
 
@@ -136,7 +136,7 @@ namespace YunkuEntSDK.Net
                                         });
                                     }
 
-                                    byte[] buffer = new byte[_rangSize];
+                                    byte[] buffer = new byte[_blockSize];
 
                                     if (offset + buffer.Length >= filesize)
                                     {
@@ -168,7 +168,7 @@ namespace YunkuEntSDK.Net
 
                                     if (code == (int)HttpStatusCode.OK)
                                     {
-                                        offset += _rangSize;
+                                        offset += _blockSize;
                                     }
                                     else if (code == (int)HttpStatusCode.Accepted)
                                     {

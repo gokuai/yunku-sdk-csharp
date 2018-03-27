@@ -358,10 +358,10 @@ namespace YunkuEntSDK
         }
 
         public Thread UploadByBlock(string fullpath, string opName, int opId, string localFilePath, bool overWrite
-            , int rangSize, CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+            , int blockSize, CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
         {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, localFilePath,
-                fullpath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overWrite, rangSize);
+                fullpath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overWrite, blockSize);
             uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 

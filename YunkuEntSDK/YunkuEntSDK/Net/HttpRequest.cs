@@ -134,28 +134,25 @@ namespace YunkuEntSDK.Net
         {
             var myurl = new Uri(RequestUrl);
             var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
+            webRequest.Method = RequestMethod.ToString();
             webRequest.Timeout = Config.HttpTimeout;
             webRequest.ReadWriteTimeout = Config.HttpTimeout;
             webRequest.UserAgent = Config.UserAgent;
             webRequest.Headers.Add("Accept-Language", Config.Language);
-            if (string.IsNullOrEmpty(ContentType))
+
+            if (!string.IsNullOrEmpty(ContentType))
+            {
+                webRequest.ContentType = ContentType;
+            } else if (RequestMethod.Equals(RequestType.Post))
             {
                 webRequest.ContentType = "application/x-www-form-urlencoded";
             }
-            else
-            {
-                webRequest.ContentType = ContentType;
-            }
+
             if (RequestMethod == RequestType.Put)
             {
                 webRequest.KeepAlive = true;
-                webRequest.Timeout = 86400000;
             }
-
-
-            webRequest.Method = RequestMethod.ToString();
-
-        
+            
             setHeaderCollection(webRequest.Headers);
 
             using (Stream stream = webRequest.GetRequestStream())
@@ -169,8 +166,7 @@ namespace YunkuEntSDK.Net
                         writer.Flush();
                     }
 
-                    //msmutipart
-                    if (PostDataByte != null)
+                    if (PostDataByte != null) //msmutipart
                     {
                         long count = 0;
                         foreach (byte b in PostDataByte)
@@ -256,7 +252,7 @@ namespace YunkuEntSDK.Net
             string parastring = GetParemeterString();
             if (parastring.Length > 0)
             {
-                strrequesturl += "?" + parastring;
+                strrequesturl += (RequestUrl.IndexOf("?") > 0 ? "&" : "?") + parastring;
             }
             var myurl = new Uri(strrequesturl);
             var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
