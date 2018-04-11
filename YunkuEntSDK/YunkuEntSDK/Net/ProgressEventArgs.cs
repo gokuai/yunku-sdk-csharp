@@ -7,7 +7,7 @@ namespace YunkuEntSDK.Net
     {
         public int ProgressPercent { get; set; }
 
-        public string LocalFullpath { get; set; }
+        public string Fullpath { get; set; }
 
     }
 }

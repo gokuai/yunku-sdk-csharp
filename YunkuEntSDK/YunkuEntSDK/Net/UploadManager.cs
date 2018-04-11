@@ -20,14 +20,14 @@ namespace YunkuEntSDK.Net
         private string _server = ""; // 上传服务器地址
         private string _session = ""; // 上传session
         private string _apiUrl = "";
-
-        private string _localFullpath;
+        
         private string _fullpath;
         private readonly string _orgClientId;
         private long _dateline;
         private string _opName;
         private int _opId;
         private bool _overWrite;
+        private Stream _stream;
 
         public event CompletedEventHandler Completed;
         public event ProgressChangeEventHandler ProgresChanged;
@@ -36,12 +36,21 @@ namespace YunkuEntSDK.Net
 
         public delegate void ProgressChangeEventHandler(object sender, ProgressEventArgs e);
 
-
-        public UploadManager(string apiUrl, string localFullpath, string fullPath,
+        public UploadManager(string apiUrl, Stream stream, string fullPath,
             string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite, int blockSize) : base(orgClientId, clientSecret)
         {
+            if (!stream.CanRead)
+            {
+                throw new Exception("stream can not read");
+            }
+
+            if (!stream.CanSeek)
+            {
+                throw new Exception("stream can not seek");
+            }
+
             _apiUrl = apiUrl;
-            _localFullpath = localFullpath;
+            _stream = stream;
             _fullpath = fullPath;
             _opName = opName;
             _opId = opId;
@@ -50,10 +59,9 @@ namespace YunkuEntSDK.Net
             _clientSecret = clientSecret;
             _overWrite = overWrite;
             _blockSize = blockSize;
-
         }
 
-        public void DoUpload()
+        public void DoUpload(object i)
         {
             try
             {
@@ -68,10 +76,9 @@ namespace YunkuEntSDK.Net
                         {
                             IsError = true,
                             ErrorMessage = e.Message,
-                            LocalFullpath = _localFullpath
+                            Fullpath = _fullpath
                         });
                 }
-                // ignored
                 UploadAbort();
             }
         }
@@ -83,143 +90,112 @@ namespace YunkuEntSDK.Net
         /// <param name="item"></param>
         private void StartUpload()
         {
-            if (File.Exists(_localFullpath))
+            int code;
+            string fullpath = _fullpath;
+            string filehash = Util.CaculateFileHashCode(_stream);
+            string filename = Util.GetFileNameFromPath(_fullpath);
+            long filesize = _stream.Length;
+
+            ReturnResult returnResult = ReturnResult.Create(AddFile(filesize, filehash, _fullpath));
+            FileOperationData data = FileOperationData.Create(returnResult.Result, returnResult.Code);
+            if (data == null)
             {
-                using (var fs = new FileStream(_localFullpath, FileMode.Open))
+                throw new Exception("can't connect server");
+            }
+            if (data.Code != (int)HttpStatusCode.OK)
+            {
+                throw new Exception(data.ErrorCode + ":" + data.ErrorMessage);
+            }
+            if (data.Status != FileOperationData.StateNoupload)
+            {
+                _server = data.Server;
+
+                if (string.IsNullOrEmpty(_server))
                 {
-                    int code;
-                    Stream stream = fs;
-                    string fullpath = _fullpath;
-                    string filehash = Util.CaculateFileHashCode(stream);
-                    string filename = Util.GetFileNameFromPath(_fullpath);
-                    long filesize = stream.Length;
+                    throw new Exception(" The server is empty ");
+                }
+                else
+                {
+                    LogPrint.Print(" The server is " + _server);
+                }
 
+                UploadInit(data.UuidHash, filename, _fullpath, filehash, filesize);
 
-                    ReturnResult returnResult = ReturnResult.Create(AddFile(filesize, filehash, _fullpath));
-                    FileOperationData data = FileOperationData.Create(returnResult.Result, returnResult.Code);
-                    if (data != null)
+                long crc32 = 0;
+                long offset = 0;
+                long rang_end = 0;
+                String range = "";
+
+                while (offset < filesize - 1)
+                {
+                    if (ProgresChanged != null)
                     {
-                        if (data.Code == (int)HttpStatusCode.OK)
+                        ProgresChanged(this, new ProgressEventArgs()
                         {
-                            if (data.Status != FileOperationData.StateNoupload)
-                            {
-                                _server = data.Server;
+                            ProgressPercent = (int)(((float)offset / filesize) * 100),
+                            Fullpath = _fullpath
+                        });
+                    }
 
-                                if (string.IsNullOrEmpty(_server))
-                                {
-                                    throw new Exception(" The server is empty ");
-                                }
-                                else
-                                {
-                                    LogPrint.Print(" The server is " + _server);
-                                }
-
-                                UploadInit(data.UuidHash, filename, _fullpath, filehash, filesize);
-
-                                //                                long range_index = 0;
-                                //                                long range_end = 0;
-                                //                                long datalength = -1;
-                                long crc32 = 0;
-                                long offset = 0;
-                                long rang_end = 0;
-                                String range = "";
-                                byte[] dataBytes = Util.ReadToEnd(fs);
-
-                                while (offset < filesize - 1)
-                                {
-                                    if (ProgresChanged != null)
-                                    {
-                                        ProgresChanged(this, new ProgressEventArgs()
-                                        {
-                                            ProgressPercent = (int)(((float)offset / filesize) * 100),
-                                            LocalFullpath = _localFullpath
-                                        });
-                                    }
-
-                                    byte[] buffer = new byte[_blockSize];
-
-                                    if (offset + buffer.Length >= filesize)
-                                    {
-                                        int length_end = (int)(filesize - offset);
-                                        byte[] buffer_end = new byte[length_end];
-                                        for (int i = 0; i < buffer_end.Length; i++)
-                                        {
-                                            buffer_end[i] = dataBytes[i + offset];
-                                        }
-                                        crc32 = CRC32.Compute(buffer_end);
-                                        rang_end = filesize - 1;
-                                        buffer = buffer_end;
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < buffer.Length; i++)
-                                        {
-                                            buffer[i] = dataBytes[i + offset];
-                                        }
-
-                                        //                                            crc.ComputeHash(buffer, 0, buffer.Length);
-                                        crc32 = CRC32.Compute(buffer);
-                                        rang_end = offset + buffer.Length - 1;
-                                    }
-                                    range = offset + "-" + rang_end;
-
-                                    returnResult = UploadPart(range, new MemoryStream(buffer), crc32);
-                                    code = returnResult.Code;
-
-                                    if (code == (int)HttpStatusCode.OK)
-                                    {
-                                        offset += _blockSize;
-                                    }
-                                    else if (code == (int)HttpStatusCode.Accepted)
-                                    {
-                                        break;
-                                    }
-                                    else if (code >= (int)HttpStatusCode.InternalServerError)
-                                    {
-                                        ReGetUpoadServer(fullpath, filehash, filesize);
-                                        continue;
-                                    }
-                                    else if (code == (int)HttpStatusCode.Unauthorized)
-                                    {
-                                        UploadInit(data.UuidHash, filename, fullpath, filehash, filesize);
-                                        continue;
-                                    }
-                                    else if (code == (int)HttpStatusCode.Conflict)
-                                    {
-                                        var json =
-                                            (IDictionary<string, object>)
-                                                SimpleJson.DeserializeObject(returnResult.Result);
-                                        long part_range_start = Convert.ToInt64(json["expect"]);
-                                        offset = part_range_start;
-                                    }
-                                    else
-                                    {
-                                        throw new Exception();
-                                    }
-                                }
-                                UploadCheck();
-                            }
-
-                            //file upload success if reach here
-                            if (Completed != null)
-                            {
-                                Completed(this, new CompletedEventArgs() { LocalFullpath = _localFullpath });
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception(data.ErrorCode + ":" + data.ErrorMessage);
-                        }
+                    byte[] buffer;
+                    if (offset + _blockSize >= filesize)
+                    {
+                        int length_end = (int)(filesize - offset);
+                        buffer = new byte[length_end];
+                        _stream.Read(buffer, 0, length_end);
+                        crc32 = CRC32.Compute(buffer);
+                        rang_end = filesize - 1;
                     }
                     else
                     {
-                        throw new Exception("can't connect server");
+                        buffer = new byte[_blockSize];
+                        _stream.Read(buffer, 0, _blockSize);
+                        crc32 = CRC32.Compute(buffer);
+                        rang_end = offset + buffer.Length - 1;
+                    }
+                    range = offset + "-" + rang_end;
+
+                    returnResult = UploadPart(range, new MemoryStream(buffer), crc32);
+                    code = returnResult.Code;
+
+                    if (code == (int)HttpStatusCode.OK)
+                    {
+                        offset += _blockSize;
+                    }
+                    else if (code == (int)HttpStatusCode.Accepted)
+                    {
+                        break;
+                    }
+                    else if (code >= (int)HttpStatusCode.InternalServerError)
+                    {
+                        ReGetUpoadServer(fullpath, filehash, filesize);
+                        continue;
+                    }
+                    else if (code == (int)HttpStatusCode.Unauthorized)
+                    {
+                        UploadInit(data.UuidHash, filename, fullpath, filehash, filesize);
+                        continue;
+                    }
+                    else if (code == (int)HttpStatusCode.Conflict)
+                    {
+                        var json =
+                            (IDictionary<string, object>)
+                                SimpleJson.DeserializeObject(returnResult.Result);
+                        long part_range_start = Convert.ToInt64(json["expect"]);
+                        offset = part_range_start;
+                    }
+                    else
+                    {
+                        throw new Exception();
                     }
                 }
+                UploadCheck();
             }
-            else
+
+            //file upload success if reach here
+            if (Completed != null)
             {
-                LogPrint.Print(_localFullpath + " not exist");
+                Completed(this, new CompletedEventArgs() { Fullpath = _fullpath });
             }
         }
 
@@ -322,6 +298,10 @@ namespace YunkuEntSDK.Net
 
         private void UploadAbort()
         {
+            if (_server.Equals(String.Empty))
+            {
+                return;
+            }
             string url = _server + UrlUploadAbort;
             var headParameter = new Dictionary<string, string>();
             headParameter.Add("x-gk-upload-session", _session);

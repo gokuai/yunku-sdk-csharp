@@ -252,23 +252,22 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="completedEventHandler"></param>
         /// <param name="progressChangeEventHandler"></param>
         /// <returns></returns>
-        public Thread UploadByBlock(string fullPath, string opName, int opId, string localFilePath, bool overWrite
+        public bool UploadByBlockAsync(string fullPath, string opName, int opId, string localFilePath, bool overWrite
             , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
         {
-            return UploadByBlock(fullPath, opName, opId, localFilePath, overWrite, RangSize, completedEventHandler, progressChangeEventHandler);
+            return UploadByBlockAsync(fullPath, opName, opId, localFilePath, overWrite, RangSize, completedEventHandler, progressChangeEventHandler);
         }
 
-        public Thread UploadByBlock(string fullPath, string opName, int opId, string localFilePath, bool overWrite, int rangSize
+        public bool UploadByBlockAsync(string fullPath, string opName, int opId, string localFilePath, bool overWrite, int rangSize
             , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
         {
-            UploadManager uploadManager = new UploadManager(UrlApiCreateFile, localFilePath,
+            FileStream stream = File.OpenRead(localFilePath);
+            UploadManager uploadManager = new UploadManager(UrlApiCreateFile, stream,
                 fullPath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overWrite, rangSize);
             uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 
-            Thread thread = new Thread(uploadManager.DoUpload);
-            thread.Start();
-            return thread;
+            return ThreadPool.QueueUserWorkItem(new WaitCallback(uploadManager.DoUpload));
         }
 
         /// <summary>

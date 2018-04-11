@@ -8,6 +8,6 @@ namespace YunkuEntSDK.Net
 
         public string ErrorMessage { get; set; }
 
-        public string LocalFullpath { get; set; }
+        public string Fullpath { get; set; }
     }
 }

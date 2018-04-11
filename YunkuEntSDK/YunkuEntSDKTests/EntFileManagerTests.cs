@@ -79,13 +79,12 @@ namespace YunkuEntSDK.Tests
         public void UploadByBlockTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            entFile.UploadByBlock("testABC.txt", "Brandon", 0,
+            entFile.UploadByBlockAsync("testABC.txt", "Brandon", 0,
                  "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
         }
 
         private void ProgressChanged(object sender, ProgressEventArgs e)
         {
-
             LogPrint.Print(" onProgress:" + e.ProgressPercent);
         }
 
@@ -98,7 +97,7 @@ namespace YunkuEntSDK.Tests
         public void DelTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            String returnString = entFile.Del("test", "Brandon");
+            String returnString = entFile.Del("test", "Brandon", true);
             ReturnResult resultString = ReturnResult.Create(returnString);
             Assert.AreEqual(200, resultString.Code);
         }

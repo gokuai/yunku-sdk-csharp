@@ -80,7 +80,7 @@ namespace YunkuEntSDK.compat.v2.Tests
         public void UploadByBlockTest()
         {
             var entLib = new EntFileManager(orgClientId, orgClientSecret);
-            entLib.UploadByBlock("testUPp.txt", "Brandon", 0, "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
+            entLib.UploadByBlockAsync("testUPp.txt", "Brandon", 0, "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
         }
 
         private void ProgressChanged(object sender, ProgressEventArgs e)

@@ -61,21 +61,22 @@ namespace YunkuSDKEntDemo
             DebugConfig.LogPrintAvialable = false;
             DebugConfig.LogPath = ""; //日志文件没有做大小限制
 
-            ConfigHelper.SetApiHost("http://yk3-api-ent.goukuai.cn");
-            ConfigHelper.SetWebHost("http://yk3.goukuai.cn");
-
+            //ConfigHelper.SetApiHost("http://server/m-open");
+            //ConfigHelper.SetWebHost("http://server");
+            //ConfigHelper.SetUploadBlockSize(5000 * 1024);
 
             //==========企业文件操作============//
-            var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
+            //var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
+
+            //DeserializeReturn(entFileManager.GetFileList());
 
             //获取文件列表
-            DeserializeReturn(entFileManager.GetFileList());
+            //DeserializeReturn(entFileManager.GetFileList());
 
             //异步获取文件列表
             //entFileManager.GetFileListAsync("", 0, 100, true, (s,requestEvent)=> {
             //    DeserializeReturn(requestEvent.Result);
             //} );
-
 
             //获取更新列表
             //DeserializeReturn(entFileManager.GetUpdateList(false, 0));
@@ -89,15 +90,14 @@ namespace YunkuSDKEntDemo
             //获取文件（夹）信息
             //DeserializeReturn(entFileManager.GetFileInfoByFullpath("testRangSize.txt"));
 
-
             //创建文件夹
             //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
 
             //上传文件 文件不得超过50MB
             //DeserializeReturn(entFileManager.CreateFile("test111.txt", "Brandon", "D:\\test.txt"));
 
-            //分块上传，默认分块上传大小为512K
-            //entFileManager.UploadByBlock("testRangSize.txt", "Brandon", 0,
+            //分块上传，默认分块上传大小为10MB
+            //entFileManager.UploadByBlockAsync("testRangSize.txt", "Brandon", 0,
             //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
 
             //通过链接上传文件
@@ -105,7 +105,7 @@ namespace YunkuSDKEntDemo
             //    "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg"));
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
-            //DeserializeReturn(entFileManager.Del("test", "Brandon"));
+            //DeserializeReturn(entFileManager.Del("test", "Brandon", true));
 
             //移动文件
             //DeserializeReturn(entFileManager.Move("qq.jpg", "test/qq.jpg", "Brandon"));
@@ -270,8 +270,7 @@ namespace YunkuSDKEntDemo
                 return;
             }
 
-            TB_Result.Text += e.LocalFullpath + ":" + e.ProgressPercent + "\r\n";
-            TB_Result.Text += "==========================\r\n";
+            TB_Result.Text += e.Fullpath + " progress:" + e.ProgressPercent + "\r\n";
         }
 
         private void UploadCompeleted(object sender, CompletedEventArgs e)
@@ -284,13 +283,11 @@ namespace YunkuSDKEntDemo
 
             if (e.IsError)
             {
-                TB_Result.Text += e.LocalFullpath + ":" + e.ErrorMessage + "\r\n";
-                TB_Result.Text += "==========================\r\n";
+                TB_Result.Text += e.Fullpath + " complete:" + e.ErrorMessage + "\r\n";
             }
             else
             {
-                TB_Result.Text += e.LocalFullpath + ":" + "success" + "\r\n";
-                TB_Result.Text += "==========================\r\n";
+                TB_Result.Text += e.Fullpath + " complete:" + "success" + "\r\n";
             }
         }
     }
