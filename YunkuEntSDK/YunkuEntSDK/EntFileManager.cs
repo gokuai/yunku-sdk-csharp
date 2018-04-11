@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 using static YunkuEntSDK.HttpEngine.RequestHelper;
@@ -341,27 +342,76 @@ namespace YunkuEntSDK
         }
 
         /// <summary>
+        /// 异步分块上传本地文件，默认分块上传大小10MB
+        /// </summary>
+        /// <param name="fullpath"></param>
+        /// <param name="opName"></param>
+        /// <param name="opId"></param>
+        /// <param name="localFilepath"></param>
+        /// <param name="overwrite"></param>
+        /// <param name="completedEventHandler"></param>
+        /// <param name="progressChangeEventHandler"></param>
+        /// <returns></returns>
+        public bool UploadByBlockAsync(string fullpath, string opName, int opId, string localFilepath, bool overwrite
+            , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        {
+            return UploadByBlockAsync(fullpath, opName, opId, localFilepath, overwrite, BlockSize, completedEventHandler, progressChangeEventHandler);
+        }
+
+        public bool UploadByBlockAsync(string fullpath, string opName, int opId, string localFilepath, bool overwrite
+            , int blockSize, CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        {
+            FileStream stream = File.OpenRead(localFilepath);
+            return UploadByBlockAsync(fullpath, opName, opId, stream, overwrite, blockSize, completedEventHandler, progressChangeEventHandler);
+        }
+
+        /// <summary>
+        /// 异步分块上传文件流，默认分块上传大小10MB
+        /// </summary>
+        /// <param name="fullpath"></param>
+        /// <param name="opName"></param>
+        /// <param name="opId"></param>
+        /// <param name="stream"></param>
+        /// <param name="overwrite"></param>
+        /// <param name="completedEventHandler"></param>
+        /// <param name="progressChangeEventHandler"></param>
+        /// <returns></returns>
+        public bool UploadByBlockAsync(string fullpath, string opName, int opId, Stream stream, bool overwrite
+            , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        {
+            return UploadByBlockAsync(fullpath, opName, opId, stream, overwrite, BlockSize, completedEventHandler, progressChangeEventHandler);
+        }
+
+        public bool UploadByBlockAsync(string fullpath, string opName, int opId, Stream stream, bool overwrite
+            , int blockSize, CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        {
+            UploadManager uploadManager = new UploadManager(UrlApiCreateFile, stream,
+                fullpath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overwrite, blockSize);
+            uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
+            uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
+
+            WaitCallback callback = new WaitCallback(uploadManager.UploadAsync);
+            return ThreadPool.QueueUserWorkItem(callback);
+        }
+
+        /// <summary>
         /// 分块上传本地文件，默认分块上传大小10MB
         /// </summary>
         /// <param name="fullpath"></param>
         /// <param name="opName"></param>
         /// <param name="opId"></param>
-        /// <param name="localFilePath"></param>
-        /// <param name="overWrite"></param>
-        /// <param name="completedEventHandler"></param>
-        /// <param name="progressChangeEventHandler"></param>
+        /// <param name="localFilepath"></param>
+        /// <param name="overwrite"></param>
         /// <returns></returns>
-        public bool UploadByBlockAsync(string fullpath, string opName, int opId, string localFilePath, bool overWrite
-            , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        public UploadResult UploadByBlock(string fullpath, string opName, int opId, string localFilepath, bool overwrite)
         {
-            return UploadByBlockAsync(fullpath, opName, opId, localFilePath, overWrite, BlockSize, completedEventHandler, progressChangeEventHandler);
+            return UploadByBlock(fullpath, opName, opId, localFilepath, overwrite, BlockSize);
         }
 
-        public bool UploadByBlockAsync(string fullpath, string opName, int opId, string localFilePath, bool overWrite
-            , int blockSize, CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        public UploadResult UploadByBlock(string fullpath, string opName, int opId, string localFilepath, bool overwrite, int blockSize)
         {
-            FileStream stream = File.OpenRead(localFilePath);
-            return UploadByBlockAsync(fullpath, opName, opId, stream, overWrite, blockSize, completedEventHandler, progressChangeEventHandler);
+            FileStream stream = File.OpenRead(localFilepath);
+            return UploadByBlock(fullpath, opName, opId, stream, overwrite, BlockSize);
         }
 
         /// <summary>
@@ -370,27 +420,21 @@ namespace YunkuEntSDK
         /// <param name="fullpath"></param>
         /// <param name="opName"></param>
         /// <param name="opId"></param>
-        /// <param name="stream"></param>
-        /// <param name="overWrite"></param>
-        /// <param name="completedEventHandler"></param>
-        /// <param name="progressChangeEventHandler"></param>
+        /// <param name="localFilePath"></param>
+        /// <param name="overwrite"></param>
+        /// <param name="blockSize"></param>
         /// <returns></returns>
-        public bool UploadByBlockAsync(string fullpath, string opName, int opId, Stream stream, bool overWrite
-            , CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        public UploadResult UploadByBlock(string fullpath, string opName, int opId, Stream stream, bool overwrite)
         {
-            return UploadByBlockAsync(fullpath, opName, opId, stream, overWrite, BlockSize, completedEventHandler, progressChangeEventHandler);
+            return UploadByBlock(fullpath, opName, opId, stream, overwrite, BlockSize);
         }
 
-        public bool UploadByBlockAsync(string fullpath, string opName, int opId, Stream stream, bool overWrite
-            , int blockSize, CompletedEventHandler completedEventHandler, ProgressChangeEventHandler progressChangeEventHandler)
+        public UploadResult UploadByBlock(string fullpath, string opName, int opId, Stream stream, bool overwrite, int blockSize)
         {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, stream,
-                fullpath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overWrite, blockSize);
-            uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
-            uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
+                fullpath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overwrite, blockSize);
 
-            WaitCallback callback = new WaitCallback(uploadManager.DoUpload);
-            return ThreadPool.QueueUserWorkItem(callback);
+            return uploadManager.Upload();
         }
 
         /// <summary>

@@ -29,32 +29,23 @@ namespace YunkuEntSDK.Data
             if (jsonString == null) return null;
 
             FileOperationData data = new FileOperationData();
-            try
+
+            var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
+            data.Code = code;
+            if (code == (int) HttpStatusCode.OK)
             {
-                var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(jsonString);
-                data.Code = code;
-                if (code == (int) HttpStatusCode.OK)
-                {
-                    data.Server = SimpleJson.TryStringValue(json, KeyServer);
-                    data.UuidHash = SimpleJson.TryStringValue(json, KeyHash);
-                    data.Status = SimpleJson.TryIntValue(json, KeyState);
-                    data.FileVersion = SimpleJson.TryIntValue(json, KeyVersion);
-                }
-                else
-                {
-                    data.ErrorCode = SimpleJson.TryIntValue(json, KeyErrorCode);
-                    data.ErrorMessage = SimpleJson.TryStringValue(json, KeyErrorMsg);
-                }
-
-                return data;
-
+                data.Server = SimpleJson.TryStringValue(json, KeyServer);
+                data.UuidHash = SimpleJson.TryStringValue(json, KeyHash);
+                data.Status = SimpleJson.TryIntValue(json, KeyState);
+                data.FileVersion = SimpleJson.TryIntValue(json, KeyVersion);
             }
-            catch (Exception ex)
+            else
             {
-                LogPrint.Print(LogTag + ":" + ex.StackTrace);
-                return null;
-
+                data.ErrorCode = SimpleJson.TryIntValue(json, KeyErrorCode);
+                data.ErrorMessage = SimpleJson.TryStringValue(json, KeyErrorMsg);
             }
+
+            return data;
         }
     }
 

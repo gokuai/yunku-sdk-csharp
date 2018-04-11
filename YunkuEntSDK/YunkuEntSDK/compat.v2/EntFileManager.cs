@@ -267,7 +267,7 @@ namespace YunkuEntSDK.compat.v2
             uploadManager.Completed += new UploadManager.CompletedEventHandler(completedEventHandler);
             uploadManager.ProgresChanged += new UploadManager.ProgressChangeEventHandler(progressChangeEventHandler);
 
-            return ThreadPool.QueueUserWorkItem(new WaitCallback(uploadManager.DoUpload));
+            return ThreadPool.QueueUserWorkItem(new WaitCallback(uploadManager.UploadAsync));
         }
 
         /// <summary>

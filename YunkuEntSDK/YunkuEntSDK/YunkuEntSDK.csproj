@@ -49,6 +49,7 @@
     <Compile Include="compat.v2\OauthEngine.cs" />
     <Compile Include="ConfigHelper.cs" />
     <Compile Include="Data\BaseData.cs" />
+    <Compile Include="Data\FileInfo.cs" />
     <Compile Include="Data\FileOperationData.cs" />
     <Compile Include="Data\Group.cs" />
     <Compile Include="Data\OauthData.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Data\Person.cs" />
     <Compile Include="Data\ReturnResult.cs" />
     <Compile Include="Data\SyncMemberData.cs" />
+    <Compile Include="Data\UploadResult.cs" />
     <Compile Include="DebugConfig.cs" />
     <Compile Include="EntFileManager.cs" />
     <Compile Include="EntManager.cs" />

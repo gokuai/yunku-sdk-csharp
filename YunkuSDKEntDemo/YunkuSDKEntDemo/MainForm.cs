@@ -91,24 +91,32 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.GetFileInfoByFullpath("testRangSize.txt"));
 
             //创建文件夹
-            //DeserializeReturn(entFileManager.CreateFolder("test", "Brandon"));
-
-            //上传文件 文件不得超过50MB
-            //DeserializeReturn(entFileManager.CreateFile("test111.txt", "Brandon", "D:\\test.txt"));
+            //DeserializeReturn(entFileManager.CreateFolder("test", ""));
 
             //分块上传，默认分块上传大小为10MB
-            //entFileManager.UploadByBlockAsync("testRangSize.txt", "Brandon", 0,
-            //    "D:\\test.txt", true, UploadCompeleted, ProgressChanged);
+            //UploadResult result = entFileManager.UploadByBlock("testRangSize.txt", "", 0, @"D:\test.txt", true);
+            //if (result.IsError)
+            //{
+            //    TB_Result.Text += result.FileInfo.Fullpath + " upload error: " + result.ErrorMessage + "\r\n";
+            //}
+            //else
+            //{
+            //    TB_Result.Text += result.FileInfo.Fullpath + " upload success, size: " +  result.FileInfo.Filesize + "\r\n";
+            //}
+
+            //异步方式分块上传，默认分块上传大小为10MB
+            //entFileManager.UploadByBlockAsync("testRangSize.txt", "", 0,
+            //    @"D:\test.txt", true, UploadCompeleted, ProgressChanged);
 
             //通过链接上传文件
-            //DeserializeReturn(entFileManager.CreateFileByUrl("1q.jpg", 0, "Brandon", true,
+            //DeserializeReturn(entFileManager.CreateFileByUrl("1q.jpg", 0, "", true,
             //    "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg"));
 
             //删除文件 如果是多个文件则用逗号隔开fullpath,例如"test1,test2"
-            //DeserializeReturn(entFileManager.Del("test", "Brandon", true));
+            //DeserializeReturn(entFileManager.Del("test", "", true));
 
             //移动文件
-            //DeserializeReturn(entFileManager.Move("qq.jpg", "test/qq.jpg", "Brandon"));
+            //DeserializeReturn(entFileManager.Move("qq.jpg", "test/qq.jpg", ""));
 
             ////文件外链
             //DeserializeReturn(entFileManager.Link("qq.jpg", 0, EntFileManager.AuthType.Default, null));
@@ -283,11 +291,11 @@ namespace YunkuSDKEntDemo
 
             if (e.IsError)
             {
-                TB_Result.Text += e.Fullpath + " complete:" + e.ErrorMessage + "\r\n";
+                TB_Result.Text += e.Fullpath + " upload error:" + e.ErrorMessage + "\r\n";
             }
             else
             {
-                TB_Result.Text += e.Fullpath + " complete:" + "success" + "\r\n";
+                TB_Result.Text += e.Fullpath + " upload success\r\n";
             }
         }
     }

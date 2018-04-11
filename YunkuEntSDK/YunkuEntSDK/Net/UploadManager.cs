@@ -21,13 +21,15 @@ namespace YunkuEntSDK.Net
         private string _session = ""; // 上传session
         private string _apiUrl = "";
         
-        private string _fullpath;
         private readonly string _orgClientId;
         private long _dateline;
         private string _opName;
         private int _opId;
         private bool _overWrite;
         private Stream _stream;
+
+        private Data.FileInfo _fileinfo;
+        private UploadResult _result;
 
         public event CompletedEventHandler Completed;
         public event ProgressChangeEventHandler ProgresChanged;
@@ -36,8 +38,8 @@ namespace YunkuEntSDK.Net
 
         public delegate void ProgressChangeEventHandler(object sender, ProgressEventArgs e);
 
-        public UploadManager(string apiUrl, Stream stream, string fullPath,
-            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overWrite, int blockSize) : base(orgClientId, clientSecret)
+        public UploadManager(string apiUrl, Stream stream, string fullpath,
+            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overwrite, int blockSize) : base(orgClientId, clientSecret)
         {
             if (!stream.CanRead)
             {
@@ -51,21 +53,22 @@ namespace YunkuEntSDK.Net
 
             _apiUrl = apiUrl;
             _stream = stream;
-            _fullpath = fullPath;
             _opName = opName;
             _opId = opId;
             _orgClientId = orgClientId;
             _dateline = dateline;
             _clientSecret = clientSecret;
-            _overWrite = overWrite;
+            _overWrite = overwrite;
             _blockSize = blockSize;
+            _fileinfo = new Data.FileInfo() { Fullpath = fullpath };
+            _result = new UploadResult();
         }
 
-        public void DoUpload(object i)
+        public void UploadAsync(object i)
         {
             try
             {
-                StartUpload();
+                StartUpload(true);
             }
             catch (Exception e)
             {
@@ -76,11 +79,28 @@ namespace YunkuEntSDK.Net
                         {
                             IsError = true,
                             ErrorMessage = e.Message,
-                            Fullpath = _fullpath
+                            Fullpath = _fileinfo.Fullpath,
+                            FileInfo = _fileinfo
                         });
                 }
                 UploadAbort();
             }
+        }
+
+        public UploadResult Upload()
+        {
+            try
+            {
+                StartUpload(false);
+            }
+            catch (Exception e)
+            {
+                UploadAbort();
+                _result.IsError = true;
+                _result.ErrorMessage = e.Message;
+            }
+            _result.FileInfo = _fileinfo;
+            return _result;
         }
 
 
@@ -88,15 +108,14 @@ namespace YunkuEntSDK.Net
         /// 开始上传
         /// </summary>
         /// <param name="item"></param>
-        private void StartUpload()
+        private void StartUpload(bool async)
         {
             int code;
-            string fullpath = _fullpath;
-            string filehash = Util.CaculateFileHashCode(_stream);
-            string filename = Util.GetFileNameFromPath(_fullpath);
-            long filesize = _stream.Length;
+            _fileinfo.Filename = Util.GetFileNameFromPath(_fileinfo.Fullpath);
+            _fileinfo.Filehash = Util.CaculateFileHashCode(_stream);
+            _fileinfo.Filesize = _stream.Length;
 
-            ReturnResult returnResult = ReturnResult.Create(AddFile(filesize, filehash, _fullpath));
+            ReturnResult returnResult = ReturnResult.Create(AddFile(_fileinfo.Filesize, _fileinfo.Filehash, _fileinfo.Fullpath));
             FileOperationData data = FileOperationData.Create(returnResult.Result, returnResult.Code);
             if (data == null)
             {
@@ -108,6 +127,7 @@ namespace YunkuEntSDK.Net
             }
             if (data.Status != FileOperationData.StateNoupload)
             {
+                _fileinfo.Hash = data.UuidHash;
                 _server = data.Server;
 
                 if (string.IsNullOrEmpty(_server))
@@ -119,32 +139,32 @@ namespace YunkuEntSDK.Net
                     LogPrint.Print(" The server is " + _server);
                 }
 
-                UploadInit(data.UuidHash, filename, _fullpath, filehash, filesize);
+                UploadInit(data.UuidHash, _fileinfo.Filename, _fileinfo.Fullpath, _fileinfo.Filehash, _fileinfo.Filesize);
 
                 long crc32 = 0;
                 long offset = 0;
                 long rang_end = 0;
                 String range = "";
 
-                while (offset < filesize - 1)
+                while (offset < _fileinfo.Filesize - 1)
                 {
                     if (ProgresChanged != null)
                     {
                         ProgresChanged(this, new ProgressEventArgs()
                         {
-                            ProgressPercent = (int)(((float)offset / filesize) * 100),
-                            Fullpath = _fullpath
+                            ProgressPercent = (int)(((float)offset / _fileinfo.Filesize) * 100),
+                            Fullpath = _fileinfo.Fullpath
                         });
                     }
 
                     byte[] buffer;
-                    if (offset + _blockSize >= filesize)
+                    if (offset + _blockSize >= _fileinfo.Filesize)
                     {
-                        int length_end = (int)(filesize - offset);
+                        int length_end = (int)(_fileinfo.Filesize - offset);
                         buffer = new byte[length_end];
                         _stream.Read(buffer, 0, length_end);
                         crc32 = CRC32.Compute(buffer);
-                        rang_end = filesize - 1;
+                        rang_end = _fileinfo.Filesize - 1;
                     }
                     else
                     {
@@ -168,12 +188,12 @@ namespace YunkuEntSDK.Net
                     }
                     else if (code >= (int)HttpStatusCode.InternalServerError)
                     {
-                        ReGetUpoadServer(fullpath, filehash, filesize);
+                        ReGetUpoadServer(_fileinfo.Fullpath, _fileinfo.Filehash, _fileinfo.Filesize);
                         continue;
                     }
                     else if (code == (int)HttpStatusCode.Unauthorized)
                     {
-                        UploadInit(data.UuidHash, filename, fullpath, filehash, filesize);
+                        UploadInit(data.UuidHash, _fileinfo.Filename, _fileinfo.Fullpath, _fileinfo.Filehash, _fileinfo.Filesize);
                         continue;
                     }
                     else if (code == (int)HttpStatusCode.Conflict)
@@ -195,7 +215,7 @@ namespace YunkuEntSDK.Net
             //file upload success if reach here
             if (Completed != null)
             {
-                Completed(this, new CompletedEventArgs() { Fullpath = _fullpath });
+                Completed(this, new CompletedEventArgs() { Fullpath = _fileinfo.Fullpath, FileInfo = _fileinfo });
             }
         }
 
