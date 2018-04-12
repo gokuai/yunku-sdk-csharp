@@ -295,8 +295,7 @@ namespace YunkuEntSDK.Net
             if (result.Code == (int)HttpStatusCode.OK)
             {
                 long.TryParse(result.Body, out checkSize);
-            }
-            if (result.Code >= (int)HttpStatusCode.InternalServerError)
+            } else if (result.Code >= (int)HttpStatusCode.InternalServerError)
             {
                 checkSize = -1;
             } else
