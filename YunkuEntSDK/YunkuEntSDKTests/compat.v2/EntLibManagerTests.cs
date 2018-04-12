@@ -23,9 +23,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.Create("vitali", "1073741824", "destroy", "test lib");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.Create("vitali", "1073741824", "destroy", "test lib");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -33,9 +32,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.GetLibList();
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.GetLibList();
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -43,9 +41,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.Bind(1262696, "YunkuJavaSDKDemo", null);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.Bind(1262696, "YunkuJavaSDKDemo", null);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -53,9 +50,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.UnBind("AxT0EUEjtYc8za41xXl1dKFJ40");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.UnBind("AxT0EUEjtYc8za41xXl1dKFJ40");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -63,9 +59,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.GetMembers(0, 10, 1262679);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.GetMembers(0, 10, 1262679);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -73,9 +68,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.GetMember(1262679, EntLibManager.MemberType.MemberId, new[] { "239931" });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.GetMember(1262679, EntLibManager.MemberType.MemberId, new[] { "239931" });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -83,9 +77,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.AddMembers(1262679, 13862, new int[] { 885371 });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.AddMembers(1262679, 13862, new int[] { 885371 });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -93,9 +86,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.SetMemberRole(1262679, 13862, new int[] { 885371 });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.SetMemberRole(1262679, 13862, new int[] { 885371 });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -103,9 +95,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.DelMember(1262679, new int[] { 885371 });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.DelMember(1262679, new int[] { 885371 });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -113,9 +104,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.GetGroups(1262679);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.GetGroups(1262679);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -123,9 +113,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.AddGroup(1262679, 154837, 13862);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.AddGroup(1262679, 154837, 13862);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -133,9 +122,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.DelGroup(1262679, 154837);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.DelGroup(1262679, 154837);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -143,9 +131,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.SetGroupRole(1262679, 154837, 13862);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.SetGroupRole(1262679, 154837, 13862);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -153,9 +140,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.Destroy("AxT0EUEjtYc8za41xXl1dKFJ40");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.Destroy("AxT0EUEjtYc8za41xXl1dKFJ40");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -163,9 +149,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.Set(1262696, "ttt", "1073741824", "");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.Set(1262696, "ttt", "1073741824", "");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
@@ -173,9 +158,8 @@ namespace YunkuEntSDK.compat.v2.Tests
         {
             var entLib = new EntLibManager(clientId, clientSecret);
             entLib.AccessToken(admin, password);
-            string returnString = entLib.GetInfo(1262679);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = entLib.GetInfo(1262679);
+            Assert.AreEqual(200, result.Code);
         }
     }
 }

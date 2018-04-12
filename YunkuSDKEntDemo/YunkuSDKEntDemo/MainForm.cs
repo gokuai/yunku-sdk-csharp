@@ -22,19 +22,18 @@ namespace YunkuSDKEntDemo
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        private void DeserializeReturn(string jsonString)
+        private void DeserializeReturn(ReturnResult result)
         {
-            ReturnResult returnResult = ReturnResult.Create(jsonString);
-            int code = returnResult.Code;
+            int code = result.Code;
             string msg = "";
-            string result = returnResult.Result;
+            string body = result.Body;
             //复制到剪贴板
 
             if (code == (int)HttpStatusCode.OK)
             {
                 //成功则返回结果
 
-                if (result.Equals(string.Empty))
+                if (string.IsNullOrEmpty(body))
                 {
                     msg = "返回成功";
                 }
@@ -42,7 +41,7 @@ namespace YunkuSDKEntDemo
             else
             {
                 //返回错误信息
-                BaseData data = BaseData.Create(result);
+                BaseData data = BaseData.Create(body);
                 if (data != null)
                 {
                     msg = data.ErrorCode + ":" + data.ErrorMessage;
@@ -63,10 +62,10 @@ namespace YunkuSDKEntDemo
 
             //ConfigHelper.SetApiHost("http://server/m-open");
             //ConfigHelper.SetWebHost("http://server");
-            //ConfigHelper.SetUploadBlockSize(5000 * 1024);
+            //ConfigHelper.SetUploadBlockSize(5 * 1024 * 1024);
 
             //==========企业文件操作============//
-            //var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
+            var entFileManager = new EntFileManager(SdkConfig.orgClientId, SdkConfig.orgClientSecret);
 
             //DeserializeReturn(entFileManager.GetFileList());
 
@@ -94,15 +93,7 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.CreateFolder("test", ""));
 
             //分块上传，默认分块上传大小为10MB
-            //UploadResult result = entFileManager.UploadByBlock("testRangSize.txt", "", 0, @"D:\test.txt", true);
-            //if (result.IsError)
-            //{
-            //    TB_Result.Text += result.FileInfo.Fullpath + " upload error: " + result.ErrorMessage + "\r\n";
-            //}
-            //else
-            //{
-            //    TB_Result.Text += result.FileInfo.Fullpath + " upload success, size: " +  result.FileInfo.Filesize + "\r\n";
-            //}
+            //FileInfo info = entFileManager.UploadByBlock("testRangSize.txt", "", 0, @"D:\testRangSize.txt", true);
 
             //异步方式分块上传，默认分块上传大小为10MB
             //entFileManager.UploadByBlockAsync("testRangSize.txt", "", 0,

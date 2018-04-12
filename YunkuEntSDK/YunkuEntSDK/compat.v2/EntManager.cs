@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
@@ -39,7 +40,7 @@ namespace YunkuEntSDK.compat.v2
         /// 获取角色
         /// </summary>
         /// <returns></returns>
-        public string GetRoles()
+        public ReturnResult GetRoles()
         {
             string url = UrlApiEntGetRoles;
             var parameter = new Dictionary<string, string>();
@@ -55,7 +56,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="start"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public string GetMembers(int start, int size)
+        public ReturnResult GetMembers(int start, int size)
         {
             string url = UrlApiEntGetMembers;
             var parameter = new Dictionary<string, string>();
@@ -66,7 +67,7 @@ namespace YunkuEntSDK.compat.v2
             return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
         }
 
-        private string GetMember(int memberId, string outId, string account)
+        private ReturnResult GetMember(int memberId, string outId, string account)
         {
             string url = UrlApiGetMember;
             var parameter = new Dictionary<string, string>();
@@ -86,7 +87,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public string GetMemberById(int memberId)
+        public ReturnResult GetMemberById(int memberId)
         {
             return GetMember(memberId, null, null);
         }
@@ -97,7 +98,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="outId"></param>
         /// <returns></returns>
 
-        public string GetMemberByOutId(string outId)
+        public ReturnResult GetMemberByOutId(string outId)
         {
             return GetMember(0, outId, null);
         }
@@ -107,7 +108,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public string GetMemberByAccount(string account)
+        public ReturnResult GetMemberByAccount(string account)
         {
             return GetMember(0, null, account);
         }
@@ -116,7 +117,7 @@ namespace YunkuEntSDK.compat.v2
         ///     获取分组
         /// </summary>
         /// <returns></returns>
-        public string GetGroups()
+        public ReturnResult GetGroups()
         {
             string url = UrlApiEntGetGroups;
             var parameter = new Dictionary<string, string>();
@@ -130,7 +131,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public string GetMemberFileLink(int memberId, bool fileOnly)
+        public ReturnResult GetMemberFileLink(int memberId, bool fileOnly)
         {
             string url = UrlApiGetMemberFileLink;
             var parameter = new Dictionary<string, string>();
@@ -155,7 +156,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="memberEmail"></param>
         /// <param name="memberPhone"></param>
         /// <returns></returns>
-        public string AddSyncMember(string outId, string memberName,
+        public ReturnResult AddSyncMember(string outId, string memberName,
             string account, string memberEmail, string memberPhone, string password)
         {
             string url = UrlApiAddSyncMember;
@@ -177,7 +178,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="outId"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public string SetSyncMemberState(string outId, bool state)
+        public ReturnResult SetSyncMemberState(string outId, bool state)
         {
             string url = UrlApiAddSyncMember;
             var parameter = new Dictionary<string, string>();
@@ -193,7 +194,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="groups"></param>
         /// <returns></returns>
-        public string DelSyncMember(string[] members)
+        public ReturnResult DelSyncMember(string[] members)
         {
             string url = UrlApiDelSyncMember;
             var parameter = new Dictionary<string, string>();
@@ -210,7 +211,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="name"></param>
         /// <param name="parentOutId"></param>
         /// <returns></returns>
-        public string AddSyncGroup(string outId, string name, string parentOutId)
+        public ReturnResult AddSyncGroup(string outId, string name, string parentOutId)
         {
             string url = UrlApiAddSyncGroup;
             var parameter = new Dictionary<string, string>();
@@ -227,7 +228,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="groups"></param>
         /// <returns></returns>
-        public string DelSyncGroup(string[] groups)
+        public ReturnResult DelSyncGroup(string[] groups)
         {
             string url = UrlApiDelSyncGroup;
             var parameter = new Dictionary<string, string>();
@@ -243,7 +244,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="groupOutId"></param>
         /// <param name="members"></param>
         /// <returns></returns>
-        public string AddSyncGroupMember(string groupOutId, string[] members)
+        public ReturnResult AddSyncGroupMember(string groupOutId, string[] members)
         {
             string url = UrlApiAddSyncGroupMember;
             var parameter = new Dictionary<string, string>();
@@ -260,7 +261,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="groupOutId"></param>
         /// <param name="members"></param>
         /// <returns></returns>
-        public string DelSyncGroupMember(string groupOutId, string[] members)
+        public ReturnResult DelSyncGroupMember(string groupOutId, string[] members)
         {
             string url = UrlApiDelSyncGroupMember;
             var parameter = new Dictionary<string, string>();
@@ -279,7 +280,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="size"></param>
         /// <param name="showChild"></param>
         /// <returns></returns>
-        public string GetGroupMembers(int groupId, int start, int size, bool showChild)
+        public ReturnResult GetGroupMembers(int groupId, int start, int size, bool showChild)
         {
             string url = UrlApiGetGroupMembers;
             var parameter = new Dictionary<string, string>();
@@ -297,7 +298,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="members"></param>
         /// <returns></returns>
-        public string DelSyncMemberGroup(string[] members)
+        public ReturnResult DelSyncMemberGroup(string[] members)
         {
             {
                 string url = UrlApiDelSyncMemberGroup;

@@ -56,7 +56,7 @@ namespace YunkuEntSDK
         /// 获取根目录文件列表
         /// </summary>
         /// <returns></returns>
-        public string GetFileList()
+        public ReturnResult GetFileList()
         {
             return GetFileList("", 0, 100, false);
         }
@@ -94,7 +94,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullpath"></param>
         /// <returns></returns>
-        public string GetFileList(string fullpath)
+        public ReturnResult GetFileList(string fullpath)
         {
             return GetFileList(fullpath, 0, 100, false);
         }
@@ -105,7 +105,7 @@ namespace YunkuEntSDK
         /// <param name="start"></param>
         /// <param name="fullpath"></param>
         /// <returns></returns>
-        public string GetFileList(string fullpath, int start, int size, bool dirOnly)
+        public ReturnResult GetFileList(string fullpath, int start, int size, bool dirOnly)
         {
             string url = UrlApiFilelist;
             var parameter = new Dictionary<string, string>();
@@ -128,7 +128,7 @@ namespace YunkuEntSDK
         /// <param name="isCompare"></param>
         /// <param name="fetchDateline"></param>
         /// <returns></returns>
-        public string GetUpdateList(bool isCompare, long fetchDateline)
+        public ReturnResult GetUpdateList(bool isCompare, long fetchDateline)
         {
             string url = UrlApiUpdateList;
             var parameter = new Dictionary<string, string>();
@@ -150,7 +150,7 @@ namespace YunkuEntSDK
         /// <param name="endDateline"></param>
         /// <param name="showDelete"></param>
         /// <returns></returns>
-        public string GetUpdateCount(long beginDateline, long endDateline, bool showDelete)
+        public ReturnResult GetUpdateCount(long beginDateline, long endDateline, bool showDelete)
         {
             string url = UrlApiUpdateCount;
             var parameter = new Dictionary<string, string>();
@@ -168,7 +168,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullpath"></param>
         /// <returns></returns>
-        public string GetFileInfoByFullpath(string fullpath)
+        public ReturnResult GetFileInfoByFullpath(string fullpath)
         {
             return this.GetFileInfoByFullpath(fullpath, NetType.Default, false);
         }
@@ -178,7 +178,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullpath"></param>
         /// <returns></returns>
-        public string GetFileInfoByFullpath(string fullpath, bool getAttribute)
+        public ReturnResult GetFileInfoByFullpath(string fullpath, bool getAttribute)
         {
             return this.GetFileInfoByFullpath(fullpath, NetType.Default, getAttribute);
         }
@@ -190,7 +190,7 @@ namespace YunkuEntSDK
         /// <param name="type"></param>
         /// <param name="getAttribute"></param>
         /// <returns></returns>
-        public string GetFileInfoByFullpath(string fullpath, NetType type, bool getAttribute)
+        public ReturnResult GetFileInfoByFullpath(string fullpath, NetType type, bool getAttribute)
         {
             return this.GetFileInfo(null, fullpath, type, getAttribute);
         }
@@ -200,7 +200,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="hash"></param>
         /// <returns></returns>
-        public string GetFileInfoByHash(string hash)
+        public ReturnResult GetFileInfoByHash(string hash)
         {
             return this.GetFileInfoByHash(hash, NetType.Default, false);
         }
@@ -210,7 +210,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="hash"></param>
         /// <returns></returns>
-        public string GetFileInfoByHash(string hash, bool getAttribute)
+        public ReturnResult GetFileInfoByHash(string hash, bool getAttribute)
         {
             return this.GetFileInfoByHash(hash, NetType.Default, getAttribute);
         }
@@ -222,7 +222,7 @@ namespace YunkuEntSDK
         /// <param name="type"></param>
         /// <param name="getAttribute"></param>
         /// <returns></returns>
-        public string GetFileInfoByHash(string hash, NetType type, bool getAttribute)
+        public ReturnResult GetFileInfoByHash(string hash, NetType type, bool getAttribute)
         {
             return this.GetFileInfo(hash, null, type, getAttribute);
         }
@@ -235,7 +235,7 @@ namespace YunkuEntSDK
         /// <param name="type"></param>
         /// <param name="getAttribute"></param>
         /// <returns></returns>
-        private string GetFileInfo(string hash, string fullpath, NetType type, bool getAttribute)
+        private ReturnResult GetFileInfo(string hash, string fullpath, NetType type, bool getAttribute)
         {
             string url = UrlApiFileInfo;
             var parameter = new Dictionary<string, string>();
@@ -261,7 +261,7 @@ namespace YunkuEntSDK
         /// <param name="fullpath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string CreateFolder(string fullpath, string opName)
+        public ReturnResult CreateFolder(string fullpath, string opName)
         {
             string url = UrlApiCreateFolder;
             var parameter = new Dictionary<string, string>();
@@ -280,16 +280,14 @@ namespace YunkuEntSDK
         /// <param name="opName"></param>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public string CreateFile(string fullpath, string opName, Stream stream, bool overWrite)
+        public ReturnResult CreateFile(string fullpath, string opName, Stream stream, bool overWrite)
         {
             if (stream.Length > UploadSizeLimit)
             {
-                LogPrint.Print("文件大小超过50MB");
-                return "";
+                throw new Exception("文件大小超过50MB");
             }
             long dateline = Util.GetUnixDataline();
-
-
+            
             string url = UrlApiCreateFile;
             var parameter = new Dictionary<string, string>();
             parameter.Add("org_client_id", _clientId);
@@ -324,7 +322,7 @@ namespace YunkuEntSDK
         /// <param name="opName"></param>
         /// <param name="localPath"></param>
         /// <returns></returns>
-        public string CreateFile(string fullpath, string opName, string localPath)
+        public ReturnResult CreateFile(string fullpath, string opName, string localPath)
         {
             if (File.Exists(localPath))
             {
@@ -336,8 +334,7 @@ namespace YunkuEntSDK
             }
             else
             {
-                LogPrint.Print(fullpath + " file not exist");
-                return "";
+                throw new Exception(localPath + " not found");
             }
         }
 
@@ -403,12 +400,12 @@ namespace YunkuEntSDK
         /// <param name="localFilepath"></param>
         /// <param name="overwrite"></param>
         /// <returns></returns>
-        public UploadResult UploadByBlock(string fullpath, string opName, int opId, string localFilepath, bool overwrite)
+        public Data.FileInfo UploadByBlock(string fullpath, string opName, int opId, string localFilepath, bool overwrite)
         {
             return UploadByBlock(fullpath, opName, opId, localFilepath, overwrite, BlockSize);
         }
 
-        public UploadResult UploadByBlock(string fullpath, string opName, int opId, string localFilepath, bool overwrite, int blockSize)
+        public Data.FileInfo UploadByBlock(string fullpath, string opName, int opId, string localFilepath, bool overwrite, int blockSize)
         {
             FileStream stream = File.OpenRead(localFilepath);
             return UploadByBlock(fullpath, opName, opId, stream, overwrite, BlockSize);
@@ -424,12 +421,12 @@ namespace YunkuEntSDK
         /// <param name="overwrite"></param>
         /// <param name="blockSize"></param>
         /// <returns></returns>
-        public UploadResult UploadByBlock(string fullpath, string opName, int opId, Stream stream, bool overwrite)
+        public Data.FileInfo UploadByBlock(string fullpath, string opName, int opId, Stream stream, bool overwrite)
         {
             return UploadByBlock(fullpath, opName, opId, stream, overwrite, BlockSize);
         }
 
-        public UploadResult UploadByBlock(string fullpath, string opName, int opId, Stream stream, bool overwrite, int blockSize)
+        public Data.FileInfo UploadByBlock(string fullpath, string opName, int opId, Stream stream, bool overwrite, int blockSize)
         {
             UploadManager uploadManager = new UploadManager(UrlApiCreateFile, stream,
                 fullpath, opName, opId, _clientId, Util.GetUnixDataline(), _clientSecret, overwrite, blockSize);
@@ -444,7 +441,7 @@ namespace YunkuEntSDK
         /// <param name="opName"></param>
         /// <param name="destroy"></param>
         /// <returns></returns>
-        public string Del(string fullpaths, string opName, bool destroy)
+        public ReturnResult Del(string fullpaths, string opName, bool destroy)
         {
             string url = UrlApiDelFile;
             var parameter = new Dictionary<string, string>();
@@ -467,7 +464,7 @@ namespace YunkuEntSDK
         /// <param name="destFullpath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Move(string fullpath, string destFullpath, string opName)
+        public ReturnResult Move(string fullpath, string destFullpath, string opName)
         {
             string url = UrlApiMoveFile;
             var parameter = new Dictionary<string, string>();
@@ -485,7 +482,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullpath"></param>
         /// <returns></returns>
-        public string Link(string fullpath, int deadline, AuthType authType, string password)
+        public ReturnResult Link(string fullpath, int deadline, AuthType authType, string password)
         {
             string url = UrlApiLinkFile;
             var parameter = new Dictionary<string, string>();
@@ -512,7 +509,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fileOnly"></param>
         /// <returns></returns>
-        public string Links(bool fileOnly)
+        public ReturnResult Links(bool fileOnly)
         {
             string url = UrlApiGetLink;
             var parameter = new Dictionary<string, string>();
@@ -536,7 +533,7 @@ namespace YunkuEntSDK
         /// <param name="overwrite"></param>
         /// <param name="fileUrl"></param>
         /// <returns></returns>
-        public string CreateFileByUrl(string fullpath, int opId, string opName, bool overwrite, string fileUrl)
+        public ReturnResult CreateFileByUrl(string fullpath, int opId, string opName, bool overwrite, string fileUrl)
         {
             string url = UrlApiCreateFileByUrl;
             var parameter = new Dictionary<string, string>();
@@ -562,7 +559,7 @@ namespace YunkuEntSDK
         /// (支持50MB以上文件的上传)
         /// </summary>
         /// <returns></returns>
-        public string GetUploadServers()
+        public ReturnResult GetUploadServers()
         {
             string url = UrlApiUploadServers;
             var parameter = new Dictionary<string, string>();
@@ -577,7 +574,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public string GetServerSite(string type)
+        public ReturnResult GetServerSite(string type)
         {
             string url = UrlApiGetServerSite;
             var parameter = new Dictionary<string, string>();
@@ -595,7 +592,7 @@ namespace YunkuEntSDK
         /// <param name="targetFullpath"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Copy(string originFullpath, string targetFullpath, string opName)
+        public ReturnResult Copy(string originFullpath, string targetFullpath, string opName)
         {
             string url = UrlApiCopyFile;
             var parameter = new Dictionary<string, string>();
@@ -614,7 +611,7 @@ namespace YunkuEntSDK
         /// <param name="start"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public string Recyle(int start, int size)
+        public ReturnResult Recyle(int start, int size)
         {
             string url = UrlApiRecycleFile;
             var parameter = new Dictionary<string, string>();
@@ -632,7 +629,7 @@ namespace YunkuEntSDK
         /// <param name="fullpaths"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string Recover(string fullpaths, string opName)
+        public ReturnResult Recover(string fullpaths, string opName)
         {
             string url = UrlApiRecoverFile;
             var parameter = new Dictionary<string, string>();
@@ -650,7 +647,7 @@ namespace YunkuEntSDK
         /// <param name="fullpaths"></param>
         /// <param name="opName"></param>
         /// <returns></returns>
-        public string CompletelyDelFile(string[] fullpaths, string opName)
+        public ReturnResult CompletelyDelFile(string[] fullpaths, string opName)
         {
             string url = UrlApiCompletelyDelFile;
             var parameter = new Dictionary<string, string>();
@@ -669,7 +666,7 @@ namespace YunkuEntSDK
         /// <param name="start"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public string History(string fullpath, int start, int size)
+        public ReturnResult History(string fullpath, int start, int size)
         {
             string url = UrlApiHistoryFile;
             var parameter = new Dictionary<string, string>();
@@ -688,7 +685,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="hash"></param>
         /// <returns></returns>
-        public string GetDownloadUrlByHash(string hash)
+        public ReturnResult GetDownloadUrlByHash(string hash)
         {
             return GetDownloadUrl(hash, null, false, NetType.Default, "");
         }
@@ -700,7 +697,7 @@ namespace YunkuEntSDK
         /// <param name="isOpen"></param>
         /// <param name="net"></param>
         /// <returns></returns>
-        public string GetDownloadUrlByHash(string hash, bool isOpen, NetType net)
+        public ReturnResult GetDownloadUrlByHash(string hash, bool isOpen, NetType net)
         {
             return GetDownloadUrl(hash, null, isOpen, net, "");
         }
@@ -710,7 +707,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="fullpath"></param>
         /// <returns></returns>
-        public string GetDownloadUrlByFullpath(string fullpath)
+        public ReturnResult GetDownloadUrlByFullpath(string fullpath)
         {
             return GetDownloadUrl(null, fullpath, false, NetType.Default, "");
         }
@@ -722,7 +719,7 @@ namespace YunkuEntSDK
         /// <param name="isOpen"></param>
         /// <param name="net"></param>
         /// <returns></returns>
-        public string GetDownloadUrlByFullpath(string fullpath, bool isOpen, NetType net)
+        public ReturnResult GetDownloadUrlByFullpath(string fullpath, bool isOpen, NetType net)
         {
             return GetDownloadUrl(null, fullpath, isOpen, net, "");
         }
@@ -736,7 +733,7 @@ namespace YunkuEntSDK
         /// <param name="net"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private string GetDownloadUrl(string hash, string fullpath, bool isOpen, NetType net, string fileName)
+        private ReturnResult GetDownloadUrl(string hash, string fullpath, bool isOpen, NetType net, string fileName)
         {
             string url = UrlApiGetUploadUrl;
             var parameter = new Dictionary<string, string>();
@@ -766,7 +763,7 @@ namespace YunkuEntSDK
         /// <param name="size"></param>
         /// <param name="scopes"></param>
         /// <returns></returns>
-        public string Search(string keyWords, string path, int start, int size, params ScopeType[] scopes)
+        public ReturnResult Search(string keyWords, string path, int start, int size, params ScopeType[] scopes)
         {
             string url = UrlApiSearchFile;
             var parameter = new Dictionary<string, string>();
@@ -795,7 +792,7 @@ namespace YunkuEntSDK
         /// <param name="memberName"></param>
         /// <param name="returnThumbnail"></param>
         /// <returns></returns>
-        public string GetPreviewUrlByFullpath(string fullpath, bool showWatermark, string memberName, bool returnThumbnail)
+        public ReturnResult GetPreviewUrlByFullpath(string fullpath, bool showWatermark, string memberName, bool returnThumbnail)
         {
             return this.PreviewUrl(null, fullpath, showWatermark, memberName, returnThumbnail);
         }
@@ -808,7 +805,7 @@ namespace YunkuEntSDK
         /// <param name="memberName"></param>
         /// <param name="returnThumbnail"></param>
         /// <returns></returns>
-        public string GetPreviewUrlByHash(string hash, bool showWatermark, string memberName, bool returnThumbnail)
+        public ReturnResult GetPreviewUrlByHash(string hash, bool showWatermark, string memberName, bool returnThumbnail)
         {
             return this.PreviewUrl(hash, null, showWatermark, memberName, returnThumbnail);
         }
@@ -822,7 +819,7 @@ namespace YunkuEntSDK
         /// <param name="memberName"></param>
         /// <param name="returnThumbnail"></param>
         /// <returns></returns>
-        private string PreviewUrl(string hash, string fullpath, bool showWatermark, string memberName, bool returnThumbnail)
+        private ReturnResult PreviewUrl(string hash, string fullpath, bool showWatermark, string memberName, bool returnThumbnail)
         {
             string url = UrlApiPreviewUrl;
             var parameter = new Dictionary<string, string>();
@@ -849,7 +846,7 @@ namespace YunkuEntSDK
         /// <param name="fullpath"></param>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public string GetPermission(string fullpath, int memberId)
+        public ReturnResult GetPermission(string fullpath, int memberId)
         {
             string url = UrlApiGetPermission;
             var parameter = new Dictionary<string, string>();
@@ -868,7 +865,7 @@ namespace YunkuEntSDK
         /// <param name="memberId"></param>
         /// <param name="permissions"></param>
         /// <returns></returns>
-        public string SetPermission(string fullpath, int memberId, params FilePermissions[] permissions)
+        public ReturnResult SetPermission(string fullpath, int memberId, params FilePermissions[] permissions)
         {
             string url = UrlApiSetPermission;
             var parameter = new Dictionary<string, string>();
@@ -896,7 +893,7 @@ namespace YunkuEntSDK
         /// <param name="fullpath"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public string AddTag(string fullpath, string[] tags)
+        public ReturnResult AddTag(string fullpath, string[] tags)
         {
             string url = UrlApiAddTag;
             var parameter = new Dictionary<string, string>();
@@ -914,7 +911,7 @@ namespace YunkuEntSDK
         /// <param name="fullpath"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public string DelTag(string fullpath, string[] tags)
+        public ReturnResult DelTag(string fullpath, string[] tags)
         {
             string url = UrlApiDelTag;
             var parameter = new Dictionary<string, string>();

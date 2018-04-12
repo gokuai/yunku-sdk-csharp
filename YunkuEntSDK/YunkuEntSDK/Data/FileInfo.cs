@@ -16,5 +16,7 @@ namespace YunkuEntSDK.Data
         public long Filesize { get; set; }
 
         public string Hash { get; set; }
+
+        public string UploadServer { get; set; }
     }
 }

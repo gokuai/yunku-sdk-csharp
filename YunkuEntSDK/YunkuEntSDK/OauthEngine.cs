@@ -43,7 +43,7 @@ namespace YunkuEntSDK
         public string Token { internal set; get; }
 
 
-        public string AccessToken(string username, string password)
+        public ReturnResult AccessToken(string username, string password)
         {
             string url = UrlApiToken;
             var parameter = new Dictionary<string, string>();
@@ -63,14 +63,13 @@ namespace YunkuEntSDK
             parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("sign", GenerateSign(parameter));
 
-            string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-            ReturnResult returnResult = ReturnResult.Create(result);
-            LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + result);
+            ReturnResult result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + result.ToJsonString());
 
-            if (returnResult.Code == (int)HttpStatusCode.OK)
+            if (result.Code == (int)HttpStatusCode.OK)
             {
                 LogPrint.Print(Log_Tag + "==>accessToken:==>StatusCode:200");
-                OauthData data = OauthData.Create(returnResult.Result);
+                OauthData data = OauthData.Create(result.Body);
                 Token = data.Token;
             }
             return result;
@@ -111,12 +110,11 @@ namespace YunkuEntSDK
             parameter.Add("client_id", _clientId);
             parameter.Add("sign", GenerateSign(parameter));
 
-            string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-            ReturnResult returnResult = ReturnResult.Create(result);
-            OauthData data = OauthData.Create(returnResult.Result);
+            ReturnResult result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            OauthData data = OauthData.Create(result.Body);
             if (data != null)
             {
-                data.Code = returnResult.Code;
+                data.Code = result.Code;
                 if (data.Code == (int)HttpStatusCode.OK)
                 {
                     Token = data.Token;
@@ -152,17 +150,15 @@ namespace YunkuEntSDK
             parameter.Add("sign", GenerateSign(parameter, secret, ignoreKeys));
         }
 
-        string IAuthRequest.SendRequestWithAuth(string url, RequestType method, Dictionary<string, string> parameter, Dictionary<string, string> headParameter, List<string> ignoreKeys)
+        ReturnResult IAuthRequest.SendRequestWithAuth(string url, RequestType method, Dictionary<string, string> parameter, Dictionary<string, string> headParameter, List<string> ignoreKeys)
         {
             var request = new HttpRequest { RequestUrl = url };
             request.AppendParameter(parameter);
             request.AppendHeaderParameter(headParameter);
             request.RequestMethod = method;
-            request.Request();
-
-            ReturnResult returnResult = ReturnResult.Create(request.Result);
-            string returnString = ReturnResult.Create(request.Result).Result;
-            if (returnResult.Code == (int)HttpStatusCode.Unauthorized)
+            ReturnResult result = request.Request();
+            
+            if (result.Code == (int)HttpStatusCode.Unauthorized)
             {
                 RefreshToken();
                 ReSignParams(parameter, ignoreKeys);
@@ -171,10 +167,9 @@ namespace YunkuEntSDK
                 requestAgain.AppendParameter(parameter);
                 requestAgain.AppendHeaderParameter(headParameter);
                 requestAgain.RequestMethod = method;
-                requestAgain.Request();
-                returnString = requestAgain.Result;
+                result = requestAgain.Request();
             }
-            return returnString;
+            return result;
         }
     }
 }

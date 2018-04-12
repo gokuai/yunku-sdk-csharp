@@ -29,7 +29,7 @@ namespace YunkuEntSDK.Net
             RequestUrl = "";
             _parameter = new Dictionary<string, string>();
             _headParameter = new Dictionary<string, string>();
-            RequestMethod = RequestType.Get; //默认请求方式为GET方式
+            RequestMethod = RequestType.Get;
         }
 
         /// <summary>
@@ -49,36 +49,6 @@ namespace YunkuEntSDK.Net
         ///     内容类型，post提交使用，默认为 application/x-www-form-urlencoded
         /// </summary>
         public string ContentType { get; set; }
-
-        /// <summary>
-        ///     请求返回结果
-        /// </summary>
-        public string Result { get; private set; }
-
-
-        /// <summary>
-        ///     Http请求指代
-        /// </summary>
-        /// <param name="sender">发送者</param>
-        /// <param name="e">发送所带的参数</param>
-        public delegate void HttpResquestEventHandler(object sender, HttpEventArgs e);
-
-        /// <summary>
-        ///     Http请求完成事件
-        /// </summary>
-        public event HttpResquestEventHandler HttpCompleted;
-
-        /// <summary>
-        ///     触发HTTP请求完成方法
-        /// </summary>
-        /// <param name="e">事件参数</param>
-        public void OnHttpCompleted(HttpEventArgs e)
-        {
-            if (HttpCompleted != null)
-            {
-                HttpCompleted(this, e);
-            }
-        }
 
         /// <summary>
         ///     请求URL地址
@@ -112,17 +82,15 @@ namespace YunkuEntSDK.Net
             }
         }
 
-        public void Request()
+        public ReturnResult Request()
         {
-            
-                switch (RequestMethod)
+            if (RequestMethod == RequestType.Get)
             {
-                case RequestType.Get:
-                    GetRequest();
-                    break;
-                default:
-                    DefautRequest();
-                    break;
+                return GetRequest();
+            }
+            else
+            {
+                return DefautRequest();
             }
         }
 
@@ -130,7 +98,7 @@ namespace YunkuEntSDK.Net
         /// <summary>
         ///     默认请求方式
         /// </summary>
-        private void DefautRequest()
+        private ReturnResult DefautRequest()
         {
             var myurl = new Uri(RequestUrl);
             var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
@@ -188,14 +156,14 @@ namespace YunkuEntSDK.Net
                 }
             }
 
-            Result = GetResponeResult(webRequest);
+            ReturnResult result = GetResponeResult(webRequest);
            
             _parameter.Clear();
             _headParameter.Clear();
-
+            return result;
         }
 
-        private string GetResponeResult(HttpWebRequest webRequest)
+        private ReturnResult GetResponeResult(HttpWebRequest webRequest)
         {
             string result = "";
             int code;
@@ -231,22 +199,18 @@ namespace YunkuEntSDK.Net
                 {
                 }
                 code = (int)response.StatusCode;
-
-
-
             }
             return new ReturnResult()
             {
                 Code = code,
-                Result = result
-
-            }.ToJsonString(); ;
+                Body = result
+            };
         }
 
         /// <summary>
         ///     Get请求
         /// </summary>
-        private void GetRequest()
+        private ReturnResult GetRequest()
         {
             string strrequesturl = RequestUrl;
             string parastring = GetParemeterString();
@@ -263,12 +227,12 @@ namespace YunkuEntSDK.Net
             webRequest.Method = "GET";
             setHeaderCollection(webRequest.Headers);
 
-            Result = GetResponeResult(webRequest);
-
+            ReturnResult result = GetResponeResult(webRequest);
             
             //清空参数列表
             _parameter.Clear();
             _headParameter.Clear();
+            return result;
         }
 
         /// <summary>

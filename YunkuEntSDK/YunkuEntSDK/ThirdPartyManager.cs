@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
@@ -36,7 +37,7 @@ namespace YunkuEntSDK
         /// <param name="contactEmail"></param>
         /// <param name="contactAddress"></param>
         /// <returns></returns>
-        public string CreateEnt(string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
+        public ReturnResult CreateEnt(string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
         {
             return CreateEnt(null, entName, contactName, contactMobile, contactEmail, contactAddress);
         }
@@ -51,7 +52,7 @@ namespace YunkuEntSDK
         /// <param name="contactEmail"></param>
         /// <param name="contactAddress"></param>
         /// <returns></returns>
-        public string CreateEnt(IDictionary<string, string> dic, string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
+        public ReturnResult CreateEnt(IDictionary<string, string> dic, string entName, string contactName, string contactMobile, string contactEmail, string contactAddress)
         {
             string url = UrlApiCreateEnt;
             var parameter = new Dictionary<string, string>();
@@ -79,7 +80,7 @@ namespace YunkuEntSDK
         /// 获取企业信息
         /// </summary>
         /// <returns></returns>
-        public string GetEntInfo()
+        public ReturnResult GetEntInfo()
         {
             string url = UrlApiEntInfo;
             var parameter = new Dictionary<string, string>();
@@ -97,7 +98,7 @@ namespace YunkuEntSDK
         /// <param name="space"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        public string OrderSubscribe(int memberCount, int space, int month)
+        public ReturnResult OrderSubscribe(int memberCount, int space, int month)
         {
             return Order(Subscribe, memberCount, space, month);
         }
@@ -108,7 +109,7 @@ namespace YunkuEntSDK
         /// <param name="memberCount"></param>
         /// <param name="space"></param>
         /// <returns></returns>
-        public string OrderUpgrade(int memberCount, int space)
+        public ReturnResult OrderUpgrade(int memberCount, int space)
         {
             return Order(Upgrade, memberCount, space, 0);
         }
@@ -118,7 +119,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="month"></param>
         /// <returns></returns>
-        public string OrderRenew(int month)
+        public ReturnResult OrderRenew(int month)
         {
             return Order(Renew, -1, 0, month);
         }
@@ -127,7 +128,7 @@ namespace YunkuEntSDK
         /// 退订
         /// </summary>
         /// <returns></returns>
-        public string OrderUnsubscribe()
+        public ReturnResult OrderUnsubscribe()
         {
             return Order(Unsubscribe, -1, 0, 0);
         }
@@ -140,7 +141,7 @@ namespace YunkuEntSDK
         /// <param name="space"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        public string Order(string type, int memberCount, int space, int month)
+        public ReturnResult Order(string type, int memberCount, int space, int month)
         {
             string url = UrlApiOrder;
             var parameter = new Dictionary<string, string>();
@@ -175,7 +176,7 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="ticket"></param>
         /// <returns></returns>
-        public string GetSsoUrl(string ticket)
+        public ReturnResult GetSsoUrl(string ticket)
         {
             string url = UrlApiGetSsO;
             var parameter = new Dictionary<string, string>();

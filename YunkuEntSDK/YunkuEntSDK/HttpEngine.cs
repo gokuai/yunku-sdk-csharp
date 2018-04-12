@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
@@ -25,7 +26,7 @@ namespace YunkuEntSDK
         public class RequestEvents
         {
             public int ApiID { get; set; }
-            public string Result { get; set; }
+            public ReturnResult Result { get; set; }
         }
 
         public delegate void RequestEventHanlder(object sender, RequestEvents e);
@@ -117,13 +118,13 @@ namespace YunkuEntSDK
                 return this;
             }
 
-            public string ExecuteSync()
+            public ReturnResult ExecuteSync()
             {
                 CheckNecessaryParams(_url, _method);
 
                 if (!Util.IsNetworkAvailableEx())
                 {
-                    return "";
+                    return null;
                 }
 
                 if (_checkAuth)
@@ -156,8 +157,7 @@ namespace YunkuEntSDK
                 {
                     request.Content = _stream;
                 }
-                request.Request();
-                return request.Result;
+                return request.Request();
             }
 
 
@@ -168,7 +168,7 @@ namespace YunkuEntSDK
 
                 Thread thread = new Thread(() =>
                 {
-                    string result = ExecuteSync();
+                    ReturnResult result = ExecuteSync();
                     context.Post(state =>
                     {
                         RequestCompleted?.Invoke(this, new RequestEvents() { Result = result, ApiID = ApiID });

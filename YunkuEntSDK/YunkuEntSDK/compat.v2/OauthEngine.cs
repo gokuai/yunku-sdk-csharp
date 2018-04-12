@@ -50,7 +50,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public string AccessToken(string username, string password)
+        public ReturnResult AccessToken(string username, string password)
         {
             string url = UrlApiToken;
             var parameter = new Dictionary<string, string>();
@@ -70,17 +70,16 @@ namespace YunkuEntSDK.compat.v2
             parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("sign", GenerateSign(parameter));
 
-            string result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-            ReturnResult returnResult = ReturnResult.Create(result);
-            LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + result);
+            ReturnResult returnResult = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + returnResult.ToJsonString());
 
             if (returnResult.Code == (int)HttpStatusCode.OK)
             {
                 LogPrint.Print(Log_Tag + "==>accessToken:==>StatusCode:200");
-                OauthData data = OauthData.Create(returnResult.Result);
+                OauthData data = OauthData.Create(returnResult.Body);
                 Token = data.Token;
             }
-            return result;
+            return returnResult;
         }
 
         protected void AddAuthParams(Dictionary<string, string> parameter)

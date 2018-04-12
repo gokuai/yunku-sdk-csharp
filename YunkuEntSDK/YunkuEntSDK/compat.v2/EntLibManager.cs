@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
 using YunkuEntSDK.UtilClass;
 
@@ -49,7 +50,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="storagePointName"></param>
         /// <param name="orgDesc"></param>
         /// <returns></returns>
-        public string Create(string orgName, string orgCapacity, string storagePointName, string orgLogo)
+        public ReturnResult Create(string orgName, string orgCapacity, string storagePointName, string orgLogo)
         {
             string url = UrlApiCreateLib;
             var parameter = new Dictionary<string, string>();
@@ -66,7 +67,7 @@ namespace YunkuEntSDK.compat.v2
         /// 获取企业库列表
         /// </summary>
         /// <returns></returns>
-        public string GetLibList()
+        public ReturnResult GetLibList()
         {
             return GetLibList(0);
         }
@@ -75,7 +76,7 @@ namespace YunkuEntSDK.compat.v2
         /// 获取指定成员参与的库列表
         /// </summary>
         /// <returns></returns>
-        public string GetLibList(int memberId)
+        public ReturnResult GetLibList(int memberId)
         {
             string url = UrlApiGetLibList;
             var parameter = new Dictionary<string, string>();
@@ -95,7 +96,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="title"></param>
         /// <param name="linkUrl"></param>
         /// <returns></returns>
-        public string Bind(int orgId, string title, string linkUrl)
+        public ReturnResult Bind(int orgId, string title, string linkUrl)
         {
             string url = UrlApiBind;
             var parameter = new Dictionary<string, string>();
@@ -112,7 +113,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="orgClientId"></param>
         /// <returns></returns>
-        public string UnBind(string orgClientId)
+        public ReturnResult UnBind(string orgClientId)
         {
             string url = UrlApiUnbind;
             var parameter = new Dictionary<string, string>();
@@ -129,7 +130,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="size"></param>
         /// <param name="orgId"></param>
         /// <returns></returns>
-        public string GetMembers(int start, int size, int orgId)
+        public ReturnResult GetMembers(int start, int size, int orgId)
         {
             string url = UrlApiGetMembers;
             var parameter = new Dictionary<string, string>();
@@ -148,7 +149,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="type"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public string GetMember(int orgId, MemberType type, string[] ids)
+        public ReturnResult GetMember(int orgId, MemberType type, string[] ids)
         {
             string url = UrlApiGetMembers;
             var parameter = new Dictionary<string, string>();
@@ -168,7 +169,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="roleId"></param>
         /// <param name="memberIds"></param>
         /// <returns></returns>
-        public string AddMembers(int orgId, int roleId, int[] memberIds)
+        public ReturnResult AddMembers(int orgId, int roleId, int[] memberIds)
         {
             string url = UrlApiAddMembers;
             var parameter = new Dictionary<string, string>();
@@ -187,7 +188,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="roleId"></param>
         /// <param name="memberIds"></param>
         /// <returns></returns>
-        public string SetMemberRole(int orgId, int roleId, int[] memberIds)
+        public ReturnResult SetMemberRole(int orgId, int roleId, int[] memberIds)
         {
             string url = UrlApiSetMemberRole;
             var parameter = new Dictionary<string, string>();
@@ -205,7 +206,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="orgId"></param>
         /// <param name="memberIds"></param>
         /// <returns></returns>
-        public string DelMember(int orgId, int[] memberIds)
+        public ReturnResult DelMember(int orgId, int[] memberIds)
         {
             string url = UrlApiDelMember;
             var parameter = new Dictionary<string, string>();
@@ -221,7 +222,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="orgId"></param>
         /// <returns></returns>
-        public string GetGroups(int orgId)
+        public ReturnResult GetGroups(int orgId)
         {
             string url = UrlApiGetGroups;
             var parameter = new Dictionary<string, string>();
@@ -238,7 +239,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="groupId"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public string AddGroup(int orgId, int groupId, int roleId)
+        public ReturnResult AddGroup(int orgId, int groupId, int roleId)
         {
             string url = UrlApiAddGroup;
             var parameter = new Dictionary<string, string>();
@@ -256,7 +257,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="orgId"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public string DelGroup(int orgId, int groupId)
+        public ReturnResult DelGroup(int orgId, int groupId)
         {
             string url = UrlApiDelGroup;
             var parameter = new Dictionary<string, string>();
@@ -274,7 +275,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="groupId"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public string SetGroupRole(int orgId, int groupId, int roleId)
+        public ReturnResult SetGroupRole(int orgId, int groupId, int roleId)
         {
             string url = UrlApiSetGroupRole;
             var parameter = new Dictionary<string, string>();
@@ -291,7 +292,7 @@ namespace YunkuEntSDK.compat.v2
         /// </summary>
         /// <param name="orgClientId"></param>
         /// <returns></returns>
-        public string Destroy(string orgClientId)
+        public ReturnResult Destroy(string orgClientId)
         {
             string url = UrlApiDestroy;
             var parameter = new Dictionary<string, string>();
@@ -310,7 +311,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="orgDesc"></param>
         /// <param name="orgLogo"></param>
         /// <returns></returns>
-        public string Set(int orgId, string orgName, string orgCapacity, string orgLogo)
+        public ReturnResult Set(int orgId, string orgName, string orgCapacity, string orgLogo)
         {
             string url = UrlApiSet;
             var parameter = new Dictionary<string, string>();
@@ -340,7 +341,7 @@ namespace YunkuEntSDK.compat.v2
         /// <param name="orgId"></param>
         /// <returns></returns>
 
-        public string GetInfo(int orgId)
+        public ReturnResult GetInfo(int orgId)
         {
             string url = UrlApiGetInfo;
             var parameter = new Dictionary<string, string>();

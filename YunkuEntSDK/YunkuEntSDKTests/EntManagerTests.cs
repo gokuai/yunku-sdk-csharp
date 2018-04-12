@@ -19,153 +19,136 @@ namespace YunkuEntSDK.Tests
         public void GetMembersTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetMembers(0, 99);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetMembers(0, 99);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetMemberByIdTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetMemberById(4);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetMemberById(4);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetMemberByOutIdTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetMemberByOutId("$:LWCP_v1:$ypc3i0Op0Tn0Ge2GvyShWA==");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetMemberByOutId("$:LWCP_v1:$ypc3i0Op0Tn0Ge2GvyShWA==");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetMemberByAccountTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetMemberByAccount("6905656124312207");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetMemberByAccount("6905656124312207");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetGroupsTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetGroups();
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetGroups();
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetRolesTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetRoles();
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetRoles();
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetMemberFileLinkTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetMemberFileLink(4, true);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetMemberFileLink(4, true);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void AddSyncMemberTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.AddSyncMember("MemberTest1", "Member1", "Member1", "", "", "");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.AddSyncMember("MemberTest1", "Member1", "Member1", "", "", "");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void SetSyncMemberStateTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.SetSyncMemberState("", true);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.SetSyncMemberState("", true);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void DelSyncMemberTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.DelSyncMember(new[] { "MemberTest", "MemberTest1", "MemberTest2" });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.DelSyncMember(new[] { "MemberTest", "MemberTest1", "MemberTest2" });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void AddSyncGroupTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.AddSyncGroup("ParentGroup", "ParentGroup", "");
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.AddSyncGroup("ParentGroup", "ParentGroup", "");
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void DelSyncGroupTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.DelSyncGroup(new[] { "ParentGroup", "GroupTest" });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.DelSyncGroup(new[] { "ParentGroup", "GroupTest" });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void AddSyncGroupMemberTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.AddSyncGroupMember("GroupTest", new[] { "MemberTest1" });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.AddSyncGroupMember("GroupTest", new[] { "MemberTest1" });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void DelSyncGroupMemberTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.DelSyncGroupMember("ParentGroup", new[] { "MemberTest2", "MemberTest3" });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.DelSyncGroupMember("ParentGroup", new[] { "MemberTest2", "MemberTest3" });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void GetGroupMembersTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.GetGroupMembers(1317448, 0, 3, true);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.GetGroupMembers(1317448, 0, 3, true);
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void DelSyncMemberGroupTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.DelSyncMemberGroup(new[] { "MemberTest2" });
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.DelSyncMemberGroup(new[] { "MemberTest2" });
+            Assert.AreEqual(200, result.Code);
         }
 
         [TestMethod()]
         public void AddSyncAdminTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            string returnString = ent.AddSyncAdmin("$:LWCP_v1:$ypc3i0Op0Tn0Ge2GvyShWA==", "", false);
-            ReturnResult resultString = ReturnResult.Create(returnString);
-            Assert.AreEqual(200, resultString.Code);
+            ReturnResult result = ent.AddSyncAdmin("$:LWCP_v1:$ypc3i0Op0Tn0Ge2GvyShWA==", "", false);
+            Assert.AreEqual(200, result.Code);
         }
 
     }
