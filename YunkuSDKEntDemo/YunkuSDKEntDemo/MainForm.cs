@@ -93,7 +93,19 @@ namespace YunkuSDKEntDemo
             //DeserializeReturn(entFileManager.CreateFolder("test", ""));
 
             //分块上传，默认分块上传大小为10MB
-            //FileInfo info = entFileManager.UploadByBlock("testRangSize.txt", "", 0, @"D:\testRangSize.txt", true);
+            //try
+            //{
+            //    FileInfo info = entFileManager.UploadByBlock("testRangSize.txt", "", 0, @"D:\testRangSize.txt", true);
+            //}
+            //catch (YunkuException ex)
+            //{
+            //    TB_Result.Text += "error:" + ex.Message + " ";
+            //    DeserializeReturn(ex.Result);
+            //}
+            //catch (Exception ex)
+            //{
+            //    TB_Result.Text += "upload error:" + ex.Message + "\r\n";
+            //}
 
             //异步方式分块上传，默认分块上传大小为10MB
             //entFileManager.UploadByBlockAsync("testRangSize.txt", "", 0,
