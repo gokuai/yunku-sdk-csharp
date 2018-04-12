@@ -130,17 +130,17 @@ namespace YunkuEntSDK.Net
                     return;
                 }
 
-                result = this.UploadReq();
-                if (result == null)
+                long checkSize = this.UploadReq();
+                if (checkSize < 0)
                 {
                     continue;
                 }
-                if (result.Body.Equals(_fileinfo.Filesize.ToString())) //完成上传
+                if (checkSize == _fileinfo.Filesize) //完成上传
                 {
                     break;
                 }
 
-                long offset = long.Parse(result.Body);
+                long offset = checkSize;
                 long rang_end = 0;
                 long crc32 = 0;
                 string range = "";
@@ -281,24 +281,29 @@ namespace YunkuEntSDK.Net
         }
 
         /// <summary>
-        /// 传输结束
+        /// 断点续传检查，返回-1表示服务器异常
         /// </summary>
-        public ReturnResult UploadReq()
+        public long UploadReq()
         {
             string url = _fileinfo.UploadServer + UrlUploadReq;
 
             var headParameter = new Dictionary<string, string>();
             headParameter.Add("x-gk-upload-session", _session);
 
-            ReturnResult result = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            long checkSize = 0;
+            ReturnResult result = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            if (result.Code == (int)HttpStatusCode.OK)
+            {
+                long.TryParse(result.Body, out checkSize);
+            }
             if (result.Code >= (int)HttpStatusCode.InternalServerError)
             {
-                return null;
-            } else if (string.IsNullOrEmpty(result.Body))
+                checkSize = -1;
+            } else
             {
                 throw new YunkuException("fail to get upload req", result);
             }
-            return result;
+            return checkSize;
         }
 
         /// <summary>
