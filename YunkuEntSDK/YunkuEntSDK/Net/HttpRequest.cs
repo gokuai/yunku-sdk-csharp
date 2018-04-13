@@ -165,46 +165,21 @@ namespace YunkuEntSDK.Net
 
         private ReturnResult GetResponeResult(HttpWebRequest webRequest)
         {
-            string result = "";
-            int code;
-            try
+            ReturnResult result = new ReturnResult();
+            using (var response = (HttpWebResponse)webRequest.GetResponse())
             {
-                using (var response = (HttpWebResponse)webRequest.GetResponse())
+                // 服务器返回成功消息
+                result.Code = (int)response.StatusCode;
+                using (Stream stream = response.GetResponseStream())
                 {
-                    // 服务器返回成功消息
-                    code = (int)response.StatusCode;
-                    using (Stream stream = response.GetResponseStream())
+                    using (var sr = new StreamReader(stream))
                     {
-                        using (var sr = new StreamReader(stream))
-                        {
-                            result = sr.ReadToEnd();
-                        }
+                        result.Body = sr.ReadToEnd();
                     }
                 }
             }
-            catch (WebException ex)
-            {
-                var response = ((HttpWebResponse)ex.Response);
-                try
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            result = reader.ReadToEnd();
-                        }
-                    }
-                }
-                catch (WebException)
-                {
-                }
-                code = (int)response.StatusCode;
-            }
-            return new ReturnResult()
-            {
-                Code = code,
-                Body = result
-            };
+
+            return result;
         }
 
         /// <summary>
@@ -284,7 +259,7 @@ namespace YunkuEntSDK.Net
                         {
                             continue;
                         }
-                        header[item.Key] = item.Value;
+                        header[item.Key] = Uri.EscapeDataString(item.Value);
                     }
                 }
             }
