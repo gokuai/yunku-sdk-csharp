@@ -98,7 +98,6 @@ namespace YunkuEntSDK.Net
         /// <param name="item"></param>
         private void StartUpload(bool async)
         {
-            int code;
             ReturnResult result;
             _fileinfo.Filename = Util.GetFileNameFromPath(_fileinfo.Fullpath);
             _fileinfo.Filehash = Util.CaculateFileHashCode(_stream);
@@ -120,12 +119,12 @@ namespace YunkuEntSDK.Net
                 
                 LogPrint.Print("upload server: " + _fileinfo.UploadServer);
 
-                result = this.UploadInit(_fileinfo.Hash, _fileinfo.Filename, _fileinfo.Fullpath, _fileinfo.Filehash, _fileinfo.Filesize);
+                result = this.UploadInit();
                 if (result == null)
                 {
                     continue;
                 }
-                if (result.Code == 202) //秒传
+                if (result.Code == (int)HttpStatusCode.Accepted) //秒传
                 {
                     return;
                 }
@@ -140,11 +139,14 @@ namespace YunkuEntSDK.Net
                     break;
                 }
 
+                long buflen;
                 long offset = checkSize;
-                long rang_end = 0;
-                long crc32 = 0;
-                string range = "";
+                long rang_end;
+                long crc32;
+                string range;
                 bool uploadPartErr = false;
+                int code;
+
                 _stream.Seek(offset, SeekOrigin.Begin);
 
                 while (offset < _fileinfo.Filesize - 1)
@@ -158,22 +160,11 @@ namespace YunkuEntSDK.Net
                         });
                     }
 
-                    byte[] buffer;
-                    if (offset + _blockSize >= _fileinfo.Filesize)
-                    {
-                        int length_end = (int)(_fileinfo.Filesize - offset);
-                        buffer = new byte[length_end];
-                        _stream.Read(buffer, 0, length_end);
-                        crc32 = CRC32.Compute(buffer);
-                        rang_end = _fileinfo.Filesize - 1;
-                    }
-                    else
-                    {
-                        buffer = new byte[_blockSize];
-                        _stream.Read(buffer, 0, _blockSize);
-                        crc32 = CRC32.Compute(buffer);
-                        rang_end = offset + buffer.Length - 1;
-                    }
+                    buflen = offset + _blockSize > _fileinfo.Filesize ? _fileinfo.Filesize - offset : _blockSize;
+                    byte[] buffer = new byte[buflen];
+                    _stream.Read(buffer, 0, (int)buflen);
+                    crc32 = CRC32.Compute(buffer);
+                    rang_end = offset + buflen - 1;
                     range = offset + "-" + rang_end;
 
                     result = this.UploadPart(range, new MemoryStream(buffer), crc32);
@@ -181,11 +172,11 @@ namespace YunkuEntSDK.Net
 
                     if (code == (int)HttpStatusCode.OK)
                     {
-                        offset += _blockSize;
+                        offset += buflen;
                     }
                     else if (code == (int)HttpStatusCode.Accepted)
                     {
-                        uploadPartErr = true;
+                        //uploadPartErr = true;
                         break;
                     }
                     else if (code >= (int)HttpStatusCode.InternalServerError)
@@ -201,9 +192,8 @@ namespace YunkuEntSDK.Net
                     else if (code == (int)HttpStatusCode.Conflict)
                     {
                         var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(result.Body);
-                        long part_range_start = Convert.ToInt64(json["expect"]);
-                        offset = part_range_start;
-                        _stream.Seek(part_range_start, SeekOrigin.Begin);
+                        offset = Convert.ToInt64(json["expect"]);
+                        _stream.Seek(offset, SeekOrigin.Begin);
                     }
                     else
                     {
@@ -216,7 +206,6 @@ namespace YunkuEntSDK.Net
                 }
             }
             this.UploadFinish();
-            return;
         }
 
         /// <summary>
@@ -245,19 +234,15 @@ namespace YunkuEntSDK.Net
         /// <summary>
         /// 上传初始化
         /// </summary>
-        /// <param name="hash"></param>
-        /// <param name="filename"></param>
-        /// <param name="filehash"></param>
-        /// <param name="filesize"></param>
-        private ReturnResult UploadInit(string hash, string filename, string fullpath, string filehash, long filesize)
+        private ReturnResult UploadInit()
         {
             string url = _fileinfo.UploadServer + UrlUploadInit + "?org_client_id=" + _orgClientId;
 
             var headParameter = new Dictionary<string, string>();
-            headParameter.Add("x-gk-upload-pathhash", hash);
-            headParameter.Add("x-gk-upload-filename", filename);
-            headParameter.Add("x-gk-upload-filehash", filehash);
-            headParameter.Add("x-gk-upload-filesize", filesize.ToString());
+            headParameter.Add("x-gk-upload-pathhash", _fileinfo.Hash);
+            headParameter.Add("x-gk-upload-filename", _fileinfo.Filename);
+            headParameter.Add("x-gk-upload-filehash", _fileinfo.Filehash);
+            headParameter.Add("x-gk-upload-filesize", _fileinfo.Filesize.ToString());
 
             ReturnResult result = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
             if (result.Code == (int)HttpStatusCode.OK)
@@ -273,7 +258,7 @@ namespace YunkuEntSDK.Net
             {
                 return null;
             }
-            else if (result.Code != 202)
+            else if (result.Code != (int)HttpStatusCode.Accepted)
             {
                 throw new YunkuException("fail to init upload", result);
             }
@@ -283,7 +268,7 @@ namespace YunkuEntSDK.Net
         /// <summary>
         /// 断点续传检查，返回-1表示服务器异常
         /// </summary>
-        public long UploadReq()
+        private long UploadReq()
         {
             string url = _fileinfo.UploadServer + UrlUploadReq;
 
@@ -311,7 +296,7 @@ namespace YunkuEntSDK.Net
         /// <param name="range"></param>
         /// <param name="data"></param>
         /// <param name="crc32"></param>
-        private ReturnResult UploadPart(String range, MemoryStream data, long crc32)
+        private ReturnResult UploadPart(String range, Stream data, long crc32)
         {
             string url = _fileinfo.UploadServer + UrlUploadPart;
 

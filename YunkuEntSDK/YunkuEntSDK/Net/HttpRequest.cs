@@ -149,8 +149,7 @@ namespace YunkuEntSDK.Net
 
                     if (Content != null)
                     {
-                        byte[] bytes = Util.ReadToEnd(Content);
-                        stream.Write(bytes, 0, bytes.Length);
+                        Content.CopyTo(stream);
                         stream.Flush();
                     }
                 }
