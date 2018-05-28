@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
@@ -13,9 +12,6 @@ namespace YunkuEntSDK
 
         private static string OauthHost = Config.WebHost;
         private static string UrlApiToken = OauthHost + "/oauth2/token2";
-
-
-        protected bool _isEnt;
         protected string _tokenType;
         protected string _refreshToken;
 
@@ -25,14 +21,12 @@ namespace YunkuEntSDK
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="clientId"></param>
-        /// <param name="clientSecret"></param>
-        internal OauthEngine(string clientId, string clientSecret, bool isEnt) : base(clientId, clientSecret)
+        /// <param name="secret"></param>
+        internal OauthEngine(string clientId, string secret) : base(clientId, secret)
         {
-            _isEnt = isEnt;
-            _tokenType = isEnt ? "ent" : "";
         }
 
-        internal OauthEngine(string clientId, string clientSecret, bool isEnt, string token) : this(clientId, clientSecret, isEnt)
+        internal OauthEngine(string clientId, string secret, string token) : base(clientId, secret)
         {
             Token = token;
         }
@@ -58,12 +52,8 @@ namespace YunkuEntSDK
                 passwordEncode = MD5Core.GetHashString(password);
             }
             parameter.Add("password", passwordEncode);
-            parameter.Add("client_id", _clientId);
-            parameter.Add("grant_type", _isEnt ? "ent_password" : "password");
-            parameter.Add("dateline", Util.GetUnixDataline() + "");
-            parameter.Add("sign", GenerateSign(parameter));
-
-            ReturnResult result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            parameter.Add("grant_type", "password");
+            ReturnResult result = new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
             LogPrint.Print(Log_Tag + "==>accessToken:==>result:" + result.ToJsonString());
 
             if (result.Code == (int)HttpStatusCode.OK)
@@ -79,12 +69,12 @@ namespace YunkuEntSDK
         /// 添加认证参数
         /// </summary>
         /// <param name="parameter"></param>
-        internal void AddAuthParams(Dictionary<string, string> parameter)
+        internal void AddAuthParams(IDictionary<string, string> parameter)
         {
             if (Token == null)
             {
                 parameter.Add("client_id", _clientId);
-                parameter.Add("dateline", Util.GetUnixDataline() + "");
+                parameter.Add("dateline", Util.GetUnixDataline().ToString());
             }
             else
             {
@@ -107,10 +97,7 @@ namespace YunkuEntSDK
             var parameter = new Dictionary<string, string>();
             parameter.Add("grant_type", "refresh_token");
             parameter.Add("refresh_token", _refreshToken);
-            parameter.Add("client_id", _clientId);
-            parameter.Add("sign", GenerateSign(parameter));
-
-            ReturnResult result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            ReturnResult result = new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
             OauthData data = OauthData.Create(result.Body);
             if (data != null)
             {
@@ -131,9 +118,9 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="parameter"></param>
         /// <param name="ignoreKeys"></param>
-        private void ReSignParams(Dictionary<string, string> parameter, List<string> ignoreKeys)
+        private void ReSignParams(IDictionary<string, string> parameter)
         {
-            ReSignParams(parameter, _clientSecret, ignoreKeys);
+            ReSignParams(parameter, _secret);
         }
 
         /// <summary>
@@ -142,31 +129,29 @@ namespace YunkuEntSDK
         /// <param name="parameter"></param>
         /// <param name="secret"></param>
         /// <param name="ignoreKeys"></param>
-        protected void ReSignParams(Dictionary<string, string> parameter, string secret, List<string> ignoreKeys)
+        protected void ReSignParams(IDictionary<string, string> parameter, string secret)
         {
-            parameter.Remove("token");
-            parameter.Remove("sign");
             parameter.Add("token", Token);
-            parameter.Add("sign", GenerateSign(parameter, secret, ignoreKeys));
+            parameter.Add("sign", GenerateSign(parameter, secret));
         }
 
-        ReturnResult IAuthRequest.SendRequestWithAuth(string url, RequestType method, Dictionary<string, string> parameter, Dictionary<string, string> headParameter, List<string> ignoreKeys)
+        ReturnResult IAuthRequest.SendRequestWithAuth(string url, RequestType method, IDictionary<string, string> parameter, IDictionary<string, string> headParameter)
         {
-            var request = new HttpRequest { RequestUrl = url };
-            request.AppendParameter(parameter);
-            request.AppendHeaderParameter(headParameter);
-            request.RequestMethod = method;
+            var request = new HttpRequest(url);
+            request.SetParameters(parameter);
+            request.SetHeaders(headParameter);
+            request.Method = method;
             ReturnResult result = request.Request();
             
             if (result.Code == (int)HttpStatusCode.Unauthorized)
             {
                 RefreshToken();
-                ReSignParams(parameter, ignoreKeys);
+                ReSignParams(parameter);
 
-                var requestAgain = new HttpRequest { RequestUrl = url };
-                requestAgain.AppendParameter(parameter);
-                requestAgain.AppendHeaderParameter(headParameter);
-                requestAgain.RequestMethod = method;
+                var requestAgain = new HttpRequest(url);
+                requestAgain.SetParameters(parameter);
+                requestAgain.SetHeaders(headParameter);
+                requestAgain.Method = method;
                 result = requestAgain.Request();
             }
             return result;

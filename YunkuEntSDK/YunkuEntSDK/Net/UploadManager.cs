@@ -4,11 +4,11 @@ using System.IO;
 using System.Net;
 using YunkuEntSDK.UtilClass;
 using YunkuEntSDK.Data;
-
+using System.Threading;
 
 namespace YunkuEntSDK.Net
 {
-    internal class UploadManager : HttpEngine
+    internal class UploadManager
     {
         private const string UrlUploadInit = "/upload_init";
         private const string UrlUploadReq = "/upload_req";
@@ -18,14 +18,13 @@ namespace YunkuEntSDK.Net
 
         private int _blockSize; // 上传分块大小
         private string _session = ""; // 上传session
-        private string _apiUrl = "";
 
-        private readonly string _orgClientId;
+        private EntFileManager _engine;
+
         private string _fullpath;
-        private long _dateline;
         private string _opName;
         private int _opId;
-        private bool _overWrite;
+        private bool _overwrite;
         private Stream _stream;
         private Data.FileInfo _fileinfo = new Data.FileInfo();
 
@@ -34,8 +33,24 @@ namespace YunkuEntSDK.Net
         public delegate void CompletedEventHandler(object sender, CompletedEventArgs e);
         public delegate void ProgressChangeEventHandler(object sender, ProgressEventArgs e);
 
-        public UploadManager(string apiUrl, Stream stream, string fullpath,
-            string opName, int opId, string orgClientId, long dateline, string clientSecret, bool overwrite, int blockSize) : base(orgClientId, clientSecret)
+
+        public UploadManager(int blockSize, EntFileManager engine)
+        {
+            this._blockSize = blockSize;
+            this._engine = engine;
+        }
+
+        public void SetOperator(int opId)
+        {
+            this._opId = opId;
+        }
+
+        public void SetOperator(String opName)
+        {
+            this._opName = opName;
+        }
+
+        public Data.FileInfo Upload(Stream stream, string fullpath, bool overwrite)
         {
             if (!stream.CanRead)
             {
@@ -46,50 +61,48 @@ namespace YunkuEntSDK.Net
             {
                 throw new Exception("stream can not seek");
             }
-
-            _apiUrl = apiUrl;
+            
             _stream = stream;
-            _opName = opName;
-            _opId = opId;
-            _orgClientId = orgClientId;
-            _dateline = dateline;
-            _clientSecret = clientSecret;
-            _overWrite = overwrite;
-            _blockSize = blockSize;
             _fullpath = fullpath;
             _fileinfo.Fullpath = _fullpath;
-        }
-
-        public void UploadAsync(object i)
-        {
-            try
-            {
-                this.StartUpload(true);
-                if (Completed != null)
-                {
-                    Completed(this, new CompletedEventArgs() { Fullpath = _fileinfo.Fullpath, FileInfo = _fileinfo });
-                }
-            }
-            catch (Exception e)
-            {
-                if (Completed != null)
-                {
-                    Completed(this,
-                        new CompletedEventArgs()
-                        {
-                            IsError = true,
-                            ErrorMessage = e.Message,
-                            Fullpath = _fullpath,
-                            FileInfo = _fileinfo
-                        });
-                }
-            }
-        }
-
-        public Data.FileInfo Upload()
-        {
+            _overwrite = overwrite;
             this.StartUpload(false);
             return _fileinfo;
+        }
+
+        public bool UploadAsync(Stream stream, string fullpath, bool overwrite)
+        {
+            _stream = stream;
+            _fullpath = fullpath;
+            _fileinfo.Fullpath = _fullpath;
+            _overwrite = overwrite;
+            WaitCallback callback = new WaitCallback(delegate(object state)
+            {
+                try
+                {
+                    this.StartUpload(true);
+                    if (Completed != null)
+                    {
+                        Completed(this, new CompletedEventArgs() { Fullpath = _fileinfo.Fullpath, FileInfo = _fileinfo });
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (Completed != null)
+                    {
+                        Completed(this,
+                            new CompletedEventArgs()
+                            {
+                                IsError = true,
+                                ErrorMessage = e.Message,
+                                Fullpath = _fullpath,
+                                FileInfo = _fileinfo
+                            });
+                    }
+                }
+            });
+            return ThreadPool.QueueUserWorkItem(callback);
+            
         }
 
         /// <summary>
@@ -105,7 +118,7 @@ namespace YunkuEntSDK.Net
 
             for (int trys = 0; trys <3; trys++)
             {
-                result = this.AddFile();
+                result = this._engine.CreateFile(this._fullpath, this._fileinfo.Filehash, this._fileinfo.Filesize, this._opId, this._opName, this._overwrite);
                 bool shouldUpload = this.DecodeAddFileResult(result);
                 if (!shouldUpload) //秒传
                 {
@@ -236,15 +249,15 @@ namespace YunkuEntSDK.Net
         /// </summary>
         private ReturnResult UploadInit()
         {
-            string url = _fileinfo.UploadServer + UrlUploadInit + "?org_client_id=" + _orgClientId;
+            string url = _fileinfo.UploadServer + UrlUploadInit + "?org_client_id=" + this._engine.GetClientId();
 
-            var headParameter = new Dictionary<string, string>();
-            headParameter.Add("x-gk-upload-pathhash", _fileinfo.Hash);
-            headParameter.Add("x-gk-upload-filename", _fileinfo.Filename);
-            headParameter.Add("x-gk-upload-filehash", _fileinfo.Filehash);
-            headParameter.Add("x-gk-upload-filesize", _fileinfo.Filesize.ToString());
+            var heads = new Dictionary<string, string>();
+            heads.Add("x-gk-upload-pathhash", _fileinfo.Hash);
+            heads.Add("x-gk-upload-filename", _fileinfo.Filename);
+            heads.Add("x-gk-upload-filehash", _fileinfo.Filehash);
+            heads.Add("x-gk-upload-filesize", _fileinfo.Filesize.ToString());
 
-            ReturnResult result = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            ReturnResult result = this._engine.Call(url, RequestType.POST, heads, null, null, true);
             if (result.Code == (int)HttpStatusCode.OK)
             {
                 var json = (IDictionary<string, object>)SimpleJson.DeserializeObject(result.Body);
@@ -272,11 +285,11 @@ namespace YunkuEntSDK.Net
         {
             string url = _fileinfo.UploadServer + UrlUploadReq;
 
-            var headParameter = new Dictionary<string, string>();
-            headParameter.Add("x-gk-upload-session", _session);
+            var heads = new Dictionary<string, string>();
+            heads.Add("x-gk-upload-session", _session);
 
             long checkSize = 0;
-            ReturnResult result = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            ReturnResult result = this._engine.Call(url, RequestType.GET, heads, null, null, true);
             if (result.Code == (int)HttpStatusCode.OK)
             {
                 long.TryParse(result.Body, out checkSize);
@@ -300,13 +313,13 @@ namespace YunkuEntSDK.Net
         {
             string url = _fileinfo.UploadServer + UrlUploadPart;
 
-            var headParameter = new Dictionary<string, string>();
+            var heads = new Dictionary<string, string>();
             //headParameter.Add("Connection", "keep-alive");
-            headParameter.Add("x-gk-upload-session", _session);
-            headParameter.Add("x-gk-upload-range", range);
-            headParameter.Add("x-gk-upload-crc", crc32.ToString());
-
-            return new RequestHelper().SetContent(data).SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Put).ExecuteSync();
+            heads.Add("x-gk-upload-session", _session);
+            heads.Add("x-gk-upload-range", range);
+            heads.Add("x-gk-upload-crc", crc32.ToString());
+            
+            return this._engine.Call(url, RequestType.PUT, heads, null, data, true);
         }
 
         /// <summary>
@@ -316,13 +329,27 @@ namespace YunkuEntSDK.Net
         {
             string url = _fileinfo.UploadServer + UrlUploadFinish;
 
-            var headParameter = new Dictionary<string, string>();
-            headParameter.Add("x-gk-upload-session", _session);
+            var heads = new Dictionary<string, string>();
+            heads.Add("x-gk-upload-session", _session);
+            ReturnResult result = null;
 
-            ReturnResult result = new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-            if (result.Code != (int)HttpStatusCode.OK)
+            int retry = 10;
+            while(retry-- > 0)
             {
-                throw new YunkuException("fail to finish upload", result);
+                result = this._engine.Call(url, RequestType.POST, heads, null, null, true);
+                if (result.Code == (int)HttpStatusCode.Accepted)
+                {
+                    Thread.Sleep(2000);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (!result.IsOK())
+            {
+                throw new YunkuException("fail to call upload_finish", result);
             }
         }
 
@@ -333,38 +360,10 @@ namespace YunkuEntSDK.Net
                 return;
             }
             string url = _fileinfo.UploadServer + UrlUploadAbort;
-            var headParameter = new Dictionary<string, string>();
-            headParameter.Add("x-gk-upload-session", _session);
+            var heads = new Dictionary<string, string>();
+            heads.Add("x-gk-upload-session", _session);
 
-            new RequestHelper().SetHeadParams(headParameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-        }
-
-        private ReturnResult AddFile()
-        {
-            string url = _apiUrl;
-
-            var parameter = new Dictionary<string, string>();
-            parameter.Add("org_client_id", _orgClientId);
-            parameter.Add("dateline", _dateline + "");
-            parameter.Add("fullpath", _fileinfo.Fullpath);
-
-            if (_opId > 0)
-            {
-                parameter.Add("op_id", _opId + "");
-            }
-            else if (!string.IsNullOrEmpty(_opName))
-            {
-                parameter.Add("op_name", _opName);
-            }
-
-            parameter.Add("overwrite", (_overWrite ? 1 : 0) + "");
-            parameter.Add("sign", GenerateSign(parameter));
-
-            parameter.Add("filesize", _fileinfo.Filesize + "");
-            parameter.Add("filehash", _fileinfo.Filehash);
-
-            ReturnResult result = new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
-            return result;
+            this._engine.Call(url, RequestType.POST, heads, null, null, true);
         }
     }
 }

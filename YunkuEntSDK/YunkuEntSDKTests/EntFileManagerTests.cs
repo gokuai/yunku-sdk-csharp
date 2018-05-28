@@ -1,10 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using YunkuEntSDK;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.UtilClass;
 using YunkuEntSDK.Net;
@@ -62,14 +57,6 @@ namespace YunkuEntSDK.Tests
         }
 
         [TestMethod()]
-        public void CreateFileTest()
-        {
-            EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            ReturnResult result = entFile.CreateFile("testVV.txt", "Brandon", "D:\\test.txt");
-            Assert.AreEqual(200, result.Code);
-        }
-
-        [TestMethod()]
         public void UploadByBlockTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
@@ -112,19 +99,10 @@ namespace YunkuEntSDK.Tests
         }
 
         [TestMethod()]
-        public void LinksTest()
+        public void GetLinksTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            ReturnResult result = entFile.Links(true);
-            Assert.AreEqual(200, result.Code);
-        }
-
-        [TestMethod()]
-        public void CreateFileByUrlTest()
-        {
-            EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            ReturnResult result = entFile.CreateFileByUrl("1q.jpg", 0, "Brandon", true,
-                "http://www.sinaimg.cn/dy/slidenews/1_img/2015_27/2841_589214_521618.jpg");
+            ReturnResult result = entFile.GetLinks(true);
             Assert.AreEqual(200, result.Code);
         }
 
@@ -137,10 +115,10 @@ namespace YunkuEntSDK.Tests
         }
 
         [TestMethod()]
-        public void GetServerSiteTest()
+        public void GetServersTest()
         {
             EntFileManager entFile = new EntFileManager(orgClientId, orgClientSecret);
-            ReturnResult result = entFile.GetServerSite("");
+            ReturnResult result = entFile.GetServers("");
             Assert.AreEqual(200, result.Code);
         }
 

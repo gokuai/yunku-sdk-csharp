@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>YunkuEntSDK</RootNamespace>
     <AssemblyName>YunkuEntSDK</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -37,16 +37,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="compat.v2\EntFileManager.cs" />
-    <Compile Include="compat.v2\EntLibManager.cs" />
-    <Compile Include="compat.v2\EntManager.cs" />
-    <Compile Include="compat.v2\HostConfig.cs" />
-    <Compile Include="compat.v2\OauthEngine.cs" />
     <Compile Include="ConfigHelper.cs" />
     <Compile Include="Data\BaseData.cs" />
     <Compile Include="Data\FileInfo.cs" />
@@ -58,6 +52,7 @@
     <Compile Include="Data\SyncMemberData.cs" />
     <Compile Include="Data\YunkuException.cs" />
     <Compile Include="DebugConfig.cs" />
+    <Compile Include="EntEngine.cs" />
     <Compile Include="EntFileManager.cs" />
     <Compile Include="EntManager.cs" />
     <Compile Include="Config.cs" />

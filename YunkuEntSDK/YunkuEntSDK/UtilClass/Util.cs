@@ -338,19 +338,9 @@ namespace YunkuEntSDK.UtilClass
 
         }
 
-
         public static long GetUnixDataline()
         {
             return UnixTimestampConverter.ConvertLocalToTimestamp(DateTime.Now) / 1000;
         }
-
-        public static bool IsNetworkAvailableEx()
-        {
-            //FIXME 这里可以加网络判断执行的方法
-            return true;
-        }
-
-
-
     }
 }

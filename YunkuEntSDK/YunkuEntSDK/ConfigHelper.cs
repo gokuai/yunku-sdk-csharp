@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace YunkuEntSDK
 {
@@ -60,6 +59,15 @@ namespace YunkuEntSDK
         public static void SetHttpTimeout(int seconds)
         {
             Config.HttpTimeout = seconds * 1000;
+        }
+
+        /// <summary>
+        /// 设置出现IO异常时的重试次数，默认不重试
+        /// </summary>
+        /// <param name="retry"></param>
+        public static void SetRetry(int retry)
+        {
+            Config.Retry = retry;
         }
     }
 }

@@ -1,24 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
-using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
     public abstract class HttpEngine : SignAbility
     {
-
         private const string Log_Tag = "HttpEngine";
 
-        protected string _clientId;
-        protected string _clientSecret;
+        public HttpEngine(string clientId, string secret) : base(clientId, secret)
+        {
+        }
 
+        public ReturnResult Call(string url, RequestType method, IDictionary<string, string> headers, IDictionary<string, string> data, Stream stream, bool disableSign)
+        {
+            RequestHelper request = new RequestHelper(this).SetUrl(url).SetMethod(method);
+            if (headers != null && headers.Count > 0)
+            {
+                request.SetHeaders(headers);
+            }
+            if (data != null && data.Count > 0)
+            {
+                request.SetParams(data);
+            }
+            if (stream != null)
+            {
+                request.SetContent(stream);
+            }
+            return request.ExecuteSync(disableSign);
+        }
 
         /// <summary>
         /// 
@@ -31,57 +43,44 @@ namespace YunkuEntSDK
 
         public delegate void RequestEventHanlder(object sender, RequestEvents e);
 
-        public HttpEngine(string clientId, string clientSecret)
+        protected internal class RequestHelper
         {
-            _clientId = clientId;
-            _clientSecret = clientSecret;
-        }
+            protected HttpEngine _engine;
+            protected RequestType _method;
+            protected IDictionary<string, string> _params;
+            protected IDictionary<string, string> _headers;
+            protected string _url;
+            protected bool _checkAuth;
+            
+            protected Stream _stream;
+            protected string _contentType;
 
-        public string GenerateSign(Dictionary<string, string> parameter)
-        {
-            return GenerateSign(parameter, _clientSecret);
-        }
+            public RequestHelper(HttpEngine engine)
+            {
+                this._engine = engine;
+            }
 
-        public string GenerateSign(Dictionary<string, string> parameter, List<string> ignoreKeys)
-        {
-            return GenerateSign(parameter, _clientSecret, ignoreKeys);
-        }
+            //public event RequestEventHanlder RequestCompleted;
 
-
-        internal class RequestHelper
-        {
-            RequestType _method;
-            Dictionary<string, string> _params;
-            Dictionary<string, string> _headParams;
-            string _url;
-            bool _checkAuth;
-
-            List<string> _ignoreKeys;
-            List<byte> _postDateByte;
-            Stream _stream;
-            string _contentType;
-
-            public event RequestEventHanlder RequestCompleted;
-
-            internal RequestHelper SetMethod(RequestType method)
+            public RequestHelper SetMethod(RequestType method)
             {
                 this._method = method;
                 return this;
             }
 
-            internal RequestHelper SetParams(Dictionary<string, string> parameter)
+            public RequestHelper SetParams(IDictionary<string, string> parameter)
             {
                 this._params = parameter;
                 return this;
             }
 
-            internal RequestHelper SetHeadParams(Dictionary<string, string> headParams)
+            public RequestHelper SetHeaders(IDictionary<string, string> headers)
             {
-                this._headParams = headParams;
+                this._headers = headers;
                 return this;
             }
 
-            RequestHelper SetCheckAuth(bool checkAuth)
+            public RequestHelper SetCheckAuth(bool checkAuth)
             {
                 this._checkAuth = checkAuth;
                 return this;
@@ -93,24 +92,11 @@ namespace YunkuEntSDK
                 return this;
             }
 
-            public RequestHelper SetIgnoreKeys(List<string> ignoreKeys)
-            {
-                this._ignoreKeys = ignoreKeys;
-                return this;
-            }
-
-            public RequestHelper SetPostDataByte(List<byte> postDataByte)
-            {
-                this._postDateByte = postDataByte;
-                return this;
-            }
-
             public RequestHelper SetContent(Stream stream)
             {
                 this._stream = stream;
                 return this;
             }
- 
 
             public RequestHelper SetContentType(string contentType)
             {
@@ -120,65 +106,57 @@ namespace YunkuEntSDK
 
             public ReturnResult ExecuteSync()
             {
-                CheckNecessaryParams(_url, _method);
+                return this.ExecuteSync(false);
+            }
 
-                if (!Util.IsNetworkAvailableEx())
-                {
-                    return null;
-                }
+            public ReturnResult ExecuteSync(bool disableSign)
+            {
+                this.CheckNecessaryParams(_url);
+                this.SetCommonParams(disableSign);
 
                 if (_checkAuth)
                 {
                     if (this.GetType().Equals(typeof(IAuthRequest)))
                     {
-                        return ((IAuthRequest)this).SendRequestWithAuth(_url, _method, _params, _headParams, _ignoreKeys);
+                        return ((IAuthRequest)this).SendRequestWithAuth(_url, _method, _params, _headers);
                     }
                 }
 
-                var request = new HttpRequest { RequestUrl = _url };
-                request.RequestMethod = _method;
+                var request = new HttpRequest(this._url);
+                request.Method = _method;
                 if (_params != null && _params.Count > 0)
                 {
-                    request.AppendParameter(_params);
+                    request.SetParameters(_params);
                 }
-                if (_headParams != null && _headParams.Count > 0)
+                if (_headers != null && _headers.Count > 0)
                 {
-                    request.AppendHeaderParameter(_headParams);
+                    request.SetHeaders(_headers);
                 }
                 if (_contentType != null && _contentType.Length > 0)
                 {
                     request.ContentType = _contentType;
                 }
-                if (_postDateByte != null)
-                {
-                    request.PostDataByte = _postDateByte;
-                }
                 if (_stream != null)
                 {
-                    request.Content = _stream;
+                    request.ContentBody = _stream;
                 }
                 return request.Request();
             }
 
-
-            public Thread ExecuteAsync(int ApiID, RequestEventHanlder hanlder)
+            protected virtual void SetCommonParams(bool disableSign)
             {
-                RequestCompleted += hanlder;
-                SynchronizationContext context = SynchronizationContext.Current;
-
-                Thread thread = new Thread(() =>
+                if (disableSign)
                 {
-                    ReturnResult result = ExecuteSync();
-                    context.Post(state =>
-                    {
-                        RequestCompleted?.Invoke(this, new RequestEvents() { Result = result, ApiID = ApiID });
-                    }, null);
-                });
-                thread.Start();
-                return thread;
+                    return;
+                }
+                if (this._params == null)
+                {
+                    this._params = new Dictionary<string, string>();
+                }
+                this._params.Add("sign", this._engine.GenerateSign(this._params));
             }
 
-            private void CheckNecessaryParams(string url, RequestType method)
+            private void CheckNecessaryParams(string url)
             {
                 if (string.IsNullOrEmpty(url))
                 {

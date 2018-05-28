@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace YunkuEntSDK
 {
@@ -14,5 +13,6 @@ namespace YunkuEntSDK
         public static int BlockSize = 10485760;
         public static string Language = "zh-cn";
         public static int HttpTimeout = 3600000;
+        public static int Retry = 0;
     }
 }

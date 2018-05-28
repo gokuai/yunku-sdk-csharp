@@ -11,263 +11,239 @@ namespace YunkuEntSDK.Net
 {
     internal class HttpRequest
     {
-        #region 私有成员
+        private IDictionary<string, string> _headers;
+        private IDictionary<string, string> _parameters;
 
-        private IDictionary<string, string> _headParameter;
-        private IDictionary<string, string> _parameter;
+        public string Url { get; set; }
 
-        #endregion
+        public RequestType Method { get; set; }
 
-        /// <summary>
-        ///     默认构造函数
-        /// </summary>
-        /// <remarks>
-        ///     默认的请求方式的GET
-        /// </remarks>
-        public HttpRequest()
-        {
-            RequestUrl = "";
-            _parameter = new Dictionary<string, string>();
-            _headParameter = new Dictionary<string, string>();
-            RequestMethod = RequestType.Get;
-        }
+        public Stream ContentBody { get; set; }
 
-        /// <summary>
-        /// </summary>
-        public List<byte> PostDataByte { get; set; }
-
-
-        public Stream Content { get; set; }
-
-        //public Stream FileContent
-        //{
-        //    get;
-        //    set;
-        //}
-
-        /// <summary>
-        ///     内容类型，post提交使用，默认为 application/x-www-form-urlencoded
-        /// </summary>
         public string ContentType { get; set; }
 
-        /// <summary>
-        ///     请求URL地址
-        /// </summary>
-        public string RequestUrl { get; set; }
-
-        /// <summary>
-        ///     请求方式
-        /// </summary>
-        public RequestType RequestMethod { get; set; }
-
-        public void AppendParameter(Dictionary<string, string> paramter)
+        public HttpRequest(string url)
         {
-            if (paramter != null)
-            {
-                _parameter = paramter;
-            }
-
+            Url = url;
+            Method = RequestType.GET;
         }
 
-        /// <summary>
-        ///     追加头参数
-        /// </summary>
-        /// <param name="key">追加键</param>
-        /// <param name="value">键对应的值</param>
-        public void AppendHeaderParameter(Dictionary<string, string> headParamter)
+        public void SetParameters(IDictionary<string, string> parameters)
         {
-            if (headParamter != null)
+            if (parameters != null)
             {
-                _headParameter = headParamter;
+                _parameters = parameters;
+            }
+        }
+
+        public void SetHeaders(IDictionary<string, string> headers)
+        {
+            if (headers != null)
+            {
+                _headers = headers;
             }
         }
 
         public ReturnResult Request()
         {
-            if (RequestMethod == RequestType.Get)
+            if (Method == RequestType.GET)
             {
-                return GetRequest();
+                return CreateGetRequest();
             }
             else
             {
-                return DefautRequest();
+                return CreateDefautRequest();
             }
         }
 
-
-        /// <summary>
-        ///     默认请求方式
-        /// </summary>
-        private ReturnResult DefautRequest()
+        private HttpWebRequest CreateRequest()
         {
-            var myurl = new Uri(RequestUrl);
-            var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
-            webRequest.Method = RequestMethod.ToString();
-            webRequest.Timeout = Config.HttpTimeout;
-            webRequest.ReadWriteTimeout = Config.HttpTimeout;
-            webRequest.UserAgent = Config.UserAgent;
-            webRequest.Headers.Add("Accept-Language", Config.Language);
-
+            string url = this.Url;
+            if (this.Method == RequestType.GET)
+            {
+                string query = this.GetParemeterString();
+                if (query.Length > 0)
+                {
+                    url += (url.IndexOf("?") > 0 ? "&" : "?") + query;
+                }
+            }
+            var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+            request.Method = Method.ToString();
+            request.Timeout = Config.HttpTimeout;
+            request.ReadWriteTimeout = Config.HttpTimeout;
+            request.UserAgent = Config.UserAgent;
+            request.Headers.Set("Accept-Language", Config.Language);
             if (!string.IsNullOrEmpty(ContentType))
             {
-                webRequest.ContentType = ContentType;
-            } else if (RequestMethod.Equals(RequestType.Post))
+                request.ContentType = ContentType;
+            }
+            else if (Method.Equals(RequestType.POST))
             {
-                webRequest.ContentType = "application/x-www-form-urlencoded";
+                request.ContentType = "application/x-www-form-urlencoded";
+            }
+            if (Method == RequestType.PUT)
+            {
+                request.KeepAlive = true;
             }
 
-            if (RequestMethod == RequestType.Put)
+            if (this._headers != null && this._headers.Count > 0)
             {
-                webRequest.KeepAlive = true;
+                foreach (var head in this._headers)
+                {
+                    if (head.Value == null)
+                    {
+                        continue;
+                    }
+                    request.Headers.Set(head.Key, Uri.EscapeDataString(head.Value));
+                }
             }
             
-            setHeaderCollection(webRequest.Headers);
+            return request;
+        }
 
-            using (Stream stream = webRequest.GetRequestStream())
+        private ReturnResult CreateDefautRequest()
+        {
+            var request = this.CreateRequest();
+            string parameterstring = this.GetParemeterString();
+            int retry = Config.Retry;
+            while (true)
             {
-                using (var writer = new StreamWriter(stream))
+                try
                 {
-                    string parameterstring = GetParemeterString();
-                    if (parameterstring.Length > 0)
+                    using (Stream stream = request.GetRequestStream())
                     {
-                        writer.Write(GetParemeterString());
-                        writer.Flush();
-                    }
-
-                    if (PostDataByte != null) //msmutipart
-                    {
-                        long count = 0;
-                        foreach (byte b in PostDataByte)
+                        if (parameterstring.Length > 0)
                         {
-                            count++;
-                            if (count % (1024 * 1024 * 100) == 0) LogPrint.Print("uploading" + count);
-
-                            stream.WriteByte(b);
+                            using (var writer = new StreamWriter(stream))
+                            {
+                                writer.Write(parameterstring);
+                                writer.Flush();
+                            }
                         }
-                        stream.Flush();
+
+                        if (ContentBody != null)
+                        {
+                            byte[] buffer = new byte[4096];
+                            int read;
+                            while ((read = ContentBody.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                stream.Write(buffer, 0, read);
+                            }
+                            stream.Flush();
+                        }
                     }
 
-                    if (Content != null)
+                    break;
+                }
+                catch (WebException ex)
+                {
+                    if (ex.Response == null)
                     {
-                        Content.CopyTo(stream);
-                        stream.Flush();
+                        if (retry-- > 0)
+                        {
+                            Thread.Sleep(1000);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
 
-            ReturnResult result = GetResponeResult(webRequest);
-           
-            _parameter.Clear();
-            _headParameter.Clear();
+            ReturnResult result = GetResponeResult(request);
             return result;
         }
 
-        private ReturnResult GetResponeResult(HttpWebRequest webRequest)
+        private WebResponse GetResponse(WebRequest request)
+        {
+            try
+            {
+                return request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response == null)
+                {
+                    throw;
+                }
+                return ex.Response;
+            }
+        }
+
+        private ReturnResult GetResponeResult(HttpWebRequest request)
         {
             ReturnResult result = new ReturnResult();
-            using (var response = (HttpWebResponse)webRequest.GetResponse())
+            int retry = Config.Retry;
+            while (true)
             {
-                // 服务器返回成功消息
-                result.Code = (int)response.StatusCode;
-                using (Stream stream = response.GetResponseStream())
+                try
                 {
-                    using (var sr = new StreamReader(stream))
+                    using (var response = this.GetResponse(request) as HttpWebResponse)
                     {
-                        result.Body = sr.ReadToEnd();
+                        // 服务器返回成功消息
+                        result.Code = (int)response.StatusCode;
+                        using (Stream stream = response.GetResponseStream())
+                        {
+                            using (var sr = new StreamReader(stream))
+                            {
+                                result.Body = sr.ReadToEnd();
+                            }
+                        }
+                    }
+
+                    return result;
+                }
+                catch(WebException)
+                {
+                    if (retry-- > 0)
+                    {
+                        Thread.Sleep(1000);
+                    }
+                    else
+                    {
+                        throw;
                     }
                 }
             }
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Get请求
-        /// </summary>
-        private ReturnResult GetRequest()
-        {
-            string strrequesturl = RequestUrl;
-            string parastring = GetParemeterString();
-            if (parastring.Length > 0)
-            {
-                strrequesturl += (RequestUrl.IndexOf("?") > 0 ? "&" : "?") + parastring;
-            }
-            var myurl = new Uri(strrequesturl);
-            var webRequest = (HttpWebRequest)WebRequest.Create(myurl);
-            webRequest.Timeout = Config.HttpTimeout;
-            webRequest.ReadWriteTimeout = Config.HttpTimeout;
-            webRequest.UserAgent = Config.UserAgent;
-            webRequest.Headers.Add("Accept-Language", Config.Language);
-            webRequest.Method = "GET";
-            setHeaderCollection(webRequest.Headers);
-
-            ReturnResult result = GetResponeResult(webRequest);
             
-            //清空参数列表
-            _parameter.Clear();
-            _headParameter.Clear();
+        }
+
+        private ReturnResult CreateGetRequest()
+        {
+            var request = this.CreateRequest();
+            ReturnResult result = GetResponeResult(request);
             return result;
         }
 
-        /// <summary>
-        ///     获取传递参数的字符串
-        /// </summary>
-        /// <returns>字符串</returns>
         private string GetParemeterString()
         {
             string result = "";
-            var sb = new StringBuilder();
-            bool hasParameter = false;
-            string value = "";
-            foreach (var item in _parameter)
+            if (this._parameters == null || this._parameters.Count == 0)
             {
-                if (!hasParameter)
-                    hasParameter = true;
-
+                return result;
+            }
+            var sb = new StringBuilder();
+            string value = "";
+            foreach (var item in _parameters)
+            {
                 if (item.Value == null)
                 {
                     continue;
                 }
                 value = Uri.EscapeDataString(item.Value); //对传递的字符串进行编码操作
-                sb.Append(string.Format("{0}={1}&", item.Key, value));
+                sb.Append(string.Format("&{0}={1}", item.Key, value));
             }
-            if (hasParameter)
+            if (sb.Length > 0)
             {
-                result = sb.ToString();
-                int len = result.Length;
-                result = result.Substring(0, --len); //将字符串尾的‘&’去掉
+                result = sb.ToString().Substring(1);
             }
             LogPrint.Print("-------httprequest------------>" + result);
             return result;
         }
-
-        /// <summary>
-        ///     获得头参数
-        /// </summary>
-        /// <param name="webrequest"></param>
-        /// <returns></returns>
-        private void setHeaderCollection(WebHeaderCollection header)
-        {
-            if (_headParameter != null)
-            {
-                if (_headParameter.Count > 0)
-                {
-                    foreach (var item in _headParameter)
-                    {
-                        if (item.Value == null)
-                        {
-                            continue;
-                        }
-                        header[item.Key] = Uri.EscapeDataString(item.Value);
-                    }
-                }
-            }
-
-
-        }
-
-      
-
-
     }
 }

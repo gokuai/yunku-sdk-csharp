@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
-using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public class ThirdPartyManager : HttpEngine
+    public class ThirdPartyManager : EntEngine
     {
         private static string UrlApiCreateEnt = Config.WebHost + "/1/thirdparty/create_ent";
         private static string UrlApiEntInfo = Config.WebHost + "/1/thirdparty/ent_info";
@@ -56,9 +51,7 @@ namespace YunkuEntSDK
         {
             string url = UrlApiCreateEnt;
             var parameter = new Dictionary<string, string>();
-            parameter.Add("client_id", _clientId);
             parameter.Add("out_id", _outId);
-            parameter.Add("dateline", Util.GetUnixDataline() + "");
             parameter.Add("ent_name", entName);
             parameter.Add("contact_name", contactName);
             parameter.Add("contact_mobile", contactMobile);
@@ -71,8 +64,7 @@ namespace YunkuEntSDK
                     parameter.Add(dics.Key, dics.Value);
                 }
             }
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
 
         }
 
@@ -84,11 +76,8 @@ namespace YunkuEntSDK
         {
             string url = UrlApiEntInfo;
             var parameter = new Dictionary<string, string>();
-            parameter.Add("client_id", _clientId);
             parameter.Add("out_id", _outId);
-            parameter.Add("dateline", Util.GetUnixDataline() + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -145,7 +134,6 @@ namespace YunkuEntSDK
         {
             string url = UrlApiOrder;
             var parameter = new Dictionary<string, string>();
-            parameter.Add("client_id", _clientId);
             parameter.Add("out_id", _outId);
             if (!string.IsNullOrEmpty(type))
             {
@@ -153,22 +141,20 @@ namespace YunkuEntSDK
                 switch (type)
                 {
                     case Subscribe:
-                        parameter.Add("member_count", memberCount + "");
-                        parameter.Add("space", space + "");
-                        parameter.Add("month", month + "");
+                        parameter.Add("member_count", memberCount.ToString());
+                        parameter.Add("space", space.ToString());
+                        parameter.Add("month", month.ToString());
                         break;
                     case Upgrade:
-                        parameter.Add("member_count", memberCount + "");
-                        parameter.Add("space", space + "");
+                        parameter.Add("member_count", memberCount.ToString());
+                        parameter.Add("space", space.ToString());
                         break;
                     case Renew:
-                        parameter.Add("month", month + "");
+                        parameter.Add("month", month.ToString());
                         break;
                 }
             }
-            parameter.Add("dateline", Util.GetUnixDataline() + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -180,12 +166,9 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetSsO;
             var parameter = new Dictionary<string, string>();
-            parameter.Add("client_id", _clientId);
             parameter.Add("out_id", _outId);
             parameter.Add("ticket", ticket);
-            parameter.Add("dateline", Util.GetUnixDataline() + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
     }
 }

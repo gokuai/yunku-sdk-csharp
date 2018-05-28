@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using YunkuEntSDK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YunkuEntSDK.Data;
 
 namespace YunkuEntSDK.Tests
@@ -36,7 +30,7 @@ namespace YunkuEntSDK.Tests
         public void BindTest()
         {
             EntLibManager entLib = new EntLibManager(ClientId, ClientSecret);
-            ReturnResult result = entLib.Bind(1317448, "", "");
+            ReturnResult result = entLib.Bind(1317448, "");
             Assert.AreEqual(200, result.Code);
         }
 
@@ -124,7 +118,7 @@ namespace YunkuEntSDK.Tests
         public void DestroyTest()
         {
             EntLibManager entLib = new EntLibManager(ClientId, ClientSecret);
-            ReturnResult result = entLib.Destroy("jvj4DYQFFPoV98to7wu4ZUQ");
+            ReturnResult result = entLib.Destroy(1317448);
             Assert.AreEqual(200, result.Code);
         }
 

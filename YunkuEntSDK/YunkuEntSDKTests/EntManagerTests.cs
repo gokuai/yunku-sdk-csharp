@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using YunkuEntSDK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YunkuEntSDK.Data;
 
 namespace YunkuEntSDK.Tests
@@ -64,18 +58,10 @@ namespace YunkuEntSDK.Tests
         }
 
         [TestMethod()]
-        public void GetMemberFileLinkTest()
-        {
-            var ent = new EntManager(ClientId, ClientSecret);
-            ReturnResult result = ent.GetMemberFileLink(4, true);
-            Assert.AreEqual(200, result.Code);
-        }
-
-        [TestMethod()]
         public void AddSyncMemberTest()
         {
             var ent = new EntManager(ClientId, ClientSecret);
-            ReturnResult result = ent.AddSyncMember("MemberTest1", "Member1", "Member1", "", "", "");
+            ReturnResult result = ent.AddSyncMember("MemberTest1", "Member1", "Member1", "", "", "", true);
             Assert.AreEqual(200, result.Code);
         }
 

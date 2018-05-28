@@ -5,7 +5,7 @@ using YunkuEntSDK.UtilClass;
 
 namespace YunkuEntSDK
 {
-    public class EntLibManager : OauthEngine
+    public class EntLibManager : EntEngine
     {
         private static string ApiEntHost = Config.ApiHost;
 
@@ -27,11 +27,7 @@ namespace YunkuEntSDK
         private static string UrlApiGetInfo = ApiEntHost + "/1/org/info";
         private static string UrlApiGetLog = ApiEntHost + "/1/org/log";
 
-        public EntLibManager(string clientId, string clientSecret) : base(clientId, clientSecret, true)
-        {
-        }
-
-        public EntLibManager(string clientId, string clientSecret, bool isEnt, string token) : base(clientId, clientSecret, isEnt, token)
+        public EntLibManager(string clientId, string clientSecret) : base(clientId, clientSecret)
         {
         }
 
@@ -47,13 +43,11 @@ namespace YunkuEntSDK
         {
             string url = UrlApiCreateLib;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
             parameter.Add("org_name", orgName);
             parameter.Add("org_capacity", orgCapacity);
             parameter.Add("storage_point_name", storagePointName);
             parameter.Add("org_logo", orgLogo);
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -73,14 +67,12 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetLibList;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
             if (memberId > 0)
             {
-                parameter.Add("member_id", memberId + "");
+                parameter.Add("member_id", memberId.ToString());
             }
-            parameter.Add("type", type + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            parameter.Add("type", type.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
         /// <summary>
@@ -90,16 +82,13 @@ namespace YunkuEntSDK
         /// <param name="title"></param>
         /// <param name="linkUrl"></param>
         /// <returns></returns>
-        public ReturnResult Bind(int orgId, string title, string linkUrl)
+        public ReturnResult Bind(int orgId, string title)
         {
             string url = UrlApiBind;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
+            parameter.Add("org_id", orgId.ToString());
             parameter.Add("title", title);
-            parameter.Add("url", linkUrl);
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
 
         }
 
@@ -112,10 +101,8 @@ namespace YunkuEntSDK
         {
             string url = UrlApiUnbind;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
             parameter.Add("org_client_id", orgClientId);
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -129,12 +116,10 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetMembers;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("start", start + "");
-            parameter.Add("size", size + "");
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            parameter.Add("org_id", orgId.ToString());
+            parameter.Add("start", start.ToString());
+            parameter.Add("size", size.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
         /// <summary>
@@ -148,12 +133,10 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetMembers;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("ids", Util.StrArrayToString(ids, ","));
+            parameter.Add("org_id", orgId.ToString());
             parameter.Add("type", type.ToString().ToLower());
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            parameter.Add("ids", Util.StrArrayToString(ids, ","));
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
         /// <summary>
@@ -167,12 +150,10 @@ namespace YunkuEntSDK
         {
             string url = UrlApiAddMembers;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("role_id", roleId + "");
+            parameter.Add("org_id", orgId.ToString());
+            parameter.Add("role_id", roleId.ToString());
             parameter.Add("member_ids", Util.IntArrayToString(memberIds, ","));
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -186,12 +167,10 @@ namespace YunkuEntSDK
         {
             string url = UrlApiSetMemberRole;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("role_id", roleId + "");
+            parameter.Add("org_id", orgId.ToString());
+            parameter.Add("role_id", roleId.ToString());
             parameter.Add("member_ids", Util.IntArrayToString(memberIds, ","));
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -204,11 +183,9 @@ namespace YunkuEntSDK
         {
             string url = UrlApiDelMember;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
+            parameter.Add("org_id", orgId.ToString());
             parameter.Add("member_ids", Util.IntArrayToString(memberIds, ","));
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -220,10 +197,8 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetGroups;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            parameter.Add("org_id", orgId.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
         /// <summary>
@@ -237,12 +212,10 @@ namespace YunkuEntSDK
         {
             string url = UrlApiAddGroup;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("role_id", roleId + "");
-            parameter.Add("group_id", groupId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            parameter.Add("org_id", orgId.ToString());
+            parameter.Add("role_id", roleId.ToString());
+            parameter.Add("group_id", groupId.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -255,11 +228,9 @@ namespace YunkuEntSDK
         {
             string url = UrlApiDelGroup;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("group_id", groupId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            parameter.Add("org_id", orgId.ToString());
+            parameter.Add("group_id", groupId.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -273,12 +244,23 @@ namespace YunkuEntSDK
         {
             string url = UrlApiSetGroupRole;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("group_id", groupId + "");
-            parameter.Add("role_id", roleId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            parameter.Add("org_id", orgId.ToString());
+            parameter.Add("group_id", groupId.ToString());
+            parameter.Add("role_id", roleId.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
+        }
+
+        /// <summary>
+        /// 删除库
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
+        public ReturnResult Destroy(int orgId)
+        {
+            string url = UrlApiDestroy;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("org_id", orgId.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -286,14 +268,12 @@ namespace YunkuEntSDK
         /// </summary>
         /// <param name="orgClientId"></param>
         /// <returns></returns>
-        public ReturnResult Destroy(string orgClientId)
+        public ReturnResult DestroyByOrgClientId(string orgClientId)
         {
             string url = UrlApiDestroy;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_client_id", orgClientId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            parameter.Add("org_client_id", orgClientId);
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -309,23 +289,21 @@ namespace YunkuEntSDK
         {
             string url = UrlApiSet;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
+            parameter.Add("org_id", orgId.ToString());
 
             if (!string.IsNullOrEmpty(orgName))
             {
-                parameter.Add("org_name", "" + orgName);
+                parameter.Add("org_name", orgName);
             }
             if (!string.IsNullOrEmpty(orgCapacity))
             {
-                parameter.Add("org_capacity", "" + orgCapacity);
+                parameter.Add("org_capacity", orgCapacity);
             }
             if (!string.IsNullOrEmpty(orgLogo))
             {
-                parameter.Add("org_logo", "" + orgLogo);
+                parameter.Add("org_logo", orgLogo);
             }
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
@@ -337,10 +315,8 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetInfo;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Get).ExecuteSync();
+            parameter.Add("org_id", orgId.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
         /// <summary>
@@ -355,16 +331,14 @@ namespace YunkuEntSDK
         {
             string url = UrlApiGetLog;
             var parameter = new Dictionary<string, string>();
-            AddAuthParams(parameter);
-            parameter.Add("org_id", orgId + "");
+            parameter.Add("org_id", orgId.ToString());
             if (act != null)
             {
-                parameter.Add("act", Util.StrArrayToString(act, ",") + "");
+                parameter.Add("act", Util.StrArrayToString(act, ","));
             }
-            parameter.Add("start_dateline", startDateline + "");
-            parameter.Add("size", size + "");
-            parameter.Add("sign", GenerateSign(parameter));
-            return new RequestHelper().SetParams(parameter).SetUrl(url).SetMethod(RequestType.Post).ExecuteSync();
+            parameter.Add("start_dateline", startDateline.ToString());
+            parameter.Add("size", size.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
         /// <summary>
@@ -373,7 +347,7 @@ namespace YunkuEntSDK
         /// <returns></returns>
         public EntLibManager Clone()
         {
-            return new EntLibManager(_clientId, _clientSecret, _isEnt, Token);
+            return new EntLibManager(_clientId, _secret);
         }
 
         public enum MemberType
