@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Net;
-using System.Threading;
 using System.Windows.Forms;
 using YunkuEntSDK;
 using YunkuEntSDK.Data;
 using YunkuEntSDK.Net;
-using YunkuEntSDK.UtilClass;
 using YunkuSDKEntDemo.Model;
 
 namespace YunkuSDKEntDemo
