@@ -21,6 +21,7 @@ namespace YunkuEntSDK
         private static string UrlApiDelFile = LibHost + "/1/file/del";
         private static string UrlApiMoveFile = LibHost + "/1/file/move";
         private static string UrlApiLinkFile = LibHost + "/1/file/link";
+        private static string UrlApiLinkClose = LibHost + "/1/file/link_close";
         private static string UrlApiGetLink = LibHost + "/1/file/links";
         private static string UrlApiUpdateCount = LibHost + "/1/file/updates_count";
         private static string UrlApiGetServerSite = LibHost + "/1/file/servers";
@@ -422,6 +423,32 @@ namespace YunkuEntSDK
         }
 
         /// <summary>
+        /// 关闭文件外链
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public ReturnResult LinkCloseByCode(string code)
+        {
+            string url = UrlApiLinkClose;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("code", code);
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
+        }
+
+        /// <summary>
+        /// 关闭文件外链
+        /// </summary>
+        /// <param name="fullpath"></param>
+        /// <returns></returns>
+        public ReturnResult LinkCloseByFullpath(string fullpath)
+        {
+            string url = UrlApiLinkClose;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("fullpath", fullpath);
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
+        }
+
+        /// <summary>
         /// 获取当前库所有外链
         /// </summary>
         /// <param name="fileOnly"></param>
@@ -438,13 +465,19 @@ namespace YunkuEntSDK
         }
 
         /// <summary>
-        /// 获取上传地址
-        /// (支持50MB以上文件的上传)
+        /// 获取上传地址和临时key
+        /// (为网页上传提供上传地址和key)
         /// </summary>
+        /// <param name="fullpath"></param>
+        /// <param name="timeout">临时key失效时长, 单位秒</param>
         /// <returns></returns>
-        public ReturnResult GetUploadServers()
+        public ReturnResult GetUploadServers(string fullpath, int timeout)
         {
             string url = UrlApiUploadServers;
+            var parameter = new Dictionary<string, string>();
+            parameter.Add("fullpath", fullpath);
+            parameter.Add("timeout", timeout.ToString());
+            parameter.Add("rand", (new Random()).Next(100000, 999999).ToString());
             return new RequestHelper(this).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
         }
 
