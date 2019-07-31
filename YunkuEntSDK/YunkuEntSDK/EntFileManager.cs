@@ -32,7 +32,7 @@ namespace YunkuEntSDK
         private static string UrlApiRecoverFile = LibHost + "/1/file/recover";
         private static string UrlApiCompletelyDelFile = LibHost + "/1/file/del_completely";
         private static string UrlApiHistoryFile = LibHost + "/1/file/history";
-        private static string UrlApiGetUploadUrl = LibHost + "/1/file/download_url";
+        private static string UrlApiGetDownloadUrl = LibHost + "/1/file/download_url";
         private static string UrlApiSearchFile = LibHost + "/1/file/search";
         private static string UrlApiPreviewUrl = LibHost + "/1/file/preview_url";
         private static string UrlApiGetPermission = LibHost + "/1/file/get_permission";
@@ -629,7 +629,7 @@ namespace YunkuEntSDK
         /// <returns></returns>
         private ReturnResult GetDownloadUrl(string hash, string fullpath, bool isOpen, NetType net, string fileName)
         {
-            string url = UrlApiGetUploadUrl;
+            string url = UrlApiGetDownloadUrl;
             var parameter = new Dictionary<string, string>();
             parameter.Add("fullpath", fullpath);
             parameter.Add("hash", hash);
@@ -711,7 +711,7 @@ namespace YunkuEntSDK
         {
             string url = UrlApiPreviewUrl;
             var parameter = new Dictionary<string, string>();
-            parameter.Add("hash", fullpath);
+            parameter.Add("hash", hash);
             parameter.Add("fullpath", fullpath);
             if (showWatermark)
             {
