@@ -26,6 +26,8 @@ namespace YunkuEntSDK
         private static string UrlApiSet = ApiEntHost + "/1/org/set";
         private static string UrlApiGetInfo = ApiEntHost + "/1/org/info";
         private static string UrlApiGetLog = ApiEntHost + "/1/org/log";
+        private static string UrlApiInfoByMember = ApiEntHost + "/1/org/info_by_member";
+        private static string UrlApiSetByMember = ApiEntHost + "/1/org/set_by_member";
 
         public EntLibManager(string clientId, string clientSecret) : base(clientId, clientSecret)
         {
@@ -339,6 +341,69 @@ namespace YunkuEntSDK
             parameter.Add("start_dateline", startDateline.ToString());
             parameter.Add("size", size.ToString());
             return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
+        }
+
+        /// <summary>
+        /// 获取个人文件库信息
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <param name="outId"></param>
+        /// <param name="account"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public ReturnResult GetInfoByMembmer(int memberId, string outId, string account, string email)
+        {
+            string url = UrlApiInfoByMember;
+            var parameter = new Dictionary<string, string>();
+            if (memberId > 0)
+            {
+                parameter.Add("member_id", memberId.ToString());
+            }
+            else if (outId != null)
+            {
+                parameter.Add("out_id", outId);
+            }
+            else if (account != null)
+            {
+                parameter.Add("account", account);
+            }
+            else if (account != null)
+            {
+                parameter.Add("email", email);
+            }
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.GET).ExecuteSync();
+        }
+
+        /// <summary>
+        /// 设置个人文件库
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <param name="outId"></param>
+        /// <param name="account"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public ReturnResult SetByMembmer(int memberId, string outId, string account, string email, long capacity)
+        {
+            string url = UrlApiSetByMember;
+            var parameter = new Dictionary<string, string>();
+            if (memberId > 0)
+            {
+                parameter.Add("member_id", memberId.ToString());
+            }
+            else if (outId != null)
+            {
+                parameter.Add("out_id", outId);
+            }
+            else if (account != null)
+            {
+                parameter.Add("account", account);
+            }
+            else if (account != null)
+            {
+                parameter.Add("email", email);
+            }
+            parameter.Add("capacity", capacity.ToString());
+            return new RequestHelper(this).SetParams(parameter).SetUrl(url).SetMethod(RequestType.POST).ExecuteSync();
         }
 
         /// <summary>
